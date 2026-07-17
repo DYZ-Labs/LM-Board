@@ -85,9 +85,8 @@ Target: ~8 benchmarks across four categories, ~15 models.
 One page, top to bottom:
 
 1. **Header** — "LM Board" wordmark, tagline ("Curated benchmark scores for frontier language models"), theme toggle, GitHub link.
-2. **Stat strip** — three quiet stat tiles in one row: models tracked, benchmarks, last updated.
-3. **Controls row** — one row above the table: category tabs (Overall · Reasoning · Coding · Math · Agentic) switching visible score columns; provider multi-select; "open weights" toggle; search box.
-4. **Leaderboard table** (the product):
+2. **Controls row** — one row above the table: category tabs (Overall · Reasoning · Coding · Math · Agentic) switching visible score columns; provider multi-select; "open weights" toggle; search box.
+3. **Leaderboard table** (the product):
    - Columns: rank · model (name + lab + open-weights badge) · Index · visible benchmark columns · price.
    - Sticky header row and sticky model column (row identity survives horizontal scroll on narrow screens).
    - **Score cell:** numeral + a thin **3px rounded-end bar** underneath, filled proportionally on a 0–100 scale.
@@ -95,7 +94,7 @@ One page, top to bottom:
    - Sorting via real `<button>`s inside header cells with `aria-sort`, a visible sort indicator, stable tie-break by model name. Default sort: Index, descending.
    - Benchmark header tooltips: what it measures, unit/settings, link to source.
    - **Row click → inline detail panel:** all scores with citations and settings, pricing, context window, release date. (This replaces per-model pages.)
-5. **Methodology + footer** — how scores are sourced, exact Index formula, self-reported caveat, disclaimer, "corrections welcome" link to GitHub issues.
+4. **Methodology + footer** — how scores are sourced, exact Index formula, self-reported caveat, disclaimer, "corrections welcome" link to GitHub issues.
 
 ### Visual system (binding constraints)
 
@@ -146,7 +145,7 @@ lmboard/
   src/
     lib/                        # schema.ts, data.ts (load+join), index.ts (LM Board Index), useSort.ts
     components/                 # LeaderboardTable, ScoreCell, FilterBar, CategoryTabs,
-                                # StatStrip, DetailPanel, Badge, ThemeToggle, Tooltip
+                                # DetailPanel, Badge, ThemeToggle, Tooltip
     app/                        # layout.tsx, page.tsx, methodology content, og image, favicon
 ```
 
@@ -201,3 +200,6 @@ Arena-style ELO/voting · running our own evals · historical score trends · pe
 - **2026-07-17 — Core table behavior:** category tabs change visible score columns but never change the site-wide Index or canonical rank. Filtering preserves those canonical ranks. Price sorting uses input price, then output price; missing values stay last in either direction. Search covers model name, provider, and model ID, and one inline detail panel is open at a time.
 - **2026-07-17 — Polish and accessibility:** best markers are calculated from the full canonical dataset, not the filtered view. The table owns a bounded vertical and horizontal scroll region so its header and model identity can remain sticky reliably. Manual light/dark choices persist and override the OS preference; without a manual choice, the OS preference remains authoritative. Meaningful small text uses secondary ink because the binding light muted token is reserved for non-text decoration and does not meet AA contrast at small sizes.
 - **2026-07-17 — Repository links:** header, footer, and correction links read `NEXT_PUBLIC_GITHUB_REPOSITORY_URL` and render only when a real repository URL is configured. No remote exists yet, so M3 does not fabricate a destination; the URL is expected to be supplied during M4 publishing.
+- **2026-07-18 — Stat strip removed:** the stat strip is removed from the page structure.
+- **2026-07-18 — Hero confirmed:** the leaderboard table remains the page hero; chrome recedes.
+- **2026-07-18 — Typography constraint unchanged:** the system sans stack remains binding, with no display or serif faces.

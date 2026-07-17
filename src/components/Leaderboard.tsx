@@ -162,7 +162,9 @@ export function Leaderboard({ data }: LeaderboardProps) {
           <h2 id="leaderboard-heading">Frontier model performance</h2>
         </div>
         <p className="snapshot-copy">
-          Click a model to inspect every source · Updated {formatDate(data.lastUpdated)}
+          {data.rows.length} models · {data.benchmarks.length} benchmarks · Updated{" "}
+          <time dateTime={data.lastUpdated}>{formatDate(data.lastUpdated)}</time> · Click a
+          model to inspect sources
         </p>
       </div>
 

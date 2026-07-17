@@ -1,25 +1,12 @@
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  timeZone: "UTC",
-});
-
-function formatDate(date: string) {
-  return dateFormatter.format(new Date(`${date}T00:00:00Z`));
-}
-
 type MethodologyProps = {
   percentBenchmarkCount: number;
   minimumCoverageCount: number;
-  lastUpdated: string;
   issuesUrl: string | null;
 };
 
 export function Methodology({
   percentBenchmarkCount,
   minimumCoverageCount,
-  lastUpdated,
   issuesUrl,
 }: MethodologyProps) {
   return (
@@ -80,9 +67,7 @@ export function Methodology({
 
       <div className="methodology-note">
         <p>
-          Snapshot retrieval date: <time dateTime={lastUpdated}>{formatDate(lastUpdated)}</time>.
-          Results and provider pricing can change; linked sources remain
-          authoritative.
+          Results and provider pricing can change; linked sources remain authoritative.
         </p>
         {issuesUrl ? (
           <a href={issuesUrl} target="_blank" rel="noreferrer">

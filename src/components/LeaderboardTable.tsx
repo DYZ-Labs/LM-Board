@@ -27,11 +27,11 @@ const compactBenchmarkLabels: Record<string, string> = {
   "gpqa-diamond": "GPQA",
   hle: "HLE",
   "aa-lcr": "LCR",
-  ifbench: "IFB",
+  ifbench: "IFBench",
   critpt: "CritPt",
-  "terminal-bench-v2-1": "TBench",
+  "terminal-bench-v2-1": "T-Bench 2.1",
   scicode: "SciCode",
-  "tau3-banking": "τ³",
+  "tau3-banking": "τ³-Bank",
 };
 
 type SortableHeaderProps = {
@@ -180,17 +180,9 @@ export function LeaderboardTable({
                     />
                   }
                 >
-                  <>
-                    <span className="benchmark-label-full">
-                      {benchmark.name}
-                    </span>
-                    <span
-                      className="benchmark-label-compact"
-                      aria-hidden="true"
-                    >
-                      {compactBenchmarkLabels[benchmark.id] ?? benchmark.name}
-                    </span>
-                  </>
+                  <span aria-hidden="true">
+                    {compactBenchmarkLabels[benchmark.id] ?? benchmark.name}
+                  </span>
                 </SortableHeader>
               ))}
               <SortableHeader

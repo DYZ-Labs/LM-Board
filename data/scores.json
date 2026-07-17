@@ -517,7 +517,7 @@
     "selfReported": false
   },
   {
-    "modelId": "spacexai-grok-4-5",
+    "modelId": "xai-grok-4-5",
     "benchmarkId": "gpqa-diamond",
     "value": 93.13,
     "source": {
@@ -528,7 +528,7 @@
     "selfReported": false
   },
   {
-    "modelId": "spacexai-grok-4-5",
+    "modelId": "xai-grok-4-5",
     "benchmarkId": "hle",
     "value": 40.27,
     "source": {
@@ -539,7 +539,7 @@
     "selfReported": false
   },
   {
-    "modelId": "spacexai-grok-4-5",
+    "modelId": "xai-grok-4-5",
     "benchmarkId": "aa-lcr",
     "value": 67.67,
     "source": {
@@ -550,7 +550,7 @@
     "selfReported": false
   },
   {
-    "modelId": "spacexai-grok-4-5",
+    "modelId": "xai-grok-4-5",
     "benchmarkId": "critpt",
     "value": 15.43,
     "source": {
@@ -561,7 +561,7 @@
     "selfReported": false
   },
   {
-    "modelId": "spacexai-grok-4-5",
+    "modelId": "xai-grok-4-5",
     "benchmarkId": "terminal-bench-v2-1",
     "value": 81.65,
     "source": {
@@ -572,7 +572,7 @@
     "selfReported": false
   },
   {
-    "modelId": "spacexai-grok-4-5",
+    "modelId": "xai-grok-4-5",
     "benchmarkId": "scicode",
     "value": 54.05,
     "source": {
@@ -583,7 +583,7 @@
     "selfReported": false
   },
   {
-    "modelId": "spacexai-grok-4-5",
+    "modelId": "xai-grok-4-5",
     "benchmarkId": "tau3-banking",
     "value": 32.58,
     "source": {

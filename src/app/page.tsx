@@ -1,7 +1,6 @@
 import { Leaderboard } from "@/components/Leaderboard";
 import { Methodology } from "@/components/Methodology";
 import { SiteFooter } from "@/components/SiteFooter";
-import { StatStrip } from "@/components/StatStrip";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { loadLeaderboardData } from "@/lib/data";
 import { MIN_INDEX_COVERAGE } from "@/lib/index";
@@ -26,7 +25,7 @@ export default function Home() {
           <a className="wordmark" href="#top" aria-label="LM Board home">
             LM<span>Board</span>
           </a>
-          <div className="hero-copy" aria-hidden="true" style={{ visibility: "hidden" }}>
+          <div className="hero-copy">
             <p className="section-kicker">Independent scores. Direct sources.</p>
             <h1>Frontier models, compared clearly.</h1>
             <p>
@@ -44,16 +43,10 @@ export default function Home() {
             <ThemeToggle />
           </nav>
         </header>
-        <StatStrip
-          modelCount={data.rows.length}
-          benchmarkCount={data.benchmarks.length}
-          lastUpdated={data.lastUpdated}
-        />
         <Leaderboard data={data} />
         <Methodology
           percentBenchmarkCount={percentBenchmarkCount}
           minimumCoverageCount={minimumCoverageCount}
-          lastUpdated={data.lastUpdated}
           issuesUrl={issuesUrl}
         />
         <SiteFooter repositoryUrl={repositoryUrl} />

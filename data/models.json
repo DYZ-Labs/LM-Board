@@ -53,7 +53,7 @@
     "lab": "Google",
     "releaseDate": "2026-02-19",
     "openWeights": false,
-    "contextWindow": 1000000,
+    "contextWindow": 1048576,
     "pricing": {
       "input": 2,
       "output": 12
@@ -74,9 +74,9 @@
     "url": "https://deepmind.google/models/model-cards/gemini-3-5-flash/"
   },
   {
-    "id": "spacexai-grok-4-5",
+    "id": "xai-grok-4-5",
     "name": "Grok 4.5",
-    "lab": "SpaceXAI",
+    "lab": "xAI",
     "releaseDate": "2026-07-08",
     "openWeights": false,
     "contextWindow": 500000,
@@ -102,10 +102,14 @@
   {
     "id": "alibaba-qwen3-7-max",
     "name": "Qwen3.7-Max",
-    "lab": "Alibaba / Qwen",
+    "lab": "Qwen",
     "releaseDate": "2026-05-20",
     "openWeights": false,
     "contextWindow": 1000000,
+    "pricing": {
+      "input": 2.5,
+      "output": 7.5
+    },
     "url": "https://qwen.ai/blog?id=qwen3.7"
   },
   {
@@ -141,6 +145,10 @@
     "releaseDate": "2026-06-01",
     "openWeights": true,
     "contextWindow": 1000000,
+    "pricing": {
+      "input": 0.3,
+      "output": 1.2
+    },
     "url": "https://www.minimax.io/blog/minimax-m3"
   },
   {
