@@ -17,7 +17,7 @@ A fast, trustworthy, single-page leaderboard: ~15–20 frontier language models 
 
 ## 3. Stack
 
-- **Next.js 15 (App Router) + TypeScript + Tailwind CSS**, built with `output: 'export'` → pure static files (deploy to Vercel/Netlify/GitHub Pages).
+- **Next.js 15 (App Router) + TypeScript + plain CSS**, built with `output: 'export'` → pure static files (deploy to Vercel/Netlify/GitHub Pages).
 - **Zod** for data validation at build time and in CI. A typo'd score or dangling `modelId` must fail the build, never ship.
 - **No other runtime dependencies.** No table library (20 rows — hand-roll a sort hook), no chart library (score bars are plain CSS), no state library.
 
@@ -152,7 +152,7 @@ lmboard/
 ## 8. Milestones & tasks
 
 ### M1 — Foundation
-- [x] Scaffold Next.js 15 + TS + Tailwind, `output: 'export'`, repo hygiene (README, .gitignore, git init)
+- [x] Scaffold Next.js 15 + TS, `output: 'export'`, repo hygiene (README, .gitignore, git init)
 - [x] Zod schemas + inferred types in `src/lib/schema.ts`
 - [x] `scripts/validate-data.ts`: schema check + referential integrity (every score's modelId/benchmarkId exists; no duplicate (model, benchmark) pairs); wire into `npm run build` and CI
 - [x] Seed data curated **from live sources** (see §5 warning): `benchmarks.json`, `models.json`, `scores.json`
@@ -203,3 +203,4 @@ Arena-style ELO/voting · running our own evals · historical score trends · pe
 - **2026-07-18 — Stat strip removed:** the stat strip is removed from the page structure.
 - **2026-07-18 — Hero confirmed:** the leaderboard table remains the page hero; chrome recedes.
 - **2026-07-18 — Typography constraint unchanged:** the system sans stack remains binding, with no display or serif faces.
+- **2026-07-18 — Styling toolchain simplified:** Tailwind CSS and the project-level PostCSS/Autoprefixer setup were removed. The site uses plain global CSS through Next.js's built-in CSS pipeline.
