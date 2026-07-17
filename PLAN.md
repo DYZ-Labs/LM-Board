@@ -91,7 +91,7 @@ One page, top to bottom:
    - Sticky header row and sticky model column (row identity survives horizontal scroll on narrow screens).
    - **Score cell:** numeral + a thin **3px rounded-end bar** underneath, filled proportionally on a 0–100 scale.
    - Real `<table>` markup (screen readers get the data model for free).
-   - Sorting via real `<button>`s inside header cells with `aria-sort`, a visible sort indicator, stable tie-break by model name. Default sort: Index, descending.
+   - Sorting via real `<button>`s inside header cells with `aria-sort`, a visible active-column indicator, stable tie-break by model name. Inactive indicators reveal on hover/focus. Default sort: Index, descending.
    - Benchmark header tooltips: what it measures, unit/settings, link to source.
    - **Row click → inline detail panel:** all scores with citations and settings, pricing, context window, release date. (This replaces per-model pages.)
 4. **Methodology + footer** — how scores are sourced, exact Index formula, self-reported caveat, disclaimer, "corrections welcome" link to GitHub issues.
@@ -101,11 +101,13 @@ One page, top to bottom:
 Neutral, data-dense, restrained. The table is the hero; chrome recedes.
 
 - **Score bars use ONE sequential blue for every column.** Magnitude is one job → one hue. Per-column different hues (rainbow columns) is a hard anti-pattern — do not do it.
-- **Numerals stay in normal text ink**, never colored. Use `font-variant-numeric: tabular-nums` in score columns only.
+- **Numerals stay in normal text ink**, never colored. Use `font-variant-numeric: tabular-nums` in score columns only. Scores, the Index, and prices render to one decimal; percent units live in benchmark tooltips instead of every cell, and price units live in the Price header.
 - **Best-in-column:** bold numeral + a small dot marker. Never color alone.
 - **No meaning by color alone anywhere:** numbers are always printed, badges always have text labels, the self-reported marker has a tooltip/label.
 - **Dark mode is designed, not inverted.** Both palettes defined as CSS custom properties; swap via `prefers-color-scheme` AND a `data-theme` attribute toggle that must win over the OS setting in both directions.
 - Typography: system sans stack (`system-ui, -apple-system, "Segoe UI", sans-serif`). No display/serif faces.
+- Interface type uses only `11px`, `12px`, `13px`, `14px`, and `16px`, with an `11px` floor. The hero uses `clamp(2.5rem, 4vw, 4rem)`; page section headings use `28px`.
+- Corner radii use only `6px`, `12px`, or `999px` pills.
 - Rows ~44px; hairline gridlines; hover wash instead of zebra striping.
 - Accessibility: AA contrast for all ink, keyboard-operable sorting, focus-visible states.
 
@@ -117,9 +119,7 @@ Neutral, data-dense, restrained. The table is the hero; chrome recedes.
 | Surface (table/cards) | `#fcfcfb` | `#1a1a19` |
 | Primary ink | `#0b0b0b` | `#ffffff` |
 | Secondary ink | `#52514e` | `#c3c2b7` |
-| Muted (labels, "—") | `#898781` | `#898781` |
 | Hairline gridline | `#e1e0d9` | `#2c2c2a` |
-| Border ring | `rgba(11,11,11,0.10)` | `rgba(255,255,255,0.10)` |
 | Accent / bar fill (blue) | `#2a78d6` | `#3987e5` |
 | Bar track: use hairline gridline color | | |
 
@@ -198,9 +198,10 @@ Arena-style ELO/voting · running our own evals · historical score trends · pe
 - **2026-07-17 — Current benchmark suite:** live curation replaced retired or superseded candidates (AIME 2025, MATH-500, Terminal-Bench Hard, and τ² Telecom) with the eight-benchmark suite in §5. CritPt is grouped under Math because its answers are quantitative, symbolic, or executable functions. The seed contains 117 independently measured Artificial Analysis results, each retrieved on 2026-07-17 with its evaluation settings and model-specific citation.
 - **2026-07-17 — Foundation tooling:** npm with Node.js 22, Tailwind CSS 3.4, a dev-only `tsx` runner, and GitHub Actions were selected. Production runtime dependencies remain limited to Next.js, React, and Zod as required.
 - **2026-07-17 — Core table behavior:** category tabs change visible score columns but never change the site-wide Index or canonical rank. Filtering preserves those canonical ranks. Price sorting uses input price, then output price; missing values stay last in either direction. Search covers model name, provider, and model ID, and one inline detail panel is open at a time.
-- **2026-07-17 — Polish and accessibility:** best markers are calculated from the full canonical dataset, not the filtered view. The table owns a bounded vertical and horizontal scroll region so its header and model identity can remain sticky reliably. Manual light/dark choices persist and override the OS preference; without a manual choice, the OS preference remains authoritative. Meaningful small text uses secondary ink because the binding light muted token is reserved for non-text decoration and does not meet AA contrast at small sizes.
+- **2026-07-17 — Polish and accessibility:** best markers are calculated from the full canonical dataset, not the filtered view. The table owns a bounded vertical and horizontal scroll region so its header and model identity can remain sticky reliably. Manual light/dark choices persist and override the OS preference; without a manual choice, the OS preference remains authoritative. Meaningful small text uses secondary ink to maintain AA contrast at small sizes.
 - **2026-07-17 — Repository links:** header, footer, and correction links read `NEXT_PUBLIC_GITHUB_REPOSITORY_URL` and render only when a real repository URL is configured. No remote exists yet, so M3 does not fabricate a destination; the URL is expected to be supplied during M4 publishing.
 - **2026-07-18 — Stat strip removed:** the stat strip is removed from the page structure.
 - **2026-07-18 — Hero confirmed:** the leaderboard table remains the page hero; chrome recedes.
 - **2026-07-18 — Typography constraint unchanged:** the system sans stack remains binding, with no display or serif faces.
 - **2026-07-18 — Styling toolchain simplified:** Tailwind CSS and the project-level PostCSS/Autoprefixer setup were removed. The site uses plain global CSS through Next.js's built-in CSS pipeline.
+- **2026-07-18 — Interface scales consolidated:** typography uses five interface tokens plus one hero and one section-heading treatment; radii use three tokens. Scores, the Index, and prices show one decimal, units move to headers/tooltips, and only the active sort arrow remains visible at rest.

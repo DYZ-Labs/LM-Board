@@ -1,18 +1,17 @@
 import { Badge } from "@/components/Badge";
-import type { Benchmark, Score } from "@/lib/schema";
+import type { Score } from "@/lib/schema";
 
 const scoreFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 1,
-  maximumFractionDigits: 2,
+  maximumFractionDigits: 1,
 });
 
 type ScoreCellProps = {
   score: Score | null;
-  unit: Benchmark["unit"];
   isBest: boolean;
 };
 
-export function ScoreCell({ score, unit, isBest }: ScoreCellProps) {
+export function ScoreCell({ score, isBest }: ScoreCellProps) {
   if (!score) {
     return (
       <td className="numeric-cell missing-value" aria-label="No curated score">
@@ -28,7 +27,6 @@ export function ScoreCell({ score, unit, isBest }: ScoreCellProps) {
       <div className="score-value-line">
         <span className="score-number">
           {scoreFormatter.format(score.value)}
-          {unit === "percent" ? <span>%</span> : null}
         </span>
         {isBest ? (
           <span className="best-marker">

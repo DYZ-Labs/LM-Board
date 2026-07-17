@@ -1,12 +1,18 @@
 :root {
   color-scheme: light;
+  --type-11: 11px;
+  --type-12: 12px;
+  --type-13: 13px;
+  --type-14: 14px;
+  --type-16: 16px;
+  --radius-sm: 6px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
   --page: #f9f9f7;
   --surface: #fcfcfb;
   --ink: #0b0b0b;
   --ink-secondary: #52514e;
-  --muted: #898781;
   --hairline: #e1e0d9;
-  --ring: rgba(11, 11, 11, 0.1);
   --accent: #2a78d6;
   --hover: rgba(42, 120, 214, 0.045);
   --detail: rgba(42, 120, 214, 0.035);
@@ -24,9 +30,7 @@
     --surface: #1a1a19;
     --ink: #ffffff;
     --ink-secondary: #c3c2b7;
-    --muted: #898781;
     --hairline: #2c2c2a;
-    --ring: rgba(255, 255, 255, 0.1);
     --accent: #3987e5;
     --hover: rgba(57, 135, 229, 0.08);
     --detail: rgba(57, 135, 229, 0.06);
@@ -41,9 +45,7 @@
   --surface: #fcfcfb;
   --ink: #0b0b0b;
   --ink-secondary: #52514e;
-  --muted: #898781;
   --hairline: #e1e0d9;
-  --ring: rgba(11, 11, 11, 0.1);
   --accent: #2a78d6;
   --hover: rgba(42, 120, 214, 0.045);
   --detail: rgba(42, 120, 214, 0.035);
@@ -57,9 +59,7 @@
   --surface: #1a1a19;
   --ink: #ffffff;
   --ink-secondary: #c3c2b7;
-  --muted: #898781;
   --hairline: #2c2c2a;
-  --ring: rgba(255, 255, 255, 0.1);
   --accent: #3987e5;
   --hover: rgba(57, 135, 229, 0.08);
   --detail: rgba(57, 135, 229, 0.06);
@@ -86,6 +86,7 @@ body {
   overflow-x: hidden;
   background: var(--page);
   color: var(--ink);
+  font-size: var(--type-16);
 }
 
 button,
@@ -165,10 +166,10 @@ svg {
   left: 12px;
   padding: 9px 12px;
   border: 1px solid var(--control-border);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink);
-  font-size: 0.82rem;
+  font-size: var(--type-13);
   font-weight: 700;
   transform: translateY(-160%);
   transition: transform 120ms ease;
@@ -196,7 +197,7 @@ svg {
 .wordmark {
   width: fit-content;
   color: var(--ink);
-  font-size: 1.08rem;
+  font-size: var(--type-16);
   font-weight: 750;
   letter-spacing: -0.04em;
   text-decoration: none;
@@ -226,10 +227,10 @@ svg {
   align-items: center;
   padding: 6px 10px;
   border: 1px solid var(--hairline);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink-secondary);
-  font-size: 0.75rem;
+  font-size: var(--type-12);
   font-weight: 650;
   text-decoration: none;
 }
@@ -256,7 +257,7 @@ svg {
 .detail-eyebrow {
   margin: 0 0 10px;
   color: var(--ink-secondary);
-  font-size: 0.71rem;
+  font-size: var(--type-11);
   font-weight: 720;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -265,7 +266,7 @@ svg {
 .hero-copy h1 {
   max-width: 700px;
   margin: 0;
-  font-size: clamp(2.5rem, 5vw, 5.6rem);
+  font-size: clamp(2.5rem, 4vw, 4rem);
   font-weight: 590;
   letter-spacing: -0.065em;
   line-height: 0.97;
@@ -275,7 +276,7 @@ svg {
   max-width: 610px;
   margin: 24px 0 0;
   color: var(--ink-secondary);
-  font-size: clamp(1rem, 1.45vw, 1.18rem);
+  font-size: var(--type-16);
   line-height: 1.65;
 }
 
@@ -293,7 +294,7 @@ svg {
 
 .leaderboard-heading-row h2 {
   margin: 0;
-  font-size: clamp(1.45rem, 2.3vw, 2.1rem);
+  font-size: 28px;
   font-weight: 610;
   letter-spacing: -0.035em;
 }
@@ -301,14 +302,14 @@ svg {
 .snapshot-copy {
   margin: 0 0 2px;
   color: var(--ink-secondary);
-  font-size: 0.78rem;
+  font-size: var(--type-12);
   white-space: nowrap;
 }
 
 .controls-shell {
   border: 1px solid var(--hairline);
   border-bottom: 0;
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   background: var(--surface);
 }
 
@@ -326,10 +327,10 @@ svg {
   min-height: 34px;
   padding: 6px 12px;
   border: 1px solid transparent;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--ink-secondary);
-  font-size: 0.82rem;
+  font-size: var(--type-13);
   font-weight: 600;
   cursor: pointer;
 }
@@ -362,7 +363,7 @@ svg {
   align-items: center;
   padding: 0 11px;
   border: 1px solid var(--control-border);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: var(--page);
   color: var(--ink-secondary);
 }
@@ -387,7 +388,7 @@ svg {
   outline: 0;
   background: transparent;
   color: var(--ink);
-  font-size: 0.82rem;
+  font-size: var(--type-13);
 }
 
 .search-control input::placeholder {
@@ -407,10 +408,10 @@ svg {
   align-items: center;
   padding: 7px 11px;
   border: 1px solid var(--control-border);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink-secondary);
-  font-size: 0.82rem;
+  font-size: var(--type-13);
   font-weight: 570;
   list-style: none;
   cursor: pointer;
@@ -442,10 +443,10 @@ svg {
   height: 19px;
   place-items: center;
   border: 1px solid var(--accent);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--surface);
   color: var(--ink);
-  font-size: 0.68rem;
+  font-size: var(--type-11);
   font-weight: 750;
 }
 
@@ -457,7 +458,7 @@ svg {
   width: 240px;
   padding: 8px;
   border: 1px solid var(--control-border);
-  border-radius: 9px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
   box-shadow: 0 16px 38px rgba(0, 0, 0, 0.14);
 }
@@ -473,7 +474,7 @@ svg {
 .provider-menu legend {
   padding: 5px 7px 7px;
   color: var(--ink-secondary);
-  font-size: 0.68rem;
+  font-size: var(--type-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -485,9 +486,9 @@ svg {
   gap: 9px;
   align-items: center;
   padding: 5px 7px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   color: var(--ink-secondary);
-  font-size: 0.8rem;
+  font-size: var(--type-13);
   cursor: pointer;
 }
 
@@ -513,14 +514,14 @@ svg {
   border-top: 1px solid var(--hairline);
   background: transparent;
   color: var(--ink-secondary);
-  font-size: 0.76rem;
+  font-size: var(--type-12);
   font-weight: 600;
   cursor: pointer;
 }
 
 .provider-done {
   border: 1px solid var(--control-border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--page);
   color: var(--ink);
 }
@@ -532,7 +533,7 @@ svg {
   align-items: center;
   padding: 7px 10px;
   color: var(--ink-secondary);
-  font-size: 0.8rem;
+  font-size: var(--type-13);
   white-space: nowrap;
   cursor: pointer;
 }
@@ -540,7 +541,7 @@ svg {
 .filter-result {
   margin-left: auto;
   color: var(--ink-secondary);
-  font-size: 0.76rem;
+  font-size: var(--type-12);
   white-space: nowrap;
 }
 
@@ -550,7 +551,7 @@ svg {
   border: 0;
   background: transparent;
   color: var(--ink-secondary);
-  font-size: 0.76rem;
+  font-size: var(--type-12);
   font-weight: 600;
   text-decoration: underline;
   text-decoration-color: var(--hairline);
@@ -575,7 +576,7 @@ svg {
   max-height: min(72vh, 720px);
   overflow: auto;
   border: 1px solid var(--hairline);
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   background: var(--surface);
   overscroll-behavior-inline: contain;
   scrollbar-gutter: stable;
@@ -610,7 +611,7 @@ svg {
   padding-bottom: 8px;
   background: var(--surface);
   color: var(--ink-secondary);
-  font-size: 0.68rem;
+  font-size: var(--type-11);
   font-weight: 700;
   letter-spacing: 0.045em;
   text-transform: uppercase;
@@ -705,7 +706,7 @@ svg {
   padding: 0;
   place-items: center;
   border: 0;
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink-secondary);
   cursor: pointer;
@@ -731,11 +732,11 @@ svg {
   width: 275px;
   padding: 14px;
   border: 1px solid var(--control-border);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
   color: var(--ink);
-  font-size: 0.72rem;
+  font-size: var(--type-12);
   font-weight: 450;
   letter-spacing: 0;
   line-height: 1.48;
@@ -750,7 +751,7 @@ svg {
 .tooltip-panel strong {
   display: block;
   margin-bottom: 7px;
-  font-size: 0.78rem;
+  font-size: var(--type-12);
   font-weight: 720;
 }
 
@@ -762,24 +763,32 @@ svg {
 .tooltip-panel .tooltip-meta {
   padding-top: 8px;
   border-top: 1px solid var(--hairline);
-  font-size: 0.67rem;
+  font-size: var(--type-11);
 }
 
 .tooltip-panel a {
   color: var(--ink);
-  font-size: 0.68rem;
+  font-size: var(--type-11);
   font-weight: 700;
 }
 
 .sort-indicator {
   color: var(--ink-secondary);
-  font-size: 0.74rem;
+  font-size: var(--type-12);
   line-height: 1;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.sort-indicator.is-active,
+.sort-button:hover .sort-indicator,
+.sort-button:focus-visible .sort-indicator {
+  opacity: 1;
 }
 
 .header-note {
   color: var(--ink-secondary);
-  font-size: 0.58rem;
+  font-size: var(--type-11);
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
@@ -812,7 +821,7 @@ svg {
 
 .rank-cell {
   color: var(--ink-secondary);
-  font-size: 0.78rem;
+  font-size: var(--type-12);
   font-variant-numeric: tabular-nums;
 }
 
@@ -843,7 +852,7 @@ svg {
 
 .model-name {
   overflow: hidden;
-  font-size: 0.86rem;
+  font-size: var(--type-14);
   font-weight: 650;
   letter-spacing: -0.015em;
   text-overflow: ellipsis;
@@ -853,7 +862,7 @@ svg {
 .disclosure-icon {
   flex: 0 0 auto;
   color: var(--ink-secondary);
-  font-size: 1rem;
+  font-size: var(--type-16);
   font-weight: 400;
 }
 
@@ -865,7 +874,7 @@ svg {
   margin-top: 3px;
   overflow: hidden;
   color: var(--ink-secondary);
-  font-size: 0.69rem;
+  font-size: var(--type-11);
   font-weight: 450;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -875,9 +884,9 @@ svg {
   flex: 0 0 auto;
   padding: 2px 5px;
   border: 1px solid var(--control-border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--ink-secondary);
-  font-size: 0.63rem;
+  font-size: var(--type-11);
   font-weight: 650;
 }
 
@@ -892,7 +901,7 @@ svg {
 
 .numeric-cell {
   text-align: right !important;
-  font-size: 0.79rem;
+  font-size: var(--type-13);
   font-variant-numeric: tabular-nums;
 }
 
@@ -922,15 +931,15 @@ svg {
   display: block;
   width: 5px;
   height: 5px;
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   background: var(--accent);
 }
 
 .score-report-badge {
   padding: 2px 4px;
   border: 1px solid var(--control-border);
-  border-radius: 999px;
-  font-size: 0.48rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--type-11);
   font-weight: 700;
 }
 
@@ -940,27 +949,19 @@ svg {
   height: 3px;
   margin-top: 6px;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--hairline);
 }
 
 .score-bar-fill {
   display: block;
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
 }
 
 .index-cell {
   font-weight: 700;
-}
-
-.price-cell small {
-  display: block;
-  margin-top: 2px;
-  color: var(--ink-secondary);
-  font-size: 0.59rem;
-  font-weight: 450;
 }
 
 .missing-value {
@@ -972,7 +973,7 @@ svg {
   display: inline-block;
   max-width: 92px;
   color: var(--ink-secondary);
-  font-size: 0.66rem;
+  font-size: var(--type-11);
   font-weight: 550;
   line-height: 1.2;
 }
@@ -988,13 +989,13 @@ svg {
 }
 
 .empty-state strong {
-  font-size: 0.92rem;
+  font-size: var(--type-14);
 }
 
 .empty-state span {
   margin-top: 6px;
   color: var(--ink-secondary);
-  font-size: 0.78rem;
+  font-size: var(--type-12);
 }
 
 .detail-row > td {
@@ -1016,7 +1017,7 @@ svg {
 
 .detail-heading h3 {
   margin: 0;
-  font-size: 1.22rem;
+  font-size: var(--type-16);
   font-weight: 640;
   letter-spacing: -0.025em;
 }
@@ -1024,7 +1025,7 @@ svg {
 .detail-heading a,
 .source-line a {
   color: var(--ink-secondary);
-  font-size: 0.75rem;
+  font-size: var(--type-12);
   font-weight: 620;
 }
 
@@ -1034,7 +1035,7 @@ svg {
   gap: 0;
   margin: 22px 0 28px;
   border: 1px solid var(--hairline);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
 }
 
@@ -1051,7 +1052,7 @@ svg {
 .model-metadata dt {
   margin-bottom: 5px;
   color: var(--ink-secondary);
-  font-size: 0.62rem;
+  font-size: var(--type-11);
   font-weight: 700;
   letter-spacing: 0.055em;
   text-transform: uppercase;
@@ -1061,14 +1062,14 @@ svg {
   margin: 0;
   overflow: hidden;
   color: var(--ink-secondary);
-  font-size: 0.72rem;
+  font-size: var(--type-12);
   font-weight: 550;
   text-overflow: ellipsis;
 }
 
 .detail-scores h4 {
   margin: 0 0 12px;
-  font-size: 0.82rem;
+  font-size: var(--type-13);
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -1098,12 +1099,12 @@ svg {
 
 .detail-score h5 {
   margin: 0;
-  font-size: 0.76rem;
+  font-size: var(--type-12);
   font-weight: 700;
 }
 
 .detail-score-heading strong {
-  font-size: 0.83rem;
+  font-size: var(--type-13);
 }
 
 .measurement-label {
@@ -1111,16 +1112,16 @@ svg {
   margin: 10px 0 0 !important;
   padding: 3px 6px;
   border: 1px solid var(--control-border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--ink-secondary) !important;
-  font-size: 0.59rem !important;
+  font-size: var(--type-11) !important;
   font-weight: 650;
 }
 
 .detail-score > p {
   margin: 10px 0 0;
   color: var(--ink-secondary);
-  font-size: 0.67rem;
+  font-size: var(--type-11);
   line-height: 1.5;
 }
 
@@ -1133,7 +1134,7 @@ svg {
 
 .source-line a {
   color: var(--ink-secondary);
-  font-size: 0.67rem;
+  font-size: var(--type-11);
 }
 
 .missing-score-copy {
@@ -1165,7 +1166,7 @@ svg {
 
 .methodology-intro h2 {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 4.2rem);
+  font-size: 28px;
   font-weight: 590;
   letter-spacing: -0.055em;
   line-height: 1;
@@ -1175,7 +1176,7 @@ svg {
   max-width: 660px;
   margin: 20px 0 0;
   color: var(--ink-secondary);
-  font-size: 0.96rem;
+  font-size: var(--type-16);
   line-height: 1.65;
 }
 
@@ -1200,14 +1201,14 @@ svg {
   display: block;
   margin-bottom: 48px;
   color: var(--ink-secondary);
-  font-size: 0.65rem;
+  font-size: var(--type-11);
   font-variant-numeric: tabular-nums;
   font-weight: 700;
 }
 
 .methodology-grid h3 {
   margin: 0 0 12px;
-  font-size: 1rem;
+  font-size: var(--type-16);
   font-weight: 680;
   letter-spacing: -0.02em;
 }
@@ -1215,7 +1216,7 @@ svg {
 .methodology-grid p {
   margin: 0;
   color: var(--ink-secondary);
-  font-size: 0.78rem;
+  font-size: var(--type-12);
   line-height: 1.65;
 }
 
@@ -1224,7 +1225,7 @@ svg {
   padding-left: 10px;
   border-left: 3px solid var(--accent);
   color: var(--ink);
-  font-size: 0.72rem;
+  font-size: var(--type-12);
   font-weight: 650;
 }
 
@@ -1236,7 +1237,7 @@ svg {
   padding: 20px 2px;
   border-bottom: 1px solid var(--hairline);
   color: var(--ink-secondary);
-  font-size: 0.72rem;
+  font-size: var(--type-12);
   line-height: 1.55;
 }
 
@@ -1263,7 +1264,7 @@ svg {
   max-width: 590px;
   margin: 0;
   color: var(--ink-secondary);
-  font-size: 0.75rem;
+  font-size: var(--type-12);
   line-height: 1.55;
 }
 
@@ -1276,7 +1277,7 @@ svg {
 
 .site-footer nav a {
   color: var(--ink-secondary);
-  font-size: 0.72rem;
+  font-size: var(--type-12);
   font-weight: 650;
 }
 
@@ -1401,7 +1402,7 @@ svg {
     border-left: 1px solid var(--hairline);
     background: var(--surface);
     color: var(--ink-secondary);
-    font-size: 0.68rem;
+    font-size: var(--type-11);
     line-height: 1.4;
     white-space: normal;
   }
@@ -1476,10 +1477,6 @@ svg {
   .site-shell {
     padding-right: 12px;
     padding-left: 12px;
-  }
-
-  .hero-copy h1 {
-    font-size: clamp(2.6rem, 14vw, 4.2rem);
   }
 
   .header-actions > a,

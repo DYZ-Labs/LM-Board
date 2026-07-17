@@ -16,12 +16,12 @@ import {
 } from "@/lib/useSort";
 
 const indexFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
 });
 const priceFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 3,
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
 });
 const compactBenchmarkLabels: Record<string, string> = {
   "gpqa-diamond": "GPQA",
@@ -59,7 +59,9 @@ function SortableHeader({
     ? sort.direction === "asc"
       ? "↑"
       : "↓"
-    : "↕";
+    : nextDirection === "asc"
+      ? "↑"
+      : "↓";
 
   return (
     <th
@@ -81,7 +83,10 @@ function SortableHeader({
           aria-label={`Sort by ${label} ${nextDirection === "asc" ? "ascending" : "descending"}`}
         >
           <span>{children ?? label}</span>
-          <span className="sort-indicator" aria-hidden="true">
+          <span
+            className={`sort-indicator${active ? " is-active" : ""}`}
+            aria-hidden="true"
+          >
             {indicator}
           </span>
         </button>
@@ -187,14 +192,14 @@ export function LeaderboardTable({
               ))}
               <SortableHeader
                 column={{ kind: "price" }}
-                label="input price per million tokens"
+                label="input and output price per million tokens"
                 sort={sort}
                 onSort={onSort}
                 className="price-column"
               >
                 <>
                   Price
-                  <span className="header-note"> in / out</span>
+                  <span className="header-note"> in / out · per Mtok</span>
                 </>
               </SortableHeader>
             </tr>
@@ -265,7 +270,6 @@ export function LeaderboardTable({
                       <ScoreCell
                         key={benchmark.id}
                         score={row.scoresByBenchmark[benchmark.id]}
-                        unit={benchmark.unit}
                         isBest={
                           row.scoresByBenchmark[benchmark.id]?.value ===
                           bestScores[benchmark.id]
@@ -274,13 +278,10 @@ export function LeaderboardTable({
                     ))}
                     <td className="numeric-cell price-cell">
                       {row.model.pricing ? (
-                        <>
-                          <span>
-                            ${priceFormatter.format(row.model.pricing.input)} / $
-                            {priceFormatter.format(row.model.pricing.output)}
-                          </span>
-                          <small>per Mtok</small>
-                        </>
+                        <span>
+                          ${priceFormatter.format(row.model.pricing.input)} / $
+                          {priceFormatter.format(row.model.pricing.output)}
+                        </span>
                       ) : (
                         <span className="missing-value">—</span>
                       )}

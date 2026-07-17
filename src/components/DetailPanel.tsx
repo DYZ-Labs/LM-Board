@@ -4,12 +4,12 @@ import type { Benchmark } from "@/lib/schema";
 
 const scoreFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 1,
-  maximumFractionDigits: 2,
+  maximumFractionDigits: 1,
 });
 const numberFormatter = new Intl.NumberFormat("en-US");
 const priceFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 3,
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
 });
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
@@ -104,7 +104,6 @@ export function DetailPanel({
                       <h5>{benchmark.name}</h5>
                       <strong className="numeric-cell">
                         {score ? scoreFormatter.format(score.value) : "—"}
-                        {score && benchmark.unit === "percent" ? "%" : null}
                       </strong>
                     </div>
                     {score ? (
