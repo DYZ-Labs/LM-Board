@@ -1,0 +1,51 @@
+import { Badge } from "@/components/Badge";
+import type { Benchmark, Score } from "@/lib/schema";
+
+const scoreFormatter = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 2,
+});
+
+type ScoreCellProps = {
+  score: Score | null;
+  unit: Benchmark["unit"];
+  isBest: boolean;
+};
+
+export function ScoreCell({ score, unit, isBest }: ScoreCellProps) {
+  if (!score) {
+    return (
+      <td className="numeric-cell missing-value" aria-label="No curated score">
+        —
+      </td>
+    );
+  }
+
+  const barWidth = Math.min(100, Math.max(0, score.value));
+
+  return (
+    <td className={`numeric-cell score-cell${isBest ? " is-best" : ""}`}>
+      <div className="score-value-line">
+        <span className="score-number">
+          {scoreFormatter.format(score.value)}
+          {unit === "percent" ? <span>%</span> : null}
+        </span>
+        {isBest ? (
+          <span className="best-marker">
+            <span className="best-dot" aria-hidden="true" />
+            <span className="sr-only">Best score in this column</span>
+          </span>
+        ) : null}
+        {score.selfReported ? (
+          <Badge className="score-report-badge">
+            <span aria-hidden="true">Vendor</span>
+            <span className="sr-only">Self-reported score</span>
+          </Badge>
+        ) : null}
+      </div>
+      <span className="score-bar" aria-hidden="true">
+        <span className="score-bar-fill" style={{ width: `${barWidth}%` }} />
+      </span>
+    </td>
+  );
+}
