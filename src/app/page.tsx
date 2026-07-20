@@ -25,9 +25,6 @@ export default function Home() {
           <a className="wordmark" href="#top" aria-label="LM Board home">
             LM<span>Board</span>
           </a>
-          <p className="header-tagline">
-            Curated benchmark scores for frontier language models
-          </p>
           <nav className="header-actions" aria-label="Site controls">
             {repositoryUrl ? (
               <a href={repositoryUrl} target="_blank" rel="noreferrer">

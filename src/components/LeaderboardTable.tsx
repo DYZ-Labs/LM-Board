@@ -271,13 +271,10 @@ export function LeaderboardTable({
                         >
                           <span className="model-identification">
                             <span className="model-name">{row.model.name}</span>
-                            {row.reasoningEffort ? (
-                              <Badge className="reasoning-effort-label reasoning-effort-primary">
-                                <span
-                                  className="reasoning-effort-text"
-                                  title={row.reasoningEffort}
-                                >
-                                  {row.reasoningEffort}
+                            {row.reasoningEffortLabel ? (
+                              <Badge className="reasoning-effort-label">
+                                <span title={row.reasoningEffort ?? undefined}>
+                                  {row.reasoningEffortLabel}
                                 </span>
                               </Badge>
                             ) : null}
@@ -289,16 +286,6 @@ export function LeaderboardTable({
                       </div>
                       <span className="model-meta">
                         {row.model.lab}
-                        {row.reasoningEffort ? (
-                          <Badge className="reasoning-effort-label reasoning-effort-meta">
-                            <span
-                              className="reasoning-effort-text"
-                              title={row.reasoningEffort}
-                            >
-                              {row.reasoningEffort}
-                            </span>
-                          </Badge>
-                        ) : null}
                         {row.model.openWeights ? (
                           <Badge className="open-weights-label">
                             Open weights

@@ -15,6 +15,7 @@ import {
 export type LeaderboardRow = {
   model: Model;
   reasoningEffort: string | null;
+  reasoningEffortLabel: ReasoningEffortLabel | null;
   scoresByBenchmark: Record<string, Score | null>;
   index: number | null;
   coverageCount: number;
@@ -28,12 +29,34 @@ export type LeaderboardData = {
   benchmarks: Benchmark[];
   labs: string[];
   lastUpdated: string;
+  scoreCount: number;
 };
+
+export type ReasoningEffortLabel =
+  | "max"
+  | "high"
+  | "xhigh"
+  | "adaptive"
+  | "reasoning";
 
 const nameCollator = new Intl.Collator("en", {
   numeric: true,
   sensitivity: "base",
 });
+
+function summarizeReasoningEffort(
+  reasoningEffort: string | null,
+): ReasoningEffortLabel | null {
+  if (!reasoningEffort) return null;
+
+  const normalized = reasoningEffort.toLocaleLowerCase("en");
+
+  if (normalized.includes("adaptive")) return "adaptive";
+  if (normalized.includes("xhigh")) return "xhigh";
+  if (normalized.includes("max")) return "max";
+  if (normalized.includes("high")) return "high";
+  return "reasoning";
+}
 
 export function loadLeaderboardData(): LeaderboardData {
   const models = ModelsFileSchema.parse(modelsJson);
@@ -90,6 +113,7 @@ export function loadLeaderboardData(): LeaderboardData {
 
   const rowsWithoutRanks: LeaderboardRow[] = models.map((model) => {
     const modelScores = scoresByModel.get(model.id) ?? [];
+    const reasoningEffort = modelScores[0]?.reasoningEffort ?? null;
     const scoreLookup = new Map(
       modelScores.map((score) => [score.benchmarkId, score]),
     );
@@ -97,7 +121,8 @@ export function loadLeaderboardData(): LeaderboardData {
 
     return {
       model,
-      reasoningEffort: modelScores[0]?.reasoningEffort ?? null,
+      reasoningEffort,
+      reasoningEffortLabel: summarizeReasoningEffort(reasoningEffort),
       scoresByBenchmark: Object.fromEntries(
         benchmarks.map((benchmark) => [
           benchmark.id,
@@ -137,5 +162,11 @@ export function loadLeaderboardData(): LeaderboardData {
     "",
   );
 
-  return { rows, benchmarks, labs, lastUpdated };
+  return {
+    rows,
+    benchmarks,
+    labs,
+    lastUpdated,
+    scoreCount: scores.length,
+  };
 }

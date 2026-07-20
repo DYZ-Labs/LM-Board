@@ -120,12 +120,6 @@ export function DetailPanel({
                         <p>
                           <strong>Settings:</strong>{" "}
                           {score.settings ?? "Not specified."}
-                          {score.reasoningEffort ? (
-                            <>
-                              {" · "}
-                              <strong>Effort:</strong> {score.reasoningEffort}
-                            </>
-                          ) : null}
                         </p>
                         <p className="source-line">
                           <a

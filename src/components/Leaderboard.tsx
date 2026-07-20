@@ -26,7 +26,7 @@ import {
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
-  month: "long",
+  month: "short",
   day: "numeric",
   timeZone: "UTC",
 });
@@ -276,11 +276,6 @@ export function Leaderboard({ data }: LeaderboardProps) {
         Sorted by {sortLabel}, {sort.direction === "asc" ? "ascending" : "descending"}.
       </p>
 
-      <p className="leaderboard-updated">
-        Last updated{" "}
-        <time dateTime={data.lastUpdated}>{formatDate(data.lastUpdated)}</time>
-      </p>
-
       <div className="controls-shell">
         <CategoryTabs value={category} onChange={handleCategoryChange} />
         <FilterBar
@@ -307,6 +302,12 @@ export function Leaderboard({ data }: LeaderboardProps) {
         onSort={requestSort}
         onToggleDetails={toggleDetails}
       />
+      <p className="leaderboard-caption">
+        Curated from primary sources · Updated{" "}
+        <time dateTime={data.lastUpdated}>{formatDate(data.lastUpdated)}</time>
+        {" · "}
+        {data.rows.length} models · {data.scoreCount} scores
+      </p>
     </section>
   );
 }
