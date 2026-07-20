@@ -2,7 +2,12 @@ import benchmarksJson from "../../data/benchmarks.json";
 import modelsJson from "../../data/models.json";
 import scoresJson from "../../data/scores.json";
 
-import { calculateLmBoardIndex } from "@/lib/index";
+import {
+  RANK_SCOPES,
+  benchmarksForScope,
+  calculateLmBoardIndex,
+  type RankScope,
+} from "@/lib/index";
 import {
   BenchmarksFileSchema,
   ModelsFileSchema,
@@ -12,11 +17,20 @@ import {
   type Score,
 } from "@/lib/schema";
 
+export type LeaderboardScope = {
+  index: number | null;
+  rank: number | null;
+  coverageCount: number;
+  coverageTotal: number;
+  coverageRatio: number;
+};
+
 export type LeaderboardRow = {
   model: Model;
   reasoningEffort: string | null;
   reasoningEffortLabel: ReasoningEffortLabel | null;
   scoresByBenchmark: Record<string, Score | null>;
+  scopes: Record<RankScope, LeaderboardScope>;
   index: number | null;
   coverageCount: number;
   coverageTotal: number;
@@ -117,7 +131,26 @@ export function loadLeaderboardData(): LeaderboardData {
     const scoreLookup = new Map(
       modelScores.map((score) => [score.benchmarkId, score]),
     );
-    const indexResult = calculateLmBoardIndex(modelScores, benchmarks);
+    const scopes = Object.fromEntries(
+      RANK_SCOPES.map((scope) => {
+        const indexResult = calculateLmBoardIndex(
+          modelScores,
+          benchmarksForScope(benchmarks, scope),
+        );
+
+        return [
+          scope,
+          {
+            index: indexResult.value,
+            rank: null,
+            coverageCount: indexResult.scoredCount,
+            coverageTotal: indexResult.totalCount,
+            coverageRatio: indexResult.coverage,
+          },
+        ];
+      }),
+    ) as Record<RankScope, LeaderboardScope>;
+    const overallScope = scopes.overall;
 
     return {
       model,
@@ -129,30 +162,52 @@ export function loadLeaderboardData(): LeaderboardData {
           scoreLookup.get(benchmark.id) ?? null,
         ]),
       ),
-      index: indexResult.value,
-      coverageCount: indexResult.scoredCount,
-      coverageTotal: indexResult.totalCount,
-      coverageRatio: indexResult.coverage,
+      scopes,
+      index: overallScope.index,
+      coverageCount: overallScope.coverageCount,
+      coverageTotal: overallScope.coverageTotal,
+      coverageRatio: overallScope.coverageRatio,
       rank: null,
     } satisfies LeaderboardRow;
   });
 
-  const rankedRows = rowsWithoutRanks
-    .filter(
-      (row): row is LeaderboardRow & { index: number } => row.index !== null,
-    )
-    .sort(
-      (left, right) =>
-        right.index - left.index ||
-        nameCollator.compare(left.model.name, right.model.name),
-    );
-  const ranksByModelId = new Map(
-    rankedRows.map((row, index) => [row.model.id, index + 1]),
-  );
-  const rows = rowsWithoutRanks.map((row) => ({
-    ...row,
-    rank: ranksByModelId.get(row.model.id) ?? null,
-  }));
+  const ranksByScope = Object.fromEntries(
+    RANK_SCOPES.map((scope) => {
+      const rankedRows = rowsWithoutRanks
+        .filter((row) => row.scopes[scope].index !== null)
+        .sort((left, right) => {
+          const leftIndex = left.scopes[scope].index as number;
+          const rightIndex = right.scopes[scope].index as number;
+
+          return (
+            rightIndex - leftIndex ||
+            nameCollator.compare(left.model.name, right.model.name)
+          );
+        });
+
+      return [
+        scope,
+        new Map(rankedRows.map((row, index) => [row.model.id, index + 1])),
+      ];
+    }),
+  ) as Record<RankScope, Map<string, number>>;
+  const rows = rowsWithoutRanks.map((row) => {
+    const scopes = Object.fromEntries(
+      RANK_SCOPES.map((scope) => [
+        scope,
+        {
+          ...row.scopes[scope],
+          rank: ranksByScope[scope].get(row.model.id) ?? null,
+        },
+      ]),
+    ) as Record<RankScope, LeaderboardScope>;
+
+    return {
+      ...row,
+      scopes,
+      rank: scopes.overall.rank,
+    };
+  });
   const labs = [...new Set(models.map((model) => model.lab))].sort((a, b) =>
     nameCollator.compare(a, b),
   );

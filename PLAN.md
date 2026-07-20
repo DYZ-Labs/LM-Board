@@ -85,7 +85,7 @@ Target: ~8 benchmarks across four categories, ~15 models.
 One page, top to bottom:
 
 1. **Header** — "LM Board" wordmark, tagline ("Curated benchmark scores for frontier language models"), theme toggle, GitHub link.
-2. **Controls row** — one row above the table: category tabs (Overall · Reasoning · Coding · Math · Agentic) switching visible score columns; provider multi-select; "open weights" toggle; search box.
+2. **Controls row** — one row above the table: category tabs (Overall · Reasoning · Coding · Math · Agentic) switching the visible score columns and active scoped Index/rank; provider multi-select; "open weights" toggle; search box.
 3. **Leaderboard table** (the product):
    - Columns: rank · model (name + lab + open-weights badge) · Index · visible benchmark columns · price.
    - Sticky header row and sticky model column (row identity survives horizontal scroll on narrow screens).
@@ -207,3 +207,4 @@ Arena-style ELO/voting · running our own evals · historical score trends · pe
 - **2026-07-18 — Interface scales consolidated:** typography uses five interface tokens plus one hero and one section-heading treatment; radii use three tokens. Scores, the Index, and prices show one decimal, units move to headers/tooltips, and only the active sort arrow remains visible at rest.
 - **2026-07-18 — Reasoning effort promoted:** reasoning effort is stored per score because it describes an evaluation run. Validation requires every score for a model to use the same value or all omit it, allowing one truthful label beside the model while preserving per-score provenance.
 - **2026-07-18 — Frontier model refresh:** Claude Fable 5 and Muse Spark 1.1 were added with 15 live Artificial Analysis results retrieved on 2026-07-18. Muse Spark 1.1 has no published IFBench result, so that score remains missing. Gemini 3.5 Pro remains officially listed as coming soon; Gemini 3.1 Pro Preview stays in the leaderboard.
+- **2026-07-20 — Scoped category ranking (supersedes the 2026-07-17 core-table decision at owner request):** each category tab now shows an Index calculated as the equal-weight mean of that category's available percent-scaled benchmarks and a canonical rank precomputed from the full dataset for that scope. The same 60% coverage gate, rounded up to a whole benchmark, applies independently in every scope. Filters and search hide rows without renumbering them; Overall remains the canonical site-wide ranking.

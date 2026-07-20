@@ -92,17 +92,22 @@ export function Leaderboard({ data }: LeaderboardProps) {
     [data.rows, normalizedQuery, openWeightsOnly, selectedLabs],
   );
   const sortedRows = useMemo(
-    () => sortLeaderboardRows(filteredRows, sort),
-    [filteredRows, sort],
+    () => sortLeaderboardRows(filteredRows, sort, category),
+    [category, filteredRows, sort],
   );
   const sortLabel = useMemo(() => {
+    const scopeLabel =
+      category === "overall"
+        ? "Overall"
+        : `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
+
     switch (sort.column.kind) {
       case "rank":
-        return "rank";
+        return `${scopeLabel} rank`;
       case "model":
         return "model name";
       case "index":
-        return "LM Board Index";
+        return `${scopeLabel} index`;
       case "price":
         return "input price";
       case "benchmark": {
@@ -114,7 +119,7 @@ export function Leaderboard({ data }: LeaderboardProps) {
         );
       }
     }
-  }, [data.benchmarks, sort.column]);
+  }, [category, data.benchmarks, sort.column]);
 
   useEffect(() => {
     function applyUrlState() {
@@ -294,6 +299,7 @@ export function Leaderboard({ data }: LeaderboardProps) {
 
       <LeaderboardTable
         rows={sortedRows}
+        category={category}
         allBenchmarks={data.benchmarks}
         visibleBenchmarks={visibleBenchmarks}
         bestScores={bestScores}

@@ -1,10 +1,10 @@
 "use client";
 
-import type { Benchmark } from "@/lib/schema";
+import type { RankScope } from "@/lib/index";
 
-export type Category = "overall" | Benchmark["category"];
+export type { RankScope as Category } from "@/lib/index";
 
-const categories: { value: Category; label: string }[] = [
+const categories: { value: RankScope; label: string }[] = [
   { value: "overall", label: "Overall" },
   { value: "reasoning", label: "Reasoning" },
   { value: "coding", label: "Coding" },
@@ -13,8 +13,8 @@ const categories: { value: Category; label: string }[] = [
 ];
 
 type CategoryTabsProps = {
-  value: Category;
-  onChange: (category: Category) => void;
+  value: RankScope;
+  onChange: (category: RankScope) => void;
 };
 
 export function CategoryTabs({ value, onChange }: CategoryTabsProps) {

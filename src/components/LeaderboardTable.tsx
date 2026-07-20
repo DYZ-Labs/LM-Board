@@ -12,6 +12,7 @@ import { Badge } from "@/components/Badge";
 import { ScoreCell } from "@/components/ScoreCell";
 import { Tooltip } from "@/components/Tooltip";
 import type { LeaderboardRow } from "@/lib/data";
+import type { RankScope } from "@/lib/index";
 import type { Benchmark } from "@/lib/schema";
 import { modelFragment } from "@/lib/urlState";
 import {
@@ -104,6 +105,7 @@ function SortableHeader({
 
 type LeaderboardTableProps = {
   rows: LeaderboardRow[];
+  category: RankScope;
   allBenchmarks: Benchmark[];
   visibleBenchmarks: Benchmark[];
   bestScores: Record<string, number | null>;
@@ -115,6 +117,7 @@ type LeaderboardTableProps = {
 
 export function LeaderboardTable({
   rows,
+  category,
   allBenchmarks,
   visibleBenchmarks,
   bestScores,
@@ -129,6 +132,10 @@ export function LeaderboardTable({
   const tableStyle = {
     "--benchmark-count": visibleBenchmarks.length,
   } as CSSProperties;
+  const scopeLabel =
+    category === "overall"
+      ? "Overall"
+      : `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
 
   return (
     <>
@@ -174,7 +181,7 @@ export function LeaderboardTable({
               />
               <SortableHeader
                 column={{ kind: "index" }}
-                label="LM Board Index"
+                label={`${scopeLabel} index`}
                 sort={sort}
                 onSort={onSort}
                 className="index-column"
@@ -228,6 +235,7 @@ export function LeaderboardTable({
             ) : null}
             {rows.map((row) => {
               const expanded = expandedModelId === row.model.id;
+              const activeScope = row.scopes[category];
               const modelLabel = row.reasoningEffort
                 ? `${row.model.name} (${row.reasoningEffort})`
                 : row.model.name;
@@ -242,10 +250,10 @@ export function LeaderboardTable({
                     onClick={() => onToggleDetails(row.model.id)}
                   >
                     <td className="rank-cell">
-                      {row.rank === null ? (
+                      {activeScope.rank === null ? (
                         <span className="missing-value">—</span>
                       ) : (
-                        row.rank
+                        activeScope.rank
                       )}
                     </td>
                     <th scope="row" className="model-cell">
@@ -253,10 +261,14 @@ export function LeaderboardTable({
                         <span
                           className="mobile-rank"
                           aria-label={
-                            row.rank === null ? "Unranked" : `Rank ${row.rank}`
+                            activeScope.rank === null
+                              ? "Unranked"
+                              : `Rank ${activeScope.rank}`
                           }
                         >
-                          {row.rank === null ? "—" : `#${row.rank}`}
+                          {activeScope.rank === null
+                            ? "—"
+                            : `#${activeScope.rank}`}
                         </span>
                         <button
                           type="button"
@@ -294,12 +306,12 @@ export function LeaderboardTable({
                       </span>
                     </th>
                     <td className="numeric-cell index-cell">
-                      {row.index === null ? (
+                      {activeScope.index === null ? (
                         <span className="insufficient-label">
                           Insufficient data
                         </span>
                       ) : (
-                        indexFormatter.format(row.index)
+                        indexFormatter.format(activeScope.index)
                       )}
                     </td>
                     {visibleBenchmarks.map((benchmark) => (

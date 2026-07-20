@@ -2,12 +2,31 @@ import type { Benchmark, Score } from "@/lib/schema";
 
 export const MIN_INDEX_COVERAGE = 0.6;
 
+export type RankScope = "overall" | Benchmark["category"];
+
+export const RANK_SCOPES = [
+  "overall",
+  "reasoning",
+  "coding",
+  "math",
+  "agentic",
+] as const satisfies readonly RankScope[];
+
 export type IndexResult = {
   value: number | null;
   scoredCount: number;
   totalCount: number;
   coverage: number;
 };
+
+export function benchmarksForScope(
+  benchmarks: readonly Benchmark[],
+  scope: RankScope,
+) {
+  return scope === "overall"
+    ? benchmarks
+    : benchmarks.filter((benchmark) => benchmark.category === scope);
+}
 
 export function calculateLmBoardIndex(
   scores: readonly Score[],

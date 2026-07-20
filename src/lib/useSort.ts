@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import type { LeaderboardRow } from "@/lib/data";
+import type { RankScope } from "@/lib/index";
 
 export type SortDirection = "asc" | "desc";
 
@@ -75,6 +76,7 @@ function compareNullableNumbers(
 export function sortLeaderboardRows(
   rows: readonly LeaderboardRow[],
   sort: SortState,
+  scope: RankScope = "overall",
 ) {
   return [...rows].sort((left, right) => {
     let comparison = 0;
@@ -82,8 +84,8 @@ export function sortLeaderboardRows(
     switch (sort.column.kind) {
       case "rank":
         comparison = compareNullableNumbers(
-          left.rank,
-          right.rank,
+          left.scopes[scope].rank,
+          right.scopes[scope].rank,
           sort.direction,
         );
         break;
@@ -96,8 +98,8 @@ export function sortLeaderboardRows(
         break;
       case "index":
         comparison = compareNullableNumbers(
-          left.index,
-          right.index,
+          left.scopes[scope].index,
+          right.scopes[scope].index,
           sort.direction,
         );
         break;

@@ -32,9 +32,9 @@ export function Methodology({
           </span>
           <h3>Equal-weight Index</h3>
           <p>
-            The Index is the arithmetic mean of a model&apos;s available
-            percent-scaled scores. Each benchmark has equal weight. Missing
-            results are omitted—not treated as zero.
+            Within Overall or any category, the Index is the arithmetic mean of
+            a model&apos;s available percent-scaled scores. Each benchmark has
+            equal weight. Missing results are omitted—not treated as zero.
           </p>
           <p className="formula">
             Index = sum of available scores ÷ available benchmarks
@@ -46,10 +46,11 @@ export function Methodology({
           </span>
           <h3>Coverage gate</h3>
           <p>
-            A model ranks only after covering at least 60% of percent-scaled
-            benchmarks: currently {minimumCoverageCount} of {percentBenchmarkCount}.
-            Category tabs and filters never recalculate its canonical Index or
-            rank.
+            Each scope ranks a model only after it covers at least 60% of that
+            scope&apos;s percent-scaled benchmarks. Overall currently requires{" "}
+            {minimumCoverageCount} of {percentBenchmarkCount} and remains the
+            canonical site-wide ranking. Filters only hide rows; they never
+            renumber ranks.
           </p>
         </article>
         <article>
