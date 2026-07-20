@@ -4,7 +4,7 @@ LM Board is a static, curated leaderboard for frontier language-model benchmark 
 
 This repository implements the MVP described in [PLAN.md](./PLAN.md): a Next.js 15 App Router project, shared Zod data schemas, live-sourced seed data, build-time integrity validation, a polished interactive leaderboard, and a dependency-free static export.
 
-The leaderboard computes a transparent coverage-gated Index, supports sorting every column, switches benchmark columns by category, combines provider/search/open-weight filters, and exposes an inline source panel for every model and score. Category, sort, direction, and expanded-model state are reflected in the URL so a specific view can be shared directly.
+The leaderboard computes a transparent coverage-gated Index for Overall and each benchmark category, with canonical ranks precomputed per scope. It supports sorting every column, switches benchmark columns and scoped ranking by category, combines provider/search/open-weight filters, and exposes an inline source panel for every model and score. Category, sort, direction, and expanded-model state are reflected in the URL so a specific view can be shared directly.
 
 ## Requirements
 
@@ -59,3 +59,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the source requirements, data-file 
 The current snapshot contains 17 models, 8 benchmarks, and 132 scores. The original 2026-07-17 seed and subsequent model refresh are documented in the decision log in `PLAN.md`.
 
 Where present, pricing is the current uncached base or short-context API rate in USD per million tokens. Provider pricing may be tiered by context length or promotional period, so the linked official model source remains authoritative.
+# LM-Board
