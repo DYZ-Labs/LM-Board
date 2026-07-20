@@ -1,6 +1,6 @@
 # LM Board — MVP Plan & Design Spec
 
-> **Status:** M1 + M2 + M3 complete; M4 shipping not started.
+> **Status:** M1 + M2 + M3 complete; M4 shipping in progress.
 > **Audience:** this file is the single source of truth for any agent or contributor implementing the MVP. It is self-contained — no other context is required. Update the milestone checkboxes as work lands.
 
 ## 1. Product definition
@@ -173,8 +173,8 @@ lmboard/
 
 ### M4 — Ship
 - [ ] Static export deployed (Vercel default)
-- [ ] OG image + favicon + metadata
-- [ ] README + CONTRIBUTING (how to add a model/score via PR; validation must pass)
+- [x] OG image + favicon + metadata
+- [x] README + CONTRIBUTING (how to add a model/score via PR; validation must pass)
 
 ## 9. Explicitly out of scope (v2 candidates — do not build in MVP)
 

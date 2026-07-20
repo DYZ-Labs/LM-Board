@@ -202,7 +202,7 @@ svg {
 
 .site-header {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 16px;
   align-items: center;
   padding: 6px 2px 12px;
@@ -217,13 +217,28 @@ svg {
   text-decoration: none;
 }
 
+.site-header > .wordmark {
+  grid-column: 1;
+  grid-row: 1;
+}
+
 .wordmark span {
   color: var(--ink-secondary);
   font-weight: 520;
 }
 
+.header-tagline {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: var(--type-12);
+}
+
 .header-actions {
   display: flex;
+  grid-column: 3;
+  grid-row: 1;
   gap: 8px;
   align-items: center;
   justify-content: flex-end;
@@ -796,6 +811,7 @@ svg {
   height: 48px;
   background: var(--surface);
   cursor: pointer;
+  scroll-margin-top: 44px;
   transition: background-color 120ms ease;
 }
 
@@ -1526,6 +1542,21 @@ svg {
   .site-shell {
     padding-right: 12px;
     padding-left: 12px;
+  }
+
+  .site-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .header-tagline {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: var(--type-11);
+  }
+
+  .header-actions {
+    grid-column: 2;
+    grid-row: 1;
   }
 
   .header-actions > a,

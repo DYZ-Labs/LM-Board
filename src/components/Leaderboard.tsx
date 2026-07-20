@@ -14,6 +14,15 @@ import {
   sortLeaderboardRows,
   useSort,
 } from "@/lib/useSort";
+import {
+  categoryFromUrl,
+  isDefaultSort,
+  modelFragment,
+  needsDirectionParameter,
+  rowFromFragment,
+  sortFromUrl,
+  sortKey,
+} from "@/lib/urlState";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
@@ -36,6 +45,7 @@ export function Leaderboard({ data }: LeaderboardProps) {
   const [query, setQuery] = useState("");
   const [openWeightsOnly, setOpenWeightsOnly] = useState(false);
   const [expandedModelId, setExpandedModelId] = useState<string | null>(null);
+  const [urlStateReady, setUrlStateReady] = useState(false);
   const { sort, setSort, requestSort } = useSort();
 
   const bestScores = useMemo(
@@ -105,6 +115,108 @@ export function Leaderboard({ data }: LeaderboardProps) {
       }
     }
   }, [data.benchmarks, sort.column]);
+
+  useEffect(() => {
+    function applyUrlState() {
+      const params = new URLSearchParams(window.location.search);
+      const nextCategory = categoryFromUrl(params.get("tab"));
+      const requestedSort = sortFromUrl(
+        params.get("sort"),
+        params.get("direction"),
+        data.benchmarks,
+      );
+      const requestedBenchmarkId =
+        requestedSort.column.kind === "benchmark"
+          ? requestedSort.column.id
+          : null;
+      const requestedBenchmark = requestedBenchmarkId
+        ? data.benchmarks.find(
+            (benchmark) => benchmark.id === requestedBenchmarkId,
+          )
+        : null;
+      const nextSort =
+        requestedBenchmark &&
+        nextCategory !== "overall" &&
+        requestedBenchmark.category !== nextCategory
+          ? DEFAULT_SORT
+          : requestedSort;
+      const fragment = window.location.hash.slice(1);
+      const expandedRow = fragment
+        ? rowFromFragment(fragment, data.rows)
+        : null;
+
+      setCategory(nextCategory);
+      setSort(nextSort);
+      setExpandedModelId(expandedRow?.model.id ?? null);
+      setUrlStateReady(true);
+    }
+
+    applyUrlState();
+    window.addEventListener("hashchange", applyUrlState);
+    window.addEventListener("popstate", applyUrlState);
+
+    return () => {
+      window.removeEventListener("hashchange", applyUrlState);
+      window.removeEventListener("popstate", applyUrlState);
+    };
+  }, [data.benchmarks, data.rows, setSort]);
+
+  useEffect(() => {
+    if (!urlStateReady) return;
+
+    const url = new URL(window.location.href);
+
+    if (category === "overall") {
+      url.searchParams.delete("tab");
+    } else {
+      url.searchParams.set("tab", category);
+    }
+
+    if (isDefaultSort(sort)) {
+      url.searchParams.delete("sort");
+      url.searchParams.delete("direction");
+    } else {
+      url.searchParams.set("sort", sortKey(sort.column));
+
+      if (needsDirectionParameter(sort.column, sort.direction)) {
+        url.searchParams.set("direction", sort.direction);
+      } else {
+        url.searchParams.delete("direction");
+      }
+    }
+
+    const expandedRow = expandedModelId
+      ? data.rows.find((row) => row.model.id === expandedModelId)
+      : null;
+
+    if (expandedRow) {
+      url.hash = modelFragment(expandedRow.model.name);
+    } else if (
+      url.hash &&
+      rowFromFragment(url.hash.slice(1), data.rows)
+    ) {
+      url.hash = "";
+    }
+
+    window.history.replaceState(window.history.state, "", url);
+  }, [category, data.rows, expandedModelId, sort, urlStateReady]);
+
+  useEffect(() => {
+    if (!urlStateReady || !expandedModelId) return;
+
+    const expandedRow = data.rows.find(
+      (row) => row.model.id === expandedModelId,
+    );
+    if (!expandedRow) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      document
+        .getElementById(modelFragment(expandedRow.model.name))
+        ?.scrollIntoView({ block: "nearest" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [category, data.rows, expandedModelId, sort, urlStateReady]);
 
   useEffect(() => {
     if (

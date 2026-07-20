@@ -13,6 +13,7 @@ import { ScoreCell } from "@/components/ScoreCell";
 import { Tooltip } from "@/components/Tooltip";
 import type { LeaderboardRow } from "@/lib/data";
 import type { Benchmark } from "@/lib/schema";
+import { modelFragment } from "@/lib/urlState";
 import {
   isActiveSortColumn,
   nextDirectionFor,
@@ -234,6 +235,7 @@ export function LeaderboardTable({
               return (
                 <Fragment key={row.model.id}>
                   <tr
+                    id={modelFragment(row.model.name)}
                     className={
                       expanded ? "model-row is-expanded" : "model-row"
                     }
