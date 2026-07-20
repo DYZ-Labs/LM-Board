@@ -25,14 +25,6 @@ export default function Home() {
           <a className="wordmark" href="#top" aria-label="LM Board home">
             LM<span>Board</span>
           </a>
-          <div className="hero-copy">
-            <p className="section-kicker">Independent scores. Direct sources.</p>
-            <h1>Frontier models, compared clearly.</h1>
-            <p>
-              A curated view of published benchmark results, with the settings
-              and provenance behind every number.
-            </p>
-          </div>
           <nav className="header-actions" aria-label="Site controls">
             {repositoryUrl ? (
               <a href={repositoryUrl} target="_blank" rel="noreferrer">

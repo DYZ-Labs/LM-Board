@@ -53,7 +53,7 @@ export function ThemeToggle() {
       type="button"
       className="theme-toggle"
       aria-label={`Switch to ${nextTheme} theme`}
-      aria-pressed={theme === "dark"}
+      title={`Switch to ${nextTheme} theme`}
       onClick={toggleTheme}
     >
       {theme === "dark" ? (
@@ -66,7 +66,6 @@ export function ThemeToggle() {
           <path d="M15.9 13.3A7 7 0 0 1 6.7 4.1a6.7 6.7 0 1 0 9.2 9.2Z" fill="none" />
         </svg>
       )}
-      <span>{theme === "dark" ? "Light" : "Dark"}</span>
     </button>
   );
 }

@@ -66,6 +66,7 @@ export const ScoreSchema = z
       })
       .strict(),
     settings: z.string().trim().min(1).optional(),
+    reasoningEffort: z.string().trim().min(1).max(40).optional(),
     selfReported: z.boolean(),
   })
   .strict();

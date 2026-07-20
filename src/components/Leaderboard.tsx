@@ -48,7 +48,7 @@ export function Leaderboard({ data }: LeaderboardProps) {
             )
             .filter((value): value is number => value !== null);
 
-          return [benchmark.id, Math.max(...values)];
+          return [benchmark.id, values.length > 0 ? Math.max(...values) : null];
         }),
       ),
     [data.benchmarks, data.rows],
@@ -156,20 +156,17 @@ export function Leaderboard({ data }: LeaderboardProps) {
 
   return (
     <section className="leaderboard" aria-labelledby="leaderboard-heading">
-      <div className="leaderboard-heading-row">
-        <div>
-          <p className="section-kicker">The leaderboard</p>
-          <h2 id="leaderboard-heading">Frontier model performance</h2>
-        </div>
-        <p className="snapshot-copy">
-          {data.rows.length} models · {data.benchmarks.length} benchmarks · Updated{" "}
-          <time dateTime={data.lastUpdated}>{formatDate(data.lastUpdated)}</time> · Click a
-          model to inspect sources
-        </p>
-      </div>
+      <h1 className="sr-only" id="leaderboard-heading">
+        LM Board leaderboard
+      </h1>
 
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         Sorted by {sortLabel}, {sort.direction === "asc" ? "ascending" : "descending"}.
+      </p>
+
+      <p className="leaderboard-updated">
+        Last updated{" "}
+        <time dateTime={data.lastUpdated}>{formatDate(data.lastUpdated)}</time>
       </p>
 
       <div className="controls-shell">

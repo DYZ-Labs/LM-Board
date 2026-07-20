@@ -59,8 +59,10 @@ export function Methodology({
           <h3>Provenance first</h3>
           <p>
             Canonical third-party measurements are preferred. Vendor-reported
-            results remain visibly labeled. Scores with different tools,
-            reasoning budgets, or harnesses may not be directly comparable.
+            results remain visibly labeled. A displayed reasoning-effort label
+            applies uniformly to every score in that model row. Scores with
+            different tools, reasoning budgets, or harnesses may not be directly
+            comparable.
           </p>
         </article>
       </div>

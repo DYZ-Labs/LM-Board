@@ -68,6 +68,7 @@ function validateRelationships(
   const modelIds = new Set(models.map(({ id }) => id));
   const benchmarkById = new Map(benchmarks.map((benchmark) => [benchmark.id, benchmark]));
   const scorePairs = new Set<string>();
+  const reasoningEffortsByModel = new Map<string, Set<string | null>>();
 
   for (const [index, score] of scores.entries()) {
     const prefix = `scores.json[${index}]`;
@@ -95,6 +96,19 @@ function validateRelationships(
       );
     }
     scorePairs.add(pair);
+
+    const reasoningEfforts =
+      reasoningEffortsByModel.get(score.modelId) ?? new Set();
+    reasoningEfforts.add(score.reasoningEffort ?? null);
+    reasoningEffortsByModel.set(score.modelId, reasoningEfforts);
+  }
+
+  for (const [modelId, reasoningEfforts] of reasoningEffortsByModel) {
+    if (reasoningEfforts.size > 1) {
+      errors.push(
+        `Scores for model "${modelId}" must all use the same reasoningEffort or all omit it`,
+      );
+    }
   }
 
   return errors;

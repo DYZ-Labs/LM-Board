@@ -22,6 +22,19 @@
     "url": "https://openai.com/index/introducing-gpt-oss/"
   },
   {
+    "id": "anthropic-claude-fable-5",
+    "name": "Claude Fable 5",
+    "lab": "Anthropic",
+    "releaseDate": "2026-06-09",
+    "openWeights": false,
+    "contextWindow": 1000000,
+    "pricing": {
+      "input": 10,
+      "output": 50
+    },
+    "url": "https://www.anthropic.com/news/claude-fable-5-mythos-5"
+  },
+  {
     "id": "anthropic-claude-opus-4-8",
     "name": "Claude Opus 4.8",
     "lab": "Anthropic",
@@ -172,6 +185,19 @@
     "openWeights": true,
     "contextWindow": 1000000,
     "url": "https://build.nvidia.com/nvidia/nemotron-3-ultra-550b-a55b/modelcard"
+  },
+  {
+    "id": "meta-muse-spark-1-1",
+    "name": "Muse Spark 1.1",
+    "lab": "Meta",
+    "releaseDate": "2026-07-09",
+    "openWeights": false,
+    "contextWindow": 1000000,
+    "pricing": {
+      "input": 1.25,
+      "output": 4.25
+    },
+    "url": "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
   },
   {
     "id": "meta-llama-4-maverick",

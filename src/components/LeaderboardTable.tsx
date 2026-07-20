@@ -1,6 +1,11 @@
 "use client";
 
-import { Fragment, type CSSProperties, type ReactNode } from "react";
+import {
+  Fragment,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 import { DetailPanel } from "@/components/DetailPanel";
 import { Badge } from "@/components/Badge";
@@ -100,7 +105,7 @@ type LeaderboardTableProps = {
   rows: LeaderboardRow[];
   allBenchmarks: Benchmark[];
   visibleBenchmarks: Benchmark[];
-  bestScores: Record<string, number>;
+  bestScores: Record<string, number | null>;
   sort: SortState;
   expandedModelId: string | null;
   onSort: (column: SortColumn) => void;
@@ -117,6 +122,8 @@ export function LeaderboardTable({
   onSort,
   onToggleDetails,
 }: LeaderboardTableProps) {
+  const [hasHorizontalScrollOffset, setHasHorizontalScrollOffset] =
+    useState(false);
   const columnCount = 4 + visibleBenchmarks.length;
   const tableStyle = {
     "--benchmark-count": visibleBenchmarks.length,
@@ -125,15 +132,20 @@ export function LeaderboardTable({
   return (
     <>
       <p className="table-scroll-instructions" id="table-scroll-instructions">
-        Scroll horizontally for more benchmarks. The model column remains
-        visible; the table header remains pinned while scrolling vertically.
+        Scroll for benchmarks · Model stays pinned
       </p>
       <div
-        className="table-scroll"
+        className={`table-scroll${hasHorizontalScrollOffset ? " is-horizontally-scrolled" : ""}`}
         role="region"
         tabIndex={0}
         aria-labelledby="leaderboard-heading"
         aria-describedby="table-scroll-instructions"
+        onScroll={(event) => {
+          const isScrolled = event.currentTarget.scrollLeft > 0;
+          setHasHorizontalScrollOffset((current) =>
+            current === isScrolled ? current : isScrolled,
+          );
+        }}
       >
         <table
           className="leaderboard-table"
@@ -215,6 +227,9 @@ export function LeaderboardTable({
             ) : null}
             {rows.map((row) => {
               const expanded = expandedModelId === row.model.id;
+              const modelLabel = row.reasoningEffort
+                ? `${row.model.name} (${row.reasoningEffort})`
+                : row.model.name;
 
               return (
                 <Fragment key={row.model.id}>
@@ -232,24 +247,56 @@ export function LeaderboardTable({
                       )}
                     </td>
                     <th scope="row" className="model-cell">
-                      <button
-                        type="button"
-                        className="model-trigger"
-                        aria-expanded={expanded}
-                        aria-controls={`details-${row.model.id}`}
-                        aria-label={`${expanded ? "Hide" : "Show"} details for ${row.model.name}`}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          onToggleDetails(row.model.id);
-                        }}
-                      >
-                        <span className="model-name">{row.model.name}</span>
-                        <span className="disclosure-icon" aria-hidden="true">
-                          {expanded ? "−" : "+"}
+                      <div className="model-primary-line">
+                        <span
+                          className="mobile-rank"
+                          aria-label={
+                            row.rank === null ? "Unranked" : `Rank ${row.rank}`
+                          }
+                        >
+                          {row.rank === null ? "—" : `#${row.rank}`}
                         </span>
-                      </button>
+                        <button
+                          type="button"
+                          className="model-trigger"
+                          aria-expanded={expanded}
+                          aria-controls={`details-${row.model.id}`}
+                          aria-label={`${expanded ? "Hide" : "Show"} details for ${modelLabel}`}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onToggleDetails(row.model.id);
+                          }}
+                        >
+                          <span className="model-identification">
+                            <span className="model-name">{row.model.name}</span>
+                            {row.reasoningEffort ? (
+                              <Badge className="reasoning-effort-label reasoning-effort-primary">
+                                <span
+                                  className="reasoning-effort-text"
+                                  title={row.reasoningEffort}
+                                >
+                                  {row.reasoningEffort}
+                                </span>
+                              </Badge>
+                            ) : null}
+                          </span>
+                          <span className="disclosure-icon" aria-hidden="true">
+                            {expanded ? "−" : "+"}
+                          </span>
+                        </button>
+                      </div>
                       <span className="model-meta">
                         {row.model.lab}
+                        {row.reasoningEffort ? (
+                          <Badge className="reasoning-effort-label reasoning-effort-meta">
+                            <span
+                              className="reasoning-effort-text"
+                              title={row.reasoningEffort}
+                            >
+                              {row.reasoningEffort}
+                            </span>
+                          </Badge>
+                        ) : null}
                         {row.model.openWeights ? (
                           <Badge className="open-weights-label">
                             Open weights

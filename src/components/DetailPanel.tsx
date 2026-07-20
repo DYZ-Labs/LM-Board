@@ -60,6 +60,10 @@ export function DetailPanel({
               <dd>{model.lab}</dd>
             </div>
             <div>
+              <dt>Effort</dt>
+              <dd>{row.reasoningEffort ?? "Not listed"}</dd>
+            </div>
+            <div>
               <dt>Released</dt>
               <dd>{formatDate(model.releaseDate)}</dd>
             </div>
@@ -108,12 +112,21 @@ export function DetailPanel({
                     </div>
                     {score ? (
                       <>
-                        <Badge className="measurement-label">
-                          {score.selfReported
-                            ? "Self-reported measurement"
-                            : "Third-party measurement"}
-                        </Badge>
-                        <p>{score.settings ?? "Settings not specified."}</p>
+                        {score.selfReported ? (
+                          <Badge className="measurement-label">
+                            Self-reported measurement
+                          </Badge>
+                        ) : null}
+                        <p>
+                          <strong>Settings:</strong>{" "}
+                          {score.settings ?? "Not specified."}
+                          {score.reasoningEffort ? (
+                            <>
+                              {" · "}
+                              <strong>Effort:</strong> {score.reasoningEffort}
+                            </>
+                          ) : null}
+                        </p>
                         <p className="source-line">
                           <a
                             href={score.source.url}

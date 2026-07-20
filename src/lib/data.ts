@@ -14,6 +14,7 @@ import {
 
 export type LeaderboardRow = {
   model: Model;
+  reasoningEffort: string | null;
   scoresByBenchmark: Record<string, Score | null>;
   index: number | null;
   coverageCount: number;
@@ -75,6 +76,18 @@ export function loadLeaderboardData(): LeaderboardData {
     scoresByModel.set(score.modelId, modelScores);
   }
 
+  for (const [modelId, modelScores] of scoresByModel) {
+    const reasoningEfforts = new Set(
+      modelScores.map((score) => score.reasoningEffort ?? null),
+    );
+
+    if (reasoningEfforts.size > 1) {
+      throw new Error(
+        `Scores for model "${modelId}" must all use the same reasoningEffort or all omit it`,
+      );
+    }
+  }
+
   const rowsWithoutRanks: LeaderboardRow[] = models.map((model) => {
     const modelScores = scoresByModel.get(model.id) ?? [];
     const scoreLookup = new Map(
@@ -84,6 +97,7 @@ export function loadLeaderboardData(): LeaderboardData {
 
     return {
       model,
+      reasoningEffort: modelScores[0]?.reasoningEffort ?? null,
       scoresByBenchmark: Object.fromEntries(
         benchmarks.map((benchmark) => [
           benchmark.id,
