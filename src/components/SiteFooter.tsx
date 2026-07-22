@@ -13,8 +13,8 @@ export function SiteFooter({ repositoryUrl }: SiteFooterProps) {
         the model providers or benchmark authors.
       </p>
       <nav aria-label="Footer navigation">
-        <a href="#leaderboard">Leaderboard</a>
-        <a href="#methodology">Methodology</a>
+        <a href="/#leaderboard">Leaderboard</a>
+        <a href="/methodology">Methodology</a>
         {repositoryUrl ? (
           <a href={repositoryUrl} target="_blank" rel="noreferrer">
             GitHub

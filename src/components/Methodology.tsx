@@ -17,7 +17,7 @@ export function Methodology({
     >
       <div className="methodology-intro">
         <p className="section-kicker">Methodology</p>
-        <h2 id="methodology-heading">Simple enough to audit.</h2>
+        <h1 id="methodology-heading">Simple enough to audit.</h1>
         <p>
           LM Board curates published evaluations; it does not run benchmarks.
           Every displayed score keeps its source, retrieval date, and available
@@ -30,7 +30,7 @@ export function Methodology({
           <span className="method-number" aria-hidden="true">
             01
           </span>
-          <h3>Equal-weight Index</h3>
+          <h2>Equal-weight Index</h2>
           <p>
             Within Overall or any category, the Index is the arithmetic mean of
             a model&apos;s available percent-scaled scores. Each benchmark has
@@ -44,7 +44,7 @@ export function Methodology({
           <span className="method-number" aria-hidden="true">
             02
           </span>
-          <h3>Coverage gate</h3>
+          <h2>Coverage gate</h2>
           <p>
             Each scope ranks a model only after it covers at least 60% of that
             scope&apos;s percent-scaled benchmarks. Overall currently requires{" "}
@@ -57,7 +57,7 @@ export function Methodology({
           <span className="method-number" aria-hidden="true">
             03
           </span>
-          <h3>Provenance first</h3>
+          <h2>Provenance first</h2>
           <p>
             Canonical third-party measurements are preferred. Vendor-reported
             results remain visibly labeled. A displayed reasoning-effort label

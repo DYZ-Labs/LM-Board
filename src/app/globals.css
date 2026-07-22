@@ -1264,9 +1264,7 @@ svg {
 }
 
 .methodology {
-  margin-top: var(--space-7);
-  padding: var(--space-7) 2px 0;
-  border-top: 1px solid var(--hairline);
+  padding: var(--space-4) 2px 0;
 }
 
 .methodology-intro {
@@ -1281,12 +1279,12 @@ svg {
   grid-row: 1 / span 2;
 }
 
-.methodology-intro h2,
+.methodology-intro h1,
 .methodology-intro > p:last-child {
   grid-column: 2;
 }
 
-.methodology-intro h2 {
+.methodology-intro h1 {
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
   font-size: var(--type-34);
@@ -1338,7 +1336,7 @@ svg {
   font-weight: var(--weight-medium);
 }
 
-.methodology-grid h3 {
+.methodology-grid h2 {
   margin: 0 0 var(--space-3);
   font-size: var(--type-16);
   font-weight: var(--weight-bold);
@@ -1368,7 +1366,6 @@ svg {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-5) 2px;
-  border-bottom: 1px solid var(--hairline);
   color: var(--ink-secondary);
   font-size: var(--type-12);
   line-height: 1.55;
@@ -1390,7 +1387,9 @@ svg {
   grid-template-columns: minmax(150px, 0.4fr) minmax(0, 1.45fr) auto;
   gap: var(--space-6);
   align-items: start;
+  margin-top: var(--space-7);
   padding: var(--space-6) 2px 0;
+  border-top: 1px solid var(--hairline);
 }
 
 .site-footer > .wordmark {
@@ -1606,7 +1605,7 @@ svg {
   }
 
   .methodology-intro .section-kicker,
-  .methodology-intro h2,
+  .methodology-intro h1,
   .methodology-intro > p:last-child {
     grid-column: 1;
   }
@@ -1771,11 +1770,6 @@ svg {
 
   .detail-score-grid {
     grid-template-columns: 1fr;
-  }
-
-  .methodology {
-    margin-top: var(--space-7);
-    padding-top: var(--space-7);
   }
 
   .methodology-grid {
