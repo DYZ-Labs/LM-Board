@@ -59,5 +59,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the source requirements, data-file 
 The current snapshot contains 17 models, 8 benchmarks, and 132 scores. The original 2026-07-17 seed and subsequent model refresh are documented in the decision log in `PLAN.md`.
 
 Where present, pricing is the current uncached base or short-context API rate in USD per million tokens. Provider pricing may be tiered by context length or promotional period, so the linked official model source remains authoritative.
-# LM-Board
-# LM-Board

@@ -17,14 +17,19 @@ export default function Home() {
 
   return (
     <>
-      <a className="skip-link" href="#leaderboard-heading">
+      <a className="skip-link" href="#leaderboard">
         Skip to leaderboard
       </a>
       <main className="site-shell">
         <header className="site-header" id="top">
-          <a className="wordmark" href="#top" aria-label="LM Board home">
-            LM<span>Board</span>
-          </a>
+          <div className="site-identity">
+            <h1 id="leaderboard-heading">
+              <a className="wordmark" href="#top" aria-label="LM Board home">
+                LM <span>Board</span>
+              </a>
+            </h1>
+            <p>Curated benchmark scores for frontier language models</p>
+          </div>
           <nav className="header-actions" aria-label="Site controls">
             {repositoryUrl ? (
               <a href={repositoryUrl} target="_blank" rel="noreferrer">

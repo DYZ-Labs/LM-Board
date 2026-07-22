@@ -272,11 +272,11 @@ export function Leaderboard({ data }: LeaderboardProps) {
   }
 
   return (
-    <section className="leaderboard" aria-labelledby="leaderboard-heading">
-      <h1 className="sr-only" id="leaderboard-heading">
-        LM Board leaderboard
-      </h1>
-
+    <section
+      className="leaderboard"
+      id="leaderboard"
+      aria-labelledby="leaderboard-heading"
+    >
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         Sorted by {sortLabel}, {sort.direction === "asc" ? "ascending" : "descending"}.
       </p>
