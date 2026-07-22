@@ -6,6 +6,13 @@ import { loadLeaderboardData } from "@/lib/data";
 import { MIN_INDEX_COVERAGE } from "@/lib/index";
 import { issuesUrl, repositoryUrl } from "@/lib/site";
 
+const datelineFormatter = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  timeZone: "UTC",
+});
+
 export default function Home() {
   const data = loadLeaderboardData();
   const percentBenchmarkCount = data.benchmarks.filter(
@@ -13,6 +20,9 @@ export default function Home() {
   ).length;
   const minimumCoverageCount = Math.ceil(
     percentBenchmarkCount * MIN_INDEX_COVERAGE,
+  );
+  const lastUpdatedLabel = datelineFormatter.format(
+    new Date(`${data.lastUpdated}T00:00:00Z`),
   );
 
   return (
@@ -25,7 +35,7 @@ export default function Home() {
           <div className="site-identity">
             <h1 id="leaderboard-heading">
               <a className="wordmark" href="#top" aria-label="LM Board home">
-                LM <span>Board</span>
+                LM Board
               </a>
             </h1>
             <p>Curated benchmark scores for frontier language models</p>
@@ -39,6 +49,12 @@ export default function Home() {
             ) : null}
             <ThemeToggle />
           </nav>
+          <p className="masthead-meta">
+            Updated{" "}
+            <time dateTime={data.lastUpdated}>{lastUpdatedLabel}</time>
+            <br />
+            {data.rows.length} models · {data.scoreCount} cited scores
+          </p>
         </header>
         <Leaderboard data={data} />
         <Methodology

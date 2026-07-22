@@ -6,7 +6,7 @@ export function SiteFooter({ repositoryUrl }: SiteFooterProps) {
   return (
     <footer className="site-footer">
       <a className="wordmark" href="#top" aria-label="Back to LM Board top">
-        LM<span>Board</span>
+        LM Board
       </a>
       <p>
         An independent index of curated benchmark results. Not affiliated with
