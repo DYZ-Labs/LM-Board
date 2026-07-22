@@ -1,5 +1,6 @@
 import { Badge } from "@/components/Badge";
 import type { LeaderboardRow } from "@/lib/data";
+import { formatPrice } from "@/lib/format";
 import type { Benchmark } from "@/lib/schema";
 
 const scoreFormatter = new Intl.NumberFormat("en-US", {
@@ -7,10 +8,6 @@ const scoreFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 1,
 });
 const numberFormatter = new Intl.NumberFormat("en-US");
-const priceFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   month: "short",
@@ -83,7 +80,7 @@ export function DetailPanel({
               <dt>Price / Mtok</dt>
               <dd>
                 {model.pricing
-                  ? `$${priceFormatter.format(model.pricing.input)} input · $${priceFormatter.format(model.pricing.output)} output`
+                  ? `$${formatPrice(model.pricing.input)} input · $${formatPrice(model.pricing.output)} output`
                   : "Not listed"}
               </dd>
             </div>

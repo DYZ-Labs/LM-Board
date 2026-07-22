@@ -2,6 +2,7 @@ import benchmarksJson from "../../data/benchmarks.json";
 import modelsJson from "../../data/models.json";
 import scoresJson from "../../data/scores.json";
 
+import { validateDataIntegrity } from "@/lib/dataIntegrity";
 import {
   RANK_SCOPES,
   benchmarksForScope,
@@ -76,53 +77,22 @@ export function loadLeaderboardData(): LeaderboardData {
   const models = ModelsFileSchema.parse(modelsJson);
   const benchmarks = BenchmarksFileSchema.parse(benchmarksJson);
   const scores = ScoresFileSchema.parse(scoresJson);
-  const modelsById = new Map(models.map((model) => [model.id, model]));
-  const benchmarksById = new Map(
-    benchmarks.map((benchmark) => [benchmark.id, benchmark]),
-  );
+  const integrityErrors = validateDataIntegrity(models, benchmarks, scores);
+
+  if (integrityErrors.length > 0) {
+    throw new Error(
+      `Data integrity validation failed\n${integrityErrors
+        .map((error) => `  - ${error}`)
+        .join("\n")}`,
+    );
+  }
+
   const scoresByModel = new Map<string, Score[]>();
-  const scorePairs = new Set<string>();
-
-  if (modelsById.size !== models.length) {
-    throw new Error("Model IDs must be unique");
-  }
-
-  if (benchmarksById.size !== benchmarks.length) {
-    throw new Error("Benchmark IDs must be unique");
-  }
 
   for (const score of scores) {
-    if (!modelsById.has(score.modelId)) {
-      throw new Error(`Score references unknown model: ${score.modelId}`);
-    }
-
-    if (!benchmarksById.has(score.benchmarkId)) {
-      throw new Error(
-        `Score references unknown benchmark: ${score.benchmarkId}`,
-      );
-    }
-
-    const pair = `${score.modelId}::${score.benchmarkId}`;
-    if (scorePairs.has(pair)) {
-      throw new Error(`Duplicate model/benchmark score: ${pair}`);
-    }
-
-    scorePairs.add(pair);
     const modelScores = scoresByModel.get(score.modelId) ?? [];
     modelScores.push(score);
     scoresByModel.set(score.modelId, modelScores);
-  }
-
-  for (const [modelId, modelScores] of scoresByModel) {
-    const reasoningEfforts = new Set(
-      modelScores.map((score) => score.reasoningEffort ?? null),
-    );
-
-    if (reasoningEfforts.size > 1) {
-      throw new Error(
-        `Scores for model "${modelId}" must all use the same reasoningEffort or all omit it`,
-      );
-    }
   }
 
   const rowsWithoutRanks: LeaderboardRow[] = models.map((model) => {

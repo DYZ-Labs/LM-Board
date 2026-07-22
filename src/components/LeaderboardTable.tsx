@@ -12,6 +12,7 @@ import { Badge } from "@/components/Badge";
 import { ScoreCell } from "@/components/ScoreCell";
 import { Tooltip } from "@/components/Tooltip";
 import type { LeaderboardRow } from "@/lib/data";
+import { formatPrice } from "@/lib/format";
 import type { RankScope } from "@/lib/index";
 import type { Benchmark } from "@/lib/schema";
 import { modelFragment } from "@/lib/urlState";
@@ -26,20 +27,6 @@ const indexFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 });
-const priceFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
-const subDollarPriceFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-function formatPrice(price: number) {
-  return price < 1
-    ? subDollarPriceFormatter.format(price)
-    : priceFormatter.format(price);
-}
 const compactBenchmarkLabels: Record<string, string> = {
   "gpqa-diamond": "GPQA",
   hle: "HLE",

@@ -10,7 +10,7 @@ import { issuesUrl, repositoryUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Methodology",
   description:
-    "How LM Board curates benchmark scores: an equal-weight Index, a 60% coverage gate, and provenance-first sourcing with a citation behind every number.",
+    "How LM Board works: scores collected from published sources with a citation behind every number, averaged into an equal-weight Index, with a 60% coverage rule before a model is ranked.",
   alternates: {
     canonical: "/methodology",
   },
@@ -66,11 +66,15 @@ export default function MethodologyPage() {
           </p>
         </header>
         <Methodology
+          benchmarks={data.benchmarks}
           percentBenchmarkCount={percentBenchmarkCount}
           minimumCoverageCount={minimumCoverageCount}
           issuesUrl={issuesUrl}
         />
-        <SiteFooter repositoryUrl={repositoryUrl} />
+        <SiteFooter
+          repositoryUrl={repositoryUrl}
+          pageLink={{ href: "/#leaderboard", label: "Leaderboard" }}
+        />
       </main>
     </>
   );

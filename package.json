@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "npm run validate:data && next build",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "validate:data": "tsx scripts/validate-data.ts"
   },
   "dependencies": {
@@ -19,7 +20,8 @@
     "@types/react": "^19.1.17",
     "@types/react-dom": "^19.1.11",
     "tsx": "4.23.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
   },
   "engines": {
     "node": ">=22"

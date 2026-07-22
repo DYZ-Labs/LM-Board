@@ -734,7 +734,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -746,7 +745,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -758,7 +756,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -770,7 +767,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -782,7 +778,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -794,7 +789,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -806,7 +800,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -818,7 +811,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1106,7 +1098,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1118,7 +1109,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1130,7 +1120,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1142,7 +1131,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1154,7 +1142,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1166,7 +1153,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1178,7 +1164,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1190,7 +1175,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1202,7 +1186,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1214,7 +1197,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1226,7 +1208,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1238,7 +1219,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1250,7 +1230,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1262,7 +1241,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1274,7 +1252,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1286,7 +1263,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1298,7 +1274,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1310,7 +1285,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1322,7 +1296,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1334,7 +1307,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1936,7 +1908,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1948,7 +1919,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1960,7 +1930,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1972,7 +1941,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1984,7 +1952,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1996,7 +1963,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2008,7 +1974,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2020,7 +1985,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2498,7 +2462,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2510,7 +2473,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2522,7 +2484,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2534,7 +2495,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2546,7 +2506,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2558,7 +2517,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2570,7 +2528,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2582,7 +2539,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2924,7 +2880,6 @@
       "retrieved": "2026-07-17"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning mode",
     "selfReported": false
   },
   {
@@ -2936,7 +2891,6 @@
       "retrieved": "2026-07-17"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning mode",
     "selfReported": false
   },
   {
@@ -2948,7 +2902,6 @@
       "retrieved": "2026-07-17"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning mode",
     "selfReported": false
   },
   {
@@ -2960,7 +2913,6 @@
       "retrieved": "2026-07-17"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning mode",
     "selfReported": false
   },
   {
@@ -2972,7 +2924,6 @@
       "retrieved": "2026-07-17"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning mode",
     "selfReported": false
   },
   {
@@ -2984,7 +2935,6 @@
       "retrieved": "2026-07-17"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
-    "reasoningEffort": "reasoning mode",
     "selfReported": false
   },
   {
@@ -2996,7 +2946,6 @@
       "retrieved": "2026-07-17"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning mode",
     "selfReported": false
   },
   {
@@ -3008,7 +2957,6 @@
       "retrieved": "2026-07-17"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
-    "reasoningEffort": "reasoning mode",
     "selfReported": false
   },
   {
@@ -3020,7 +2968,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -3032,7 +2979,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -3044,7 +2990,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -3056,7 +3001,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -3068,7 +3012,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -3080,7 +3023,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4209,7 +4151,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4221,7 +4162,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4233,7 +4173,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4245,7 +4184,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4257,7 +4195,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4269,7 +4206,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4281,7 +4217,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4293,7 +4228,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4305,7 +4239,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4317,7 +4250,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4329,7 +4261,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4341,7 +4272,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4449,7 +4379,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4461,7 +4390,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4473,7 +4401,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4485,7 +4412,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4497,7 +4423,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4509,7 +4434,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4521,7 +4445,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4533,7 +4456,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4633,7 +4555,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4645,7 +4566,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4657,7 +4577,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4669,7 +4588,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4681,7 +4599,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4693,7 +4610,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4705,7 +4621,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4717,7 +4632,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4905,7 +4819,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4917,7 +4830,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4929,7 +4841,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4941,7 +4852,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4953,7 +4863,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4965,7 +4874,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4977,7 +4885,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4989,7 +4896,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -5001,7 +4907,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -5013,7 +4918,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -5025,7 +4929,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -5037,7 +4940,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -5049,7 +4951,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -5061,7 +4962,6 @@
       "retrieved": "2026-07-22"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
-    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
