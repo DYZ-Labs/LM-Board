@@ -24,17 +24,6 @@ import {
   sortKey,
 } from "@/lib/urlState";
 
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-  timeZone: "UTC",
-});
-
-function formatDate(date: string) {
-  return dateFormatter.format(new Date(`${date}T00:00:00Z`));
-}
-
 type LeaderboardProps = {
   data: LeaderboardData;
 };
@@ -272,11 +261,11 @@ export function Leaderboard({ data }: LeaderboardProps) {
   }
 
   return (
-    <section className="leaderboard" aria-labelledby="leaderboard-heading">
-      <h1 className="sr-only" id="leaderboard-heading">
-        LM Board leaderboard
-      </h1>
-
+    <section
+      className="leaderboard"
+      id="leaderboard"
+      aria-labelledby="leaderboard-heading"
+    >
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         Sorted by {sortLabel}, {sort.direction === "asc" ? "ascending" : "descending"}.
       </p>
@@ -308,12 +297,6 @@ export function Leaderboard({ data }: LeaderboardProps) {
         onSort={requestSort}
         onToggleDetails={toggleDetails}
       />
-      <p className="leaderboard-caption">
-        Curated from primary sources · Updated{" "}
-        <time dateTime={data.lastUpdated}>{formatDate(data.lastUpdated)}</time>
-        {" · "}
-        {data.rows.length} models · {data.scoreCount} scores
-      </p>
     </section>
   );
 }

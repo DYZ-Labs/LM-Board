@@ -12,6 +12,7 @@ import { Badge } from "@/components/Badge";
 import { ScoreCell } from "@/components/ScoreCell";
 import { Tooltip } from "@/components/Tooltip";
 import type { LeaderboardRow } from "@/lib/data";
+import { formatPrice } from "@/lib/format";
 import type { RankScope } from "@/lib/index";
 import type { Benchmark } from "@/lib/schema";
 import { modelFragment } from "@/lib/urlState";
@@ -23,10 +24,6 @@ import {
 } from "@/lib/useSort";
 
 const indexFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
-const priceFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 });
@@ -128,7 +125,9 @@ export function LeaderboardTable({
 }: LeaderboardTableProps) {
   const [hasHorizontalScrollOffset, setHasHorizontalScrollOffset] =
     useState(false);
-  const columnCount = 4 + visibleBenchmarks.length;
+  const showIndexColumn = visibleBenchmarks.length !== 1;
+  const columnCount = 3 + visibleBenchmarks.length + Number(showIndexColumn);
+  const isSparse = visibleBenchmarks.length <= 2;
   const tableStyle = {
     "--benchmark-count": visibleBenchmarks.length,
   } as CSSProperties;
@@ -158,6 +157,7 @@ export function LeaderboardTable({
         <table
           className="leaderboard-table"
           style={tableStyle}
+          data-sparse={isSparse ? "true" : undefined}
         >
           <caption className="sr-only">
             Frontier language models ranked by the LM Board Index. Activate a
@@ -179,15 +179,17 @@ export function LeaderboardTable({
                 onSort={onSort}
                 className="model-column"
               />
-              <SortableHeader
-                column={{ kind: "index" }}
-                label={`${scopeLabel} index`}
-                sort={sort}
-                onSort={onSort}
-                className="index-column"
-              >
-                Index
-              </SortableHeader>
+              {showIndexColumn ? (
+                <SortableHeader
+                  column={{ kind: "index" }}
+                  label={`${scopeLabel} index`}
+                  sort={sort}
+                  onSort={onSort}
+                  className="index-column"
+                >
+                  {category === "overall" ? "Index" : `${scopeLabel} Index`}
+                </SortableHeader>
+              ) : null}
               {visibleBenchmarks.map((benchmark) => (
                 <SortableHeader
                   key={benchmark.id}
@@ -305,15 +307,17 @@ export function LeaderboardTable({
                         ) : null}
                       </span>
                     </th>
-                    <td className="numeric-cell index-cell">
-                      {activeScope.index === null ? (
-                        <span className="insufficient-label">
-                          Insufficient data
-                        </span>
-                      ) : (
-                        indexFormatter.format(activeScope.index)
-                      )}
-                    </td>
+                    {showIndexColumn ? (
+                      <td className="numeric-cell index-cell">
+                        {activeScope.index === null ? (
+                          <span className="insufficient-label">
+                            Insufficient data
+                          </span>
+                        ) : (
+                          indexFormatter.format(activeScope.index)
+                        )}
+                      </td>
+                    ) : null}
                     {visibleBenchmarks.map((benchmark) => (
                       <ScoreCell
                         key={benchmark.id}
@@ -327,8 +331,8 @@ export function LeaderboardTable({
                     <td className="numeric-cell price-cell">
                       {row.model.pricing ? (
                         <span>
-                          ${priceFormatter.format(row.model.pricing.input)} / $
-                          {priceFormatter.format(row.model.pricing.output)}
+                          ${formatPrice(row.model.pricing.input)} / $
+                          {formatPrice(row.model.pricing.output)}
                         </span>
                       ) : (
                         <span className="missing-value">—</span>

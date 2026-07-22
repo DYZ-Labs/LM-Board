@@ -1,85 +1,278 @@
+import { Badge } from "@/components/Badge";
+import type { Benchmark } from "@/lib/schema";
+
 type MethodologyProps = {
+  benchmarks: Benchmark[];
   percentBenchmarkCount: number;
   minimumCoverageCount: number;
   issuesUrl: string | null;
 };
 
+const CATEGORY_ORDER = [
+  "reasoning",
+  "coding",
+  "math",
+  "agentic",
+] as const satisfies readonly Benchmark["category"][];
+
+const CATEGORY_LABELS: Record<Benchmark["category"], string> = {
+  reasoning: "Reasoning",
+  coding: "Coding",
+  math: "Math",
+  agentic: "Agentic",
+};
+
+// Illustrative four-benchmark tab: coverage bar is ceil(4 × 0.6) = 3.
+const EXAMPLE_BENCHMARKS = ["Bench 1", "Bench 2", "Bench 3", "Bench 4"];
+
+const EXAMPLE_ROWS: {
+  rank: string | null;
+  model: string;
+  index: string | null;
+  scores: (string | null)[];
+}[] = [
+  { rank: "1", model: "Model B", index: "86.0", scores: ["92.0", null, "88.0", "78.0"] },
+  { rank: "2", model: "Model A", index: "81.0", scores: ["80.0", "90.0", "70.0", "84.0"] },
+  { rank: null, model: "Model C", index: null, scores: ["95.0", "96.0", null, null] },
+];
+
 export function Methodology({
+  benchmarks,
   percentBenchmarkCount,
   minimumCoverageCount,
   issuesUrl,
 }: MethodologyProps) {
+  const benchmarkGroups = CATEGORY_ORDER.map((category) => ({
+    category,
+    label: CATEGORY_LABELS[category],
+    benchmarks: benchmarks.filter(
+      (benchmark) => benchmark.category === category,
+    ),
+  })).filter((group) => group.benchmarks.length > 0);
+
   return (
     <section
       className="methodology"
       id="methodology"
-      aria-labelledby="methodology-heading"
+      aria-label="Methodology"
     >
       <div className="methodology-intro">
         <p className="section-kicker">Methodology</p>
-        <h2 id="methodology-heading">Simple enough to audit.</h2>
         <p>
-          LM Board curates published evaluations; it does not run benchmarks.
-          Every displayed score keeps its source, retrieval date, and available
-          evaluation settings one click away.
+          LM Board runs no evaluations of its own. It collects scores that labs
+          and independent evaluators have already published, puts them side by
+          side, and averages them into one Index per model. Every number on the
+          board links back to where it came from.
         </p>
       </div>
 
-      <div className="methodology-grid">
-        <article>
-          <span className="method-number" aria-hidden="true">
-            01
-          </span>
-          <h3>Equal-weight Index</h3>
-          <p>
-            Within Overall or any category, the Index is the arithmetic mean of
-            a model&apos;s available percent-scaled scores. Each benchmark has
-            equal weight. Missing results are omitted—not treated as zero.
-          </p>
-          <p className="formula">
-            Index = sum of available scores ÷ available benchmarks
-          </p>
+      <div className="method-sections">
+        <article className="method-section">
+          <header className="method-rail">
+            <h2>Where the scores come from</h2>
+          </header>
+          <div className="method-body">
+            <p>
+              Every score is copied from a published result and stores two
+              things alongside the number: a link to its source and the date it
+              was retrieved. Open any model row on the leaderboard to see both,
+              plus the evaluation settings when the source reports them.
+            </p>
+            <p>
+              Independent measurements are preferred over a lab&apos;s own
+              reporting. When a score does come from the model&apos;s maker, it
+              stays on the board but carries the{" "}
+              <Badge className="score-report-badge">Vendor</Badge> mark you see
+              next to scores in the table.
+            </p>
+          </div>
         </article>
-        <article>
-          <span className="method-number" aria-hidden="true">
-            02
-          </span>
-          <h3>Coverage gate</h3>
-          <p>
-            Each scope ranks a model only after it covers at least 60% of that
-            scope&apos;s percent-scaled benchmarks. Overall currently requires{" "}
-            {minimumCoverageCount} of {percentBenchmarkCount} and remains the
-            canonical site-wide ranking. Filters only hide rows; they never
-            renumber ranks.
-          </p>
+
+        <article className="method-section">
+          <header className="method-rail">
+            <h2>How the Index is calculated</h2>
+          </header>
+          <div className="method-body">
+            <p>
+              A model&apos;s Index is the plain average of its scores on the
+              benchmarks it has results for. Every benchmark counts equally
+              &mdash; no weighting, no Elo, no adjustments. A missing score is
+              left out of the average; it is never counted as zero.
+            </p>
+            <p className="formula">
+              Index = sum of a model&apos;s scores &divide; number of benchmarks
+              it has scores on
+            </p>
+            <figure className="method-example">
+              <div className="method-example-scroll">
+                <table>
+                  <caption className="sr-only">
+                    Example of how the Index and ranks behave with missing
+                    scores
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col" className="example-rank">
+                        Rank
+                      </th>
+                      <th scope="col" className="example-model">
+                        Model
+                      </th>
+                      <th scope="col">Index</th>
+                      {EXAMPLE_BENCHMARKS.map((name) => (
+                        <th scope="col" key={name}>
+                          {name}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {EXAMPLE_ROWS.map((row) => (
+                      <tr key={row.model}>
+                        <td className="example-rank">
+                          {row.rank ?? (
+                            <span className="missing-value" aria-label="Unranked">
+                              &mdash;
+                            </span>
+                          )}
+                        </td>
+                        <th scope="row" className="example-model">
+                          {row.model}
+                        </th>
+                        <td className="example-index">
+                          {row.index ?? (
+                            <span className="insufficient-label">
+                              Insufficient data
+                            </span>
+                          )}
+                        </td>
+                        {row.scores.map((score, scoreIndex) => (
+                          <td
+                            key={EXAMPLE_BENCHMARKS[scoreIndex]}
+                            className={score === null ? "missing-value" : undefined}
+                            aria-label={score === null ? "No score" : undefined}
+                          >
+                            {score ?? <>&mdash;</>}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <figcaption>
+                An illustrative tab with four benchmarks, where ranking requires
+                three. Model B ranks first because its missing score is left out
+                of its average &mdash; not counted as zero. Model C scores well
+                but covers only two of four benchmarks, so it keeps its scores
+                and gets no rank.
+              </figcaption>
+            </figure>
+            <p>
+              Each tab &mdash; Overall, Reasoning, Coding, Math, and Agentic
+              &mdash; applies the same average to its own set of benchmarks.
+            </p>
+          </div>
         </article>
-        <article>
-          <span className="method-number" aria-hidden="true">
-            03
-          </span>
-          <h3>Provenance first</h3>
-          <p>
-            Canonical third-party measurements are preferred. Vendor-reported
-            results remain visibly labeled. A displayed reasoning-effort label
-            applies uniformly to every score in that model row. Scores with
-            different tools, reasoning budgets, or harnesses may not be directly
-            comparable.
-          </p>
+
+        <article className="method-section">
+          <header className="method-rail">
+            <h2>Who gets ranked: the 60% rule</h2>
+          </header>
+          <div className="method-body">
+            <p>
+              An average over two benchmarks says less than an average over
+              eight, so a model is ranked only once it has scores on at least
+              60% of a tab&apos;s benchmarks. On the Overall tab that is
+              currently {minimumCoverageCount} of {percentBenchmarkCount}.
+              Below that bar a model still appears with every score it has, but
+              shows &ldquo;Insufficient data&rdquo; in place of an Index and
+              &ldquo;&mdash;&rdquo; in place of a rank. Without this rule, a
+              model evaluated
+              only on its strongest few benchmarks could top the table.
+            </p>
+            <p>
+              Search and filters never change the numbers: they only hide rows,
+              so a model keeps the same rank however the table is narrowed.
+            </p>
+          </div>
+        </article>
+
+        <article className="method-section">
+          <header className="method-rail">
+            <h2>The benchmarks</h2>
+          </header>
+          <div className="method-body">
+            <p>
+              The board currently tracks {benchmarks.length} benchmarks across
+              four categories. All of them report scores on a 0&ndash;100
+              scale, which is what makes a direct average possible; a benchmark
+              on a different scale would still be displayed, but would stay out
+              of the Index.
+            </p>
+            <div className="method-benchlist">
+              {benchmarkGroups.map((group) => (
+                <div className="method-benchgroup" key={group.category}>
+                  <h3>{group.label}</h3>
+                  <ul>
+                    {group.benchmarks.map((benchmark) => (
+                      <li key={benchmark.id}>
+                        <span className="bench-name">{benchmark.name}</span>
+                        <span className="bench-desc">
+                          {benchmark.description}
+                        </span>
+                        <a
+                          href={benchmark.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Source<span aria-hidden="true"> &#8599;</span>
+                          <span className="sr-only">
+                            {" "}
+                            (opens in a new tab)
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </article>
+
+        <article className="method-section">
+          <header className="method-rail">
+            <h2>Honest limits</h2>
+          </header>
+          <div className="method-body">
+            <p>
+              Published scores are measured under different conditions &mdash;
+              different tools, prompting setups, and reasoning budgets &mdash;
+              so a small gap between two models is noise, not signal. When a
+              model row shows a reasoning-effort label, that setting applies to
+              every score in the row.
+            </p>
+          </div>
         </article>
       </div>
 
       <div className="methodology-note">
         <p>
-          Results and provider pricing can change; linked sources remain authoritative.
+          Results and provider pricing change as labs publish updates; the
+          linked sources remain authoritative.
         </p>
         {issuesUrl ? (
           <a href={issuesUrl} target="_blank" rel="noreferrer">
             Suggest a correction on GitHub
-            <span aria-hidden="true"> ↗</span>
+            <span aria-hidden="true"> &#8599;</span>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         ) : (
-          <span>Corrections welcome; the issue tracker will be linked at publish time.</span>
+          <span>
+            Corrections welcome; the issue tracker will be linked at publish
+            time.
+          </span>
         )}
       </div>
     </section>

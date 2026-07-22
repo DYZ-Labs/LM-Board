@@ -29,5 +29,8 @@ jobs:
       - name: Type-check
         run: npm run typecheck
 
+      - name: Test
+        run: npm test
+
       - name: Validate data and build static export
         run: npm run build
