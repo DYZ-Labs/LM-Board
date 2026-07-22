@@ -65,10 +65,10 @@ function summarizeReasoningEffort(
 
   const normalized = reasoningEffort.toLocaleLowerCase("en");
 
-  if (normalized.includes("adaptive")) return "adaptive";
   if (normalized.includes("xhigh")) return "xhigh";
   if (normalized.includes("max")) return "max";
   if (normalized.includes("high")) return "high";
+  if (normalized.includes("adaptive")) return "adaptive";
   return "reasoning";
 }
 
