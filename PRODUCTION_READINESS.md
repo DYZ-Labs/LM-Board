@@ -2,7 +2,7 @@
 
 Audited 2026-07-22 on branch `redesign/printed-index` (clean working tree, 4 commits ahead of `main`). Verified locally: `npm run typecheck`, `npm run validate:data` (39 models, 8 benchmarks, 287 scores as of the 2026-07-22 back-catalog addition), and `npm run build` (9 static routes, ~109 kB first-load JS) all pass. `npm audit` reports 3 transitive advisories (details below). Deployment target assumed to be Vercel static hosting per `vercel.json` and `PLAN.md`.
 
-> **Point-in-time record:** Audited 2026-07-22 and last annotated 2026-07-24. This is not a living status document; a future audit should supersede it rather than extending its annotations.
+> **Superseded 2026-07-25:** This point-in-time audit is retained for historical context only. Current operational guidance lives in the [README](./README.md#operations); the status annotations below, including the external-monitor reference, are not current operating documentation.
 
 ## 1. Verdict
 

@@ -65,6 +65,13 @@ One-time setup:
 
 GitHub disables scheduled workflows after 60 days without repository activity; a manual dispatch re-enables the schedule.
 
+## Operations
+
+- **Rollback:** If the site is down or a deploy is bad, open the LM Board project in the Vercel dashboard, go to **Deployments**, select the previous known-good deployment, and choose **Promote**. If a data commit caused the problem, `git revert <commit>` on a new branch, open and merge the resulting pull request, and let Vercel deploy it.
+- **Monitoring and alerts:** No monitor dashboard or alert destination is verifiable from this repository. Treat production as unmonitored; the superseded readiness audit's reference to an external 15-minute check is not actionable.
+- **Discovery credential:** `DISCOVERY_PAT` is stored as a GitHub Actions repository secret. Its expiry date is unknown as of 2026-07-25; treat it as requiring immediate verification or rotation in the token owner's GitHub fine-grained-token settings, then record the confirmed date here.
+- **Access:** Daniel Yuan (GitHub `@thedanielyuan`) is the only documented operator with access to the Vercel project and the `DYZ-Labs` GitHub organization. No backup operator is documented.
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the source requirements, data-file workflow, reasoning-effort consistency rule, and required validation commands.
