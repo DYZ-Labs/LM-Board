@@ -4,8 +4,17 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      react-runtime:
+        patterns:
+          - "react"
+          - "react-dom"
     ignore:
       # eslint-config-next 15 supports ESLint through v9 only.
       - dependency-name: "eslint"
+        update-types:
+          - "version-update:semver-major"
+      # Next.js 15 cannot load its TypeScript config with newer major versions.
+      - dependency-name: "typescript"
         update-types:
           - "version-update:semver-major"
