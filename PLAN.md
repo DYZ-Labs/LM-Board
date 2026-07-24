@@ -1,6 +1,6 @@
 # LM Board — MVP Plan & Design Spec
 
-> **Status:** M1 + M2 + M3 complete; M4 shipping in progress.
+> **Status:** M1 + M2 + M3 + M4 complete.
 > **Audience:** this file is the single source of truth for any agent or contributor implementing the MVP. It is self-contained — no other context is required. Update the milestone checkboxes as work lands.
 
 ## 1. Product definition

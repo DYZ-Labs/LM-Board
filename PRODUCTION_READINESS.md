@@ -2,7 +2,7 @@
 
 Audited 2026-07-22 on branch `redesign/printed-index` (clean working tree, 4 commits ahead of `main`). Verified locally: `npm run typecheck`, `npm run validate:data` (39 models, 8 benchmarks, 287 scores as of the 2026-07-22 back-catalog addition), and `npm run build` (9 static routes, ~109 kB first-load JS) all pass. `npm audit` reports 3 transitive advisories (details below). Deployment target assumed to be Vercel static hosting per `vercel.json` and `PLAN.md`.
 
-> Status update (2026-07-24): This document preserves the 2026-07-22 audit; annotations below reflect the current repository.
+> **Point-in-time record:** Audited 2026-07-22 and last annotated 2026-07-24. This is not a living status document; a future audit should supersede it rather than extending its annotations.
 
 ## 1. Verdict
 
@@ -37,13 +37,13 @@ None. No hardcoded credentials, no committed env files or build output (verified
 - Action: bump `next` to the latest 15.5.x patch now, plan the 16.x major, and add a non-blocking `npm audit` step (or Dependabot/Renovate) so new advisories are at least visible.
 
 **M3 — No security headers are configured.**
-- **Status (2026-07-24): Resolved in repository.** Vercel is configured to send `X-Content-Type-Options`, `Referrer-Policy`, and `X-Frame-Options` on every route; the headers take effect on the next deployment.
+- **Status (2026-07-24): Resolved in repository.** Vercel is configured to send `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, and a Content Security Policy on every route; the headers take effect on the next deployment. Next.js also emits inline hydration payloads in the static export, so the CSP allows inline scripts while blocking inline event handlers; a hash for only the authored theme initializer would disable client interactivity.
 - Files: `vercel.json` (no `headers` block); the inline theme script at `src/app/layout.tsx:33-40,130` is the only script a CSP would need to allow.
 - Why it matters: without `X-Content-Type-Options: nosniff`, `Referrer-Policy`, and `frame-ancestors`/`X-Frame-Options`, the site can be framed for clickjacking-style abuse and loses defense-in-depth that costs nothing on a static site. Note `headers()` in `next.config.ts` does not work with `output: "export"` — the headers must live in `vercel.json` (or the host's equivalent).
 - Action: add a `headers` section to `vercel.json` with `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY`; if adding a CSP, use a hash source for the one inline theme script (it is a constant string, so its hash is stable).
 
 **M4 — No error boundary and no visibility into client-side failures.**
-- **Status (2026-07-24): Resolved.** A branded global error boundary now provides recovery actions, and an external monitor checks `/` and `/methodology` every 15 minutes.
+- **Status (2026-07-24): Resolved for the current scale.** A branded global error boundary provides recovery actions, and Next.js reports caught boundary errors to the browser console. An external monitor is documented as checking `/` and `/methodology` every 15 minutes, but its configuration lives outside this repository. Remote client exception telemetry is not configured and remains an accepted optional gap.
 - Files: `src/app/` contains no `error.tsx` or `global-error.tsx`; the interactive layer is `src/components/Leaderboard.tsx` (client component driving all sorting/filtering/URL state).
 - Why it matters: a runtime/hydration error in the client bundle degrades the page to Next's unstyled default error screen, and no one would know it happened — there is no error reporting, and (reasonably, for a static site) no logs to check.
 - Action: add a branded `global-error.tsx`; set up an external uptime check on `/` and `/methodology`; optionally add a lightweight client error reporter. Server-side logging/health endpoints are genuinely N/A for this architecture.
