@@ -15,7 +15,7 @@ export default function NotFound() {
           <a className="wordmark" href="/" aria-label="LM Board home">
             LM Board
           </a>
-          <p>Curated benchmark scores for frontier language models</p>
+          <p>Benchmark scores for frontier language models</p>
         </div>
       </header>
       <section className="not-found">

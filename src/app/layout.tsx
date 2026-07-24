@@ -28,7 +28,7 @@ const monoFont = IBM_Plex_Mono({
 });
 
 const title = "LM Board — Frontier Model Benchmark Leaderboard";
-const description = "Curated benchmark scores for frontier language models.";
+const description = "Benchmark scores for frontier language models.";
 
 const themeInitializationScript = `
   try {

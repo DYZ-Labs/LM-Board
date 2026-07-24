@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "LM Board",
     short_name: "LM Board",
-    description: "Curated benchmark scores for frontier language models.",
+    description: "Benchmark scores for frontier language models.",
     start_url: "/",
     display: "standalone",
     background_color: "#f6f4ee",

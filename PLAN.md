@@ -84,7 +84,7 @@ Target: ~8 benchmarks across four categories, ~15 models.
 
 One page, top to bottom:
 
-1. **Header** — "LM Board" wordmark, tagline ("Curated benchmark scores for frontier language models"), theme toggle, GitHub link.
+1. **Header** — "LM Board" wordmark, tagline ("Benchmark scores for frontier language models"), theme toggle, GitHub link.
 2. **Controls row** — one row above the table: category tabs (Overall · Reasoning · Coding · Math · Agentic) switching the visible score columns and active scoped Index/rank; provider multi-select; "open weights" toggle; search box.
 3. **Leaderboard table** (the product):
    - Columns: rank · model (name + lab + open-weights badge) · Index · visible benchmark columns · price.
