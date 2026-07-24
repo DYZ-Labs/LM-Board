@@ -30,7 +30,7 @@ export default function Home() {
                 LM Board
               </a>
             </h1>
-            <p>Benchmark scores for frontier language models</p>
+            <p>Benchmark scores for frontier AI models</p>
           </div>
           <nav className="header-actions" aria-label="Site controls">
             {repositoryUrl ? (

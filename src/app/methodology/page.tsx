@@ -46,7 +46,7 @@ export default function MethodologyPage() {
             <a className="wordmark" href="/" aria-label="LM Board home">
               LM Board
             </a>
-            <p>Benchmark scores for frontier language models</p>
+            <p>Benchmark scores for frontier AI models</p>
           </div>
           <nav className="header-actions" aria-label="Site controls">
             <a href="/">Leaderboard</a>
