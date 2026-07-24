@@ -36,6 +36,9 @@ jobs:
         run: npm test
 
       - name: Validate data and build static export
+        env:
+          NEXT_PUBLIC_SITE_URL: https://www.checklmboard.xyz
+          NEXT_PUBLIC_GITHUB_REPOSITORY_URL: https://github.com/DYZ-Labs/LM-Board
         run: npm run build
 
       - name: Check homepage HTML budget
