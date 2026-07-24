@@ -36,6 +36,17 @@ Missing results are omitted. Never add a zero or placeholder record to represent
 
 Add its metadata to `data/benchmarks.json`, including a concise description, category, unit, and canonical source. Benchmark additions change the Index coverage gate and need an explicit rationale in `PLAN.md`.
 
+## Reviewing a discovery pull request
+
+The scheduled discovery workflow opens pull requests labeled `aa-discovery` containing scaffolded `data/models.json` entries and `data/upstream-seen.json` ledger rows. Curation happens on the pull-request branch:
+
+1. Verify every scaffolded field against the vendor page and replace the placeholder `url` with the official announcement or model card. Validation keeps CI red while any model URL points at artificialanalysis.ai.
+2. Curate scores on the branch following the rules above; the workflow never adds scores.
+3. To reject a scaffold, delete its `models.json` entry **and** flip its ledger row(s) to `"ignored"`, removing the `modelId`. The validator enforces this consistency, and rejected models never resurface in later runs.
+4. Update the README seed-snapshot counts and add a `PLAN.md` decision-log entry before marking the pull request ready.
+
+The ledger records every Artificial Analysis model id ever seen. Do not delete rows to retry a model; flip the status instead.
+
 ## Required checks
 
 Run all checks before opening a pull request:

@@ -9,9 +9,85 @@ import {
   BenchmarksFileSchema,
   ModelsFileSchema,
   ScoresFileSchema,
+  type Model,
 } from "../src/lib/schema";
+import { LedgerFileSchema, validateLedgerConsistency } from "./discovery/core";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+const LEDGER_PATH = "data/upstream-seen.json";
+const UPSTREAM_PLACEHOLDER_HOST = "artificialanalysis.ai";
+
+/**
+ * Model urls must point at the official vendor announcement/model card
+ * (CONTRIBUTING.md); the discovery workflow scaffolds an AA-page placeholder,
+ * so CI stays red on a discovery PR until every placeholder is replaced.
+ * The workflow itself validates with VALIDATE_ALLOW_UPSTREAM_PLACEHOLDERS=1.
+ */
+function findPlaceholderUrlErrors(models: Model[]): string[] {
+  if (process.env.VALIDATE_ALLOW_UPSTREAM_PLACEHOLDERS === "1") {
+    return [];
+  }
+
+  return models
+    .filter((model) => {
+      const hostname = new URL(model.url).hostname;
+
+      return (
+        hostname === UPSTREAM_PLACEHOLDER_HOST ||
+        hostname.endsWith(`.${UPSTREAM_PLACEHOLDER_HOST}`)
+      );
+    })
+    .map(
+      (model) =>
+        `${model.id}: url points at ${UPSTREAM_PLACEHOLDER_HOST} — replace the discovery placeholder with the official vendor announcement/model card`,
+    );
+}
+
+interface LedgerValidation {
+  errors: string[];
+  entryCount: number | null;
+}
+
+async function validateLedger(models: Model[]): Promise<LedgerValidation> {
+  let contents: string;
+
+  try {
+    contents = await readFile(path.join(projectRoot, LEDGER_PATH), "utf8");
+  } catch {
+    // The ledger is created by `npm run discover:models -- --seed --write`
+    // and is optional until then.
+    return { errors: [], entryCount: null };
+  }
+
+  let input: unknown;
+
+  try {
+    input = JSON.parse(contents);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+
+    return { errors: [`${LEDGER_PATH}: invalid JSON (${detail})`], entryCount: null };
+  }
+
+  const result = LedgerFileSchema.safeParse(input);
+
+  if (!result.success) {
+    return {
+      errors: result.error.issues.map((issue) => {
+        const location = issue.path.length > 0 ? issue.path.join(".") : "root";
+
+        return `${LEDGER_PATH}: ${location}: ${issue.message}`;
+      }),
+      entryCount: null,
+    };
+  }
+
+  return {
+    errors: validateLedgerConsistency(result.data, models),
+    entryCount: result.data.entries.length,
+  };
+}
 
 async function loadJson<T>(relativePath: string, schema: ZodType<T>): Promise<T> {
   const absolutePath = path.join(projectRoot, relativePath);
@@ -70,7 +146,12 @@ async function main() {
   const benchmarks = benchmarksResult.value;
   const scores = scoresResult.value;
 
-  const errors = validateDataIntegrity(models, benchmarks, scores);
+  const ledger = await validateLedger(models);
+  const errors = [
+    ...validateDataIntegrity(models, benchmarks, scores),
+    ...findPlaceholderUrlErrors(models),
+    ...ledger.errors,
+  ];
 
   if (errors.length > 0) {
     throw new Error(
@@ -80,8 +161,11 @@ async function main() {
     );
   }
 
+  const ledgerNote =
+    ledger.entryCount === null ? "" : ` Upstream ledger: ${ledger.entryCount} entries.`;
+
   console.log(
-    `Validated ${models.length} models, ${benchmarks.length} benchmarks, and ${scores.length} scores.`,
+    `Validated ${models.length} models, ${benchmarks.length} benchmarks, and ${scores.length} scores.${ledgerNote}`,
   );
 }
 

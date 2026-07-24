@@ -1,0 +1,90 @@
+name: Discover upstream models
+
+# Weekly discovery of new Artificial Analysis models. Scaffolds models.json
+# entries and opens a curation PR — scores are never auto-added.
+#
+# Required repo secrets:
+#   AA_API_KEY     — free Artificial Analysis API key
+#   DISCOVERY_PAT  — fine-grained PAT (this repo; Contents RW + Pull requests RW).
+#                    The default GITHUB_TOKEN cannot be used: PRs it creates
+#                    do not trigger the CI workflow.
+# Required labels: aa-discovery, needs-curation, do-not-merge
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aa-discovery
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.DISCOVERY_PAT }}
+
+      - name: Skip if a discovery PR is already open
+        id: guard
+        env:
+          GH_TOKEN: ${{ secrets.DISCOVERY_PAT }}
+        run: |
+          open=$(gh pr list --label aa-discovery --state open --json number --jq 'length')
+          if [ "$open" != "0" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::A discovery PR is already open; new upstream arrivals accumulate until it merges."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node.js
+        if: steps.guard.outputs.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.skip != 'true'
+        run: npm ci
+
+      - name: Discover new upstream models
+        if: steps.guard.outputs.skip != 'true'
+        id: discover
+        env:
+          AA_API_KEY: ${{ secrets.AA_API_KEY }}
+        run: npx tsx scripts/discover-models.ts --write --report "$RUNNER_TEMP/pr-body.md"
+
+      - name: Validate scaffolded data
+        if: steps.guard.outputs.skip != 'true' && steps.discover.outputs.new_count != '0'
+        env:
+          VALIDATE_ALLOW_UPSTREAM_PLACEHOLDERS: "1"
+        run: |
+          npm run validate:data
+          npm test
+
+      - name: Open curation PR
+        if: steps.guard.outputs.skip != 'true' && steps.discover.outputs.new_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.DISCOVERY_PAT }}
+          PR_TITLE: ${{ steps.discover.outputs.pr_title }}
+        run: |
+          branch="bot/aa-discovery-$(date -u +%Y%m%d)"
+          git checkout -b "$branch"
+          git add data/models.json data/upstream-seen.json
+          git -c user.name="aa-discovery-bot" \
+              -c user.email="aa-discovery-bot@users.noreply.github.com" \
+              commit -m "$PR_TITLE"
+          git push -u origin "$branch"
+          gh pr create --draft --title "$PR_TITLE" --body-file "$RUNNER_TEMP/pr-body.md" \
+              --label aa-discovery --label needs-curation \
+            || gh pr create --title "[do-not-merge] $PR_TITLE" --body-file "$RUNNER_TEMP/pr-body.md" \
+              --label aa-discovery --label do-not-merge

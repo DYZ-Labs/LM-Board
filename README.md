@@ -50,6 +50,21 @@ The export includes complete social/search metadata, a generated Open Graph imag
 
 The TypeScript source of truth for all three formats is `src/lib/schema.ts`. Missing scores are omitted; they are never guessed or represented with placeholder values.
 
+## Automated discovery
+
+A scheduled workflow (`.github/workflows/discover-models.yml`, Mondays 06:17 UTC or manual dispatch) checks the free [Artificial Analysis](https://artificialanalysis.ai/) API for models the leaderboard has never seen. New models from already-tracked providers are scaffolded into `data/models.json` and opened as a draft curation pull request; model metadata in those pull requests is discovered via the Artificial Analysis API. Benchmark scores are never fetched or auto-added — they remain manually curated per [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+Every upstream model id ever seen is recorded in `data/upstream-seen.json`, so dismissed models do not resurface. A scaffold's `url` intentionally points at its Artificial Analysis page; validation rejects that host until a reviewer replaces it with the official vendor announcement, keeping CI red on unfinished curation. `npm run discover:models` runs the same discovery locally (dry-run by default; `--help` for options).
+
+One-time setup:
+
+1. Create a free Artificial Analysis API key and add it to `.env.local` as `AA_API_KEY`.
+2. Seed the ledger: `npm run discover:models -- --seed --write`, review the report, and commit `data/upstream-seen.json`.
+3. Add repository secrets `AA_API_KEY` and `DISCOVERY_PAT` — a fine-grained personal access token scoped to this repository with Contents and Pull requests read/write. The default workflow token cannot be used because pull requests it creates would not trigger CI. Note the PAT expiry and rotate it before it lapses.
+4. Create the labels `aa-discovery`, `needs-curation`, and `do-not-merge`.
+
+GitHub disables scheduled workflows after 60 days without repository activity; a manual dispatch re-enables the schedule.
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the source requirements, data-file workflow, reasoning-effort consistency rule, and required validation commands.

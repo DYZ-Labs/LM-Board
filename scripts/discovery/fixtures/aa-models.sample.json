@@ -1,0 +1,79 @@
+{
+  "status": 200,
+  "data": [
+    {
+      "id": "aa-0001-gpt-5-6-sol",
+      "name": "GPT-5.6 Sol",
+      "slug": "gpt-5-6-sol",
+      "model_creator": { "id": "aa-creator-openai", "name": "OpenAI", "slug": "openai" },
+      "release_date": "2026-07-09",
+      "pricing": { "price_1m_input_tokens": 5, "price_1m_output_tokens": 30, "price_1m_blended_3_to_1": 11.25 },
+      "median_output_tokens_per_second": 142.1
+    },
+    {
+      "id": "aa-0002-claude-fable-5",
+      "name": "Claude Fable 5",
+      "slug": "claude-fable-5",
+      "model_creator": { "id": "aa-creator-anthropic", "name": "Anthropic", "slug": "anthropic" },
+      "release_date": "2026-06-30",
+      "pricing": { "price_1m_input_tokens": 6, "price_1m_output_tokens": 45 },
+      "median_output_tokens_per_second": 88.7
+    },
+    {
+      "id": "aa-0003-kimi-k3",
+      "name": "Kimi K3",
+      "slug": "kimi-k3",
+      "model_creator": { "id": "aa-creator-moonshot", "name": "Moonshot AI", "slug": "moonshot-ai" },
+      "release_date": "2026-04-14",
+      "pricing": { "price_1m_input_tokens": 0.6, "price_1m_output_tokens": 2.5 },
+      "median_output_tokens_per_second": 61.2
+    },
+    {
+      "id": "aa-0004-grok-4-5",
+      "name": "Grok 4.5",
+      "slug": "grok-4-5",
+      "model_creator": { "id": "aa-creator-xai", "name": "xAI", "slug": "xai" },
+      "release_date": "2026-02-11",
+      "pricing": { "price_1m_input_tokens": 3, "price_1m_output_tokens": 15 },
+      "median_output_tokens_per_second": 104.9
+    },
+    {
+      "id": "aa-0005-gpt-5-7",
+      "name": "GPT-5.7",
+      "slug": "gpt-5-7",
+      "model_creator": { "id": "aa-creator-openai", "name": "OpenAI", "slug": "openai" },
+      "release_date": "2026-07-20",
+      "context_window_tokens": 1050000,
+      "licensing": { "is_open_weights": false },
+      "pricing": { "price_1m_input_tokens": 5, "price_1m_output_tokens": 30 },
+      "median_output_tokens_per_second": 150.3
+    },
+    {
+      "id": "aa-0006-grok-5-high",
+      "name": "Grok 5 (high)",
+      "slug": "grok-5-high",
+      "model_creator": { "id": "aa-creator-xai", "name": "xAI", "slug": "xai" },
+      "release_date": null,
+      "pricing": { "price_1m_input_tokens": 0, "price_1m_output_tokens": 0 },
+      "median_output_tokens_per_second": 96.4
+    },
+    {
+      "id": "aa-0007-grok-5-low",
+      "name": "Grok 5 (low)",
+      "slug": "grok-5-low",
+      "model_creator": { "id": "aa-creator-xai", "name": "xAI", "slug": "xai" },
+      "release_date": null,
+      "pricing": { "price_1m_input_tokens": 0, "price_1m_output_tokens": 0 },
+      "median_output_tokens_per_second": 121.8
+    },
+    {
+      "id": "aa-0008-nova-2-pro",
+      "name": "Nova 2 Pro",
+      "slug": "nova-2-pro",
+      "model_creator": { "id": "aa-creator-amazon", "name": "Amazon", "slug": "amazon" },
+      "release_date": "2026-05-02",
+      "pricing": { "price_1m_input_tokens": 2.4, "price_1m_output_tokens": 9.6 },
+      "median_output_tokens_per_second": 77.5
+    }
+  ]
+}

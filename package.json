@@ -7,7 +7,8 @@
     "build": "npm run validate:data && next build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "validate:data": "tsx scripts/validate-data.ts"
+    "validate:data": "tsx scripts/validate-data.ts",
+    "discover:models": "tsx scripts/discover-models.ts"
   },
   "dependencies": {
     "next": "15.5.20",
