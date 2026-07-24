@@ -13,8 +13,17 @@ export function SiteFooter({
         LM Board
       </a>
       <p>
-        An independent index of curated benchmark results. Not affiliated with
-        any model providers or benchmark authors.
+        An independent index of curated benchmark results. Benchmark scores
+        are independently measured by{" "}
+        <a
+          href="https://artificialanalysis.ai/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Artificial Analysis
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+        . Not affiliated with any model providers or benchmark authors.
       </p>
       <nav aria-label="Footer navigation">
         <a href={pageLink.href}>{pageLink.label}</a>

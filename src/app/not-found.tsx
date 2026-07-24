@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -12,9 +13,9 @@ export default function NotFound() {
     <main className="site-shell">
       <header className="site-header">
         <div className="site-identity">
-          <a className="wordmark" href="/" aria-label="LM Board home">
+          <Link className="wordmark" href="/" aria-label="LM Board home">
             LM Board
-          </a>
+          </Link>
           <p>Benchmark scores for frontier AI models</p>
         </div>
       </header>
@@ -25,7 +26,7 @@ export default function NotFound() {
           The address may have changed or never existed. The leaderboard itself
           is one click away.
         </p>
-        <a href="/">Back to the leaderboard</a>
+        <Link href="/">Back to the leaderboard</Link>
       </section>
     </main>
   );

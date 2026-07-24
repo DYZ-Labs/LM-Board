@@ -80,8 +80,18 @@ export function Methodology({
             </p>
             <p>
               Independent measurements are preferred over a lab&apos;s own
-              reporting. When a score does come from the model&apos;s maker, it
-              stays on the board but carries the{" "}
+              reporting; every score on the board today is measured
+              independently by{" "}
+              <a
+                href="https://artificialanalysis.ai/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Artificial Analysis
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+              . When a score does come from the model&apos;s maker, it stays
+              on the board but carries the{" "}
               <Badge className="score-report-badge">Vendor</Badge> mark you see
               next to scores in the table.
             </p>

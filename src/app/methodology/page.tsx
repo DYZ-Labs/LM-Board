@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Methodology } from "@/components/Methodology";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -43,13 +44,13 @@ export default function MethodologyPage() {
       <main className="site-shell">
         <header className="site-header" id="top">
           <div className="site-identity">
-            <a className="wordmark" href="/" aria-label="LM Board home">
+            <Link className="wordmark" href="/" aria-label="LM Board home">
               LM Board
-            </a>
+            </Link>
             <p>Benchmark scores for frontier AI models</p>
           </div>
           <nav className="header-actions" aria-label="Site controls">
-            <a href="/">Leaderboard</a>
+            <Link href="/">Leaderboard</Link>
             {repositoryUrl ? (
               <a href={repositoryUrl} target="_blank" rel="noreferrer">
                 GitHub

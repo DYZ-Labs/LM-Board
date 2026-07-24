@@ -322,6 +322,7 @@ export function LeaderboardTable({
                       <ScoreCell
                         key={benchmark.id}
                         score={row.scoresByBenchmark[benchmark.id]}
+                        unit={benchmark.unit}
                         isBest={
                           row.scoresByBenchmark[benchmark.id]?.value ===
                           bestScores[benchmark.id]

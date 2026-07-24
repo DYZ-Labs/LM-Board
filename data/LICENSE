@@ -1,0 +1,22 @@
+LM Board data license
+
+LM Board contributors license their original selection, coordination,
+arrangement, annotations, and other protectable contributions to the files in
+this directory under the Creative Commons Attribution 4.0 International Public
+License (CC BY 4.0):
+
+https://creativecommons.org/licenses/by/4.0/legalcode
+
+When reusing that material, attribute it as:
+
+  LM Board dataset, by LM Board contributors, licensed under CC BY 4.0
+  (https://github.com/DYZ-Labs/LM-Board)
+
+Indicate if you made changes. This data license supersedes the repository's MIT
+License for the licensed material in this directory.
+
+This license grants only rights held by LM Board contributors. It does not
+license third-party material or alter any source's terms. In particular,
+benchmark measurements attributed to Artificial Analysis are excluded from
+this license and remain subject to Artificial Analysis's terms. Each record
+identifies its source.

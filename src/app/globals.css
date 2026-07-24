@@ -1531,6 +1531,12 @@ svg {
   line-height: 1.55;
 }
 
+.site-footer > p a,
+.method-body p a {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+}
+
 .site-footer nav {
   display: flex;
   gap: var(--space-4);
@@ -1571,6 +1577,31 @@ svg {
   text-decoration: underline;
   text-decoration-color: var(--accent);
   text-underline-offset: 4px;
+}
+
+.global-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.global-error-actions button {
+  min-height: 38px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: var(--weight-semibold);
+}
+
+.global-error-actions button:first-child {
+  border-color: var(--accent);
+}
+
+.global-error-actions button:hover {
+  background: var(--hover);
 }
 
 @media (min-width: 1024px) {

@@ -93,10 +93,32 @@ async function fetchAaModels(fromPath: string | undefined): Promise<AaModel[]> {
     );
   }
 
-  const response = await fetch(AA_MODELS_ENDPOINT, {
-    headers: { "x-api-key": apiKey },
-    signal: AbortSignal.timeout(30_000),
-  });
+  let response: Response | undefined;
+
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      response = await fetch(AA_MODELS_ENDPOINT, {
+        headers: { "x-api-key": apiKey },
+        signal: AbortSignal.timeout(30_000),
+      });
+
+      const retryable =
+        response.status === 408 ||
+        response.status === 429 ||
+        response.status >= 500;
+
+      if (!retryable || attempt === 2) break;
+    } catch (error) {
+      if (attempt === 2) throw error;
+    }
+
+    console.warn("Artificial Analysis API request failed; retrying once.");
+    await new Promise((resolve) => setTimeout(resolve, 1_000));
+  }
+
+  if (response === undefined) {
+    throw new Error("Artificial Analysis API request failed after retry.");
+  }
 
   if (!response.ok) {
     throw new Error(

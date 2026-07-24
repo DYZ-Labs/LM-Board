@@ -40,7 +40,7 @@ npm run build
 
 `npm run build` validates all records and cross-file references before Next.js creates a static export in `out/`. Validation fails on malformed records, duplicate IDs, dangling score references, duplicate model/benchmark score pairs, or percent values outside `0–100`.
 
-The export includes complete social/search metadata, a generated Open Graph image, favicon, web manifest, robots rules, and sitemap. `vercel.json` configures Vercel to publish `out/`.
+The export includes complete social/search metadata, a generated Open Graph image, favicon, web manifest, robots rules, and sitemap. `vercel.json` configures Vercel to use `.next/` as its deployment output directory.
 
 ## Data layout
 
