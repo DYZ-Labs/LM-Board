@@ -21,6 +21,18 @@ const slugSchema = z
   .min(1)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Must be a lowercase, kebab-case slug");
 
+// Artificial Analysis slugs are opaque upstream identifiers. Most are
+// lowercase kebab-case, but the live API also contains dots, uppercase
+// characters, and underscores (for example `glm-4.5`, `QwQ-32B-Preview`,
+// and the creator slug `bytedance_seed`).
+const upstreamSlugSchema = z
+  .string()
+  .min(1)
+  .regex(
+    /^[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*$/,
+    "Must be a non-empty Artificial Analysis slug",
+  );
+
 const isoDateSchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, "Must use YYYY-MM-DD format");
@@ -33,10 +45,10 @@ const isoDateSchema = z
 export const AaModelSchema = z.object({
   id: z.string().min(1),
   name: z.string().trim().min(1),
-  slug: slugSchema,
+  slug: upstreamSlugSchema,
   model_creator: z.object({
     name: z.string().trim().min(1),
-    slug: slugSchema,
+    slug: upstreamSlugSchema,
   }),
   release_date: z.string().nullish(),
   context_window_tokens: z.number().int().positive().nullish(),
@@ -67,9 +79,9 @@ export function parseAaModels(input: unknown): AaModel[] {
 export const LedgerEntrySchema = z
   .object({
     aaId: z.string().min(1),
-    aaSlug: slugSchema,
+    aaSlug: upstreamSlugSchema,
     aaName: z.string().trim().min(1),
-    creator: slugSchema,
+    creator: upstreamSlugSchema,
     status: z.enum(["added", "ignored"]),
     modelId: slugSchema.optional(),
     firstSeen: isoDateSchema,
@@ -143,7 +155,7 @@ export function validateLedgerConsistency(
 // --- Seeding -------------------------------------------------------------
 
 const AA_MODEL_PAGE_PATTERN =
-  /^https?:\/\/(?:www\.)?artificialanalysis\.ai\/models\/([a-z0-9-]+)(?:[/#?]|$)/;
+  /^https?:\/\/(?:www\.)?artificialanalysis\.ai\/models\/([A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*)(?:[/#?]|$)/;
 
 /** Extracts the AA model slug from a score's source URL, if it is an AA model page. */
 export function extractAaSlug(url: string): string | null {
@@ -348,16 +360,18 @@ export function deriveIdPrefix(creatorSlug: string, ledger: LedgerFile): string 
   const counts = new Map<string, number>();
 
   for (const entry of ledger.entries) {
+    const localAaSlug = toLocalSlug(entry.aaSlug);
+
     if (
       entry.status !== "added" ||
       entry.creator !== creatorSlug ||
       entry.modelId === undefined ||
-      !entry.modelId.endsWith(entry.aaSlug)
+      !entry.modelId.endsWith(localAaSlug)
     ) {
       continue;
     }
 
-    const prefix = entry.modelId.slice(0, entry.modelId.length - entry.aaSlug.length);
+    const prefix = entry.modelId.slice(0, entry.modelId.length - localAaSlug.length);
     counts.set(prefix, (counts.get(prefix) ?? 0) + 1);
   }
 
@@ -365,7 +379,21 @@ export function deriveIdPrefix(creatorSlug: string, ledger: LedgerFile): string 
     (a, b) => b[1] - a[1] || a[0].length - b[0].length || a[0].localeCompare(b[0]),
   )[0];
 
-  return best === undefined ? `${creatorSlug}-` : best[0];
+  return best === undefined ? `${toLocalSlug(creatorSlug)}-` : best[0];
+}
+
+/** Converts an opaque upstream slug into a schema-valid local model-id part. */
+function toLocalSlug(value: string): string {
+  const normalized = value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  if (normalized === "") {
+    throw new Error(`Cannot derive a local model id from upstream slug "${value}"`);
+  }
+
+  return normalized;
 }
 
 export interface Scaffold {
@@ -445,9 +473,10 @@ export function buildScaffolds(
     ];
 
     const prefix = deriveIdPrefix(group.creator.slug, ledger);
-    let id = group.primary.slug.startsWith(prefix)
-      ? group.primary.slug
-      : `${prefix}${group.primary.slug}`;
+    const primaryIdSlug = toLocalSlug(group.primary.slug);
+    let id = primaryIdSlug.startsWith(prefix)
+      ? primaryIdSlug
+      : `${prefix}${primaryIdSlug}`;
 
     if (takenIds.has(id)) {
       let suffix = 2;

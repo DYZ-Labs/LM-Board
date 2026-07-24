@@ -106,6 +106,28 @@ describe("parseAaModels", () => {
     expect(models[0].slug).toBe("x");
   });
 
+  it("accepts opaque upstream slugs without treating them as local ids", () => {
+    const models = parseAaModels([
+      {
+        id: "x1",
+        name: "QwQ 32B Preview",
+        slug: "QwQ-32B-Preview",
+        model_creator: { name: "ByteDance Seed", slug: "bytedance_seed" },
+      },
+      {
+        id: "x2",
+        name: "GLM 4.5",
+        slug: "glm-4.5",
+        model_creator: { name: "Z AI", slug: "zai" },
+      },
+    ]);
+
+    expect(models.map((model) => model.slug)).toEqual([
+      "QwQ-32B-Preview",
+      "glm-4.5",
+    ]);
+  });
+
   it("rejects entries missing required fields", () => {
     expect(() => parseAaModels({ data: [{ id: "x1", name: "X" }] })).toThrow();
   });
@@ -118,6 +140,10 @@ describe("extractAaSlug", () => {
     ).toBe("gpt-5-6-sol");
     expect(extractAaSlug("https://www.artificialanalysis.ai/models/kimi-k3")).toBe("kimi-k3");
     expect(extractAaSlug("https://artificialanalysis.ai/models/glm-5/prompt-options")).toBe("glm-5");
+    expect(extractAaSlug("https://artificialanalysis.ai/models/QwQ-32B-Preview")).toBe(
+      "QwQ-32B-Preview",
+    );
+    expect(extractAaSlug("https://artificialanalysis.ai/models/glm-4.5")).toBe("glm-4.5");
   });
 
   it("returns null for non-AA-model-page URLs", () => {
@@ -249,6 +275,28 @@ describe("deriveIdPrefix", () => {
 
   it("falls back to the creator slug for unseen creators", () => {
     expect(deriveIdPrefix("amazon", seededLedger())).toBe("amazon-");
+    expect(deriveIdPrefix("ByteDance_Seed", seededLedger())).toBe(
+      "bytedance-seed-",
+    );
+  });
+
+  it("derives prefixes from normalized upstream slugs", () => {
+    const ledger: LedgerFile = {
+      source: "https://example.com",
+      entries: [
+        {
+          aaId: "dotted",
+          aaSlug: "GPT.5_Test",
+          aaName: "GPT 5 Test",
+          creator: "openai",
+          status: "added",
+          modelId: "openai-gpt-5-test",
+          firstSeen: TODAY,
+        },
+      ],
+    };
+
+    expect(deriveIdPrefix("openai", ledger)).toBe("openai-");
   });
 
   it("picks the most frequent prefix when mixed", () => {
@@ -356,6 +404,31 @@ describe("buildScaffolds", () => {
 
     expect(scaffolds[0].model.releaseDate).toBe("2026-08-01");
     expect(scaffolds[0].flags.join("\n")).toMatch(/day defaulted to 01/);
+  });
+
+  it("normalizes opaque upstream slugs when deriving local model ids", () => {
+    const ledger = seededLedger();
+    const dottedSlug: AaModel[] = [
+      {
+        id: "dotted-1",
+        name: "GPT 5 Test",
+        slug: "GPT.5_Test",
+        model_creator: { name: "OpenAI", slug: "openai" },
+      },
+    ];
+
+    const { scaffolds, ledgerRows } = buildScaffolds(
+      classifyNew(dottedSlug, ledger),
+      ledger,
+      MODELS,
+      TODAY,
+    );
+
+    expect(scaffolds[0].model.id).toBe("openai-gpt-5-test");
+    expect(scaffolds[0].aaPageUrl).toBe(
+      "https://artificialanalysis.ai/models/GPT.5_Test",
+    );
+    expect(ledgerRows[0].aaSlug).toBe("GPT.5_Test");
   });
 
   it("suffixes and flags colliding ids", () => {
