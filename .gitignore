@@ -23,3 +23,6 @@ npm-debug.log*
 .idea
 .vscode
 *.swp
+
+# Local analysis artifacts
+/audit-lmboard.md

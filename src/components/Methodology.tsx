@@ -84,7 +84,7 @@ export function Methodology({
       aria-label="Methodology"
     >
       <div className="methodology-intro">
-        <p className="section-kicker">Methodology</p>
+        <h1>Methodology</h1>
         <p>
           LM Board runs no evaluations of its own. It collects scores that labs
           and independent evaluators have already published, puts them side by
