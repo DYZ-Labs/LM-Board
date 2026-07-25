@@ -1129,7 +1129,7 @@ svg {
   justify-content: space-between;
 }
 
-.detail-heading h3 {
+.detail-heading h2 {
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
   font-size: var(--type-26);
@@ -1183,7 +1183,7 @@ svg {
   font-weight: var(--weight-medium);
 }
 
-.detail-scores h4 {
+.detail-scores h3 {
   margin: 0 0 var(--space-3);
   font-size: var(--type-14);
   font-weight: var(--weight-bold);
@@ -1215,7 +1215,7 @@ svg {
   justify-content: space-between;
 }
 
-.detail-score h5 {
+.detail-score h4 {
   margin: 0;
   font-size: var(--type-12);
   font-weight: var(--weight-bold);
@@ -1334,7 +1334,7 @@ svg {
 
 .method-body > p {
   color: var(--ink-secondary);
-  font-size: var(--type-14);
+  font-size: var(--type-16);
   line-height: 1.7;
 }
 
@@ -1873,6 +1873,28 @@ svg {
   .site-footer nav {
     justify-content: flex-start;
     flex-wrap: wrap;
+  }
+}
+
+/* Touch pointers get a 44px tap zone through an invisible halo; the control
+   keeps its rendered size, and max() leaves already-large controls alone. */
+@media (pointer: coarse) {
+  .header-actions > a,
+  .theme-toggle,
+  .tooltip-trigger {
+    position: relative;
+  }
+
+  .header-actions > a::after,
+  .theme-toggle::after,
+  .tooltip-trigger::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    content: "";
+    transform: translate(-50%, -50%);
   }
 }
 

@@ -42,7 +42,7 @@ export function DetailPanel({
           <div className="detail-heading">
             <div>
               <p className="detail-eyebrow">Model details</p>
-              <h3>{model.name}</h3>
+              <h2>{model.name}</h2>
             </div>
             <a href={model.url} target="_blank" rel="noreferrer">
               Official model page
@@ -97,7 +97,7 @@ export function DetailPanel({
           </dl>
 
           <div className="detail-scores">
-            <h4>Score provenance</h4>
+            <h3>Score provenance</h3>
             <div className="detail-score-grid">
               {benchmarks.map((benchmark) => {
                 const score = row.scoresByBenchmark[benchmark.id];
@@ -105,7 +105,7 @@ export function DetailPanel({
                 return (
                   <article className="detail-score" key={benchmark.id}>
                     <div className="detail-score-heading">
-                      <h5>{benchmark.name}</h5>
+                      <h4>{benchmark.name}</h4>
                       <strong className="numeric-cell">
                         {score ? scoreFormatter.format(score.value) : "—"}
                       </strong>
