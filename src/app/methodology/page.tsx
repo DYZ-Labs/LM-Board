@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Methodology } from "@/components/Methodology";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SiteMasthead } from "@/components/SiteMasthead";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { loadLeaderboardData } from "@/lib/data";
 import { MIN_INDEX_COVERAGE } from "@/lib/index";
@@ -42,30 +43,29 @@ export default function MethodologyPage() {
         Skip to methodology
       </a>
       <main className="site-shell">
-        <header className="site-header" id="top">
-          <div className="site-identity">
-            <Link className="wordmark" href="/" aria-label="LM Board home">
-              LM Board
-            </Link>
-            <p>Benchmark scores for frontier AI models</p>
-          </div>
-          <nav className="header-actions" aria-label="Site controls">
-            <Link href="/">Leaderboard</Link>
-            {repositoryUrl ? (
-              <a href={repositoryUrl} target="_blank" rel="noreferrer">
-                GitHub
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            ) : null}
-            <ThemeToggle />
-          </nav>
-          <p className="masthead-meta">
-            Updated{" "}
-            <time dateTime={data.lastUpdated}>{lastUpdatedLabel}</time>
-            <br />
-            {data.rows.length} models · {data.scoreCount} cited scores
-          </p>
-        </header>
+        <SiteMasthead
+          id="top"
+          actions={
+            <>
+              <Link href="/">Leaderboard</Link>
+              {repositoryUrl ? (
+                <a href={repositoryUrl} target="_blank" rel="noreferrer">
+                  GitHub
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              ) : null}
+              <ThemeToggle />
+            </>
+          }
+          meta={
+            <>
+              Updated{" "}
+              <time dateTime={data.lastUpdated}>{lastUpdatedLabel}</time>
+              <br />
+              {data.rows.length} models · {data.scoreCount} cited scores
+            </>
+          }
+        />
         <Methodology
           benchmarks={data.benchmarks}
           percentBenchmarkCount={percentBenchmarkCount}

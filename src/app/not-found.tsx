@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { SiteMasthead } from "@/components/SiteMasthead";
+
 export const metadata: Metadata = {
   title: "Page not found",
   robots: {
@@ -11,14 +13,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <main className="site-shell">
-      <header className="site-header">
-        <div className="site-identity">
-          <Link className="wordmark" href="/" aria-label="LM Board home">
-            LM Board
-          </Link>
-          <p>Benchmark scores for frontier AI models</p>
-        </div>
-      </header>
+      <SiteMasthead />
       <section className="not-found">
         <p className="section-kicker">404</p>
         <h1>This page isn&apos;t on the board.</h1>

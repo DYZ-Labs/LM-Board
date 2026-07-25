@@ -1,5 +1,7 @@
 "use client";
 
+import { SiteMasthead } from "@/components/SiteMasthead";
+
 import "./globals.css";
 
 type GlobalErrorProps = {
@@ -14,12 +16,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
       </head>
       <body>
         <main className="site-shell">
-          <header className="site-header">
-            <div className="site-identity">
-              <span className="wordmark">LM Board</span>
-              <p>Benchmark scores for frontier AI models</p>
-            </div>
-          </header>
+          <SiteMasthead variant="static" />
           <section className="not-found" role="alert">
             <p className="section-kicker">System error</p>
             <h1>The board hit a snag.</h1>

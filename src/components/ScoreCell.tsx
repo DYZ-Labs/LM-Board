@@ -12,7 +12,7 @@ type ScoreCellProps = {
   unit: Benchmark["unit"];
 };
 
-export function ScoreCell({ score, isBest, unit }: ScoreCellProps) {
+export function ScoreCell({ score, isBest }: ScoreCellProps) {
   if (!score) {
     return (
       <td className="numeric-cell missing-value" aria-label="No curated score">
@@ -20,9 +20,6 @@ export function ScoreCell({ score, isBest, unit }: ScoreCellProps) {
       </td>
     );
   }
-
-  const barWidth =
-    unit === "percent" ? Math.min(100, Math.max(0, score.value)) : null;
 
   return (
     <td className={`numeric-cell score-cell${isBest ? " is-best" : ""}`}>
@@ -43,11 +40,6 @@ export function ScoreCell({ score, isBest, unit }: ScoreCellProps) {
           </Badge>
         ) : null}
       </div>
-      {barWidth === null ? null : (
-        <span className="score-bar" aria-hidden="true">
-          <span className="score-bar-fill" style={{ width: `${barWidth}%` }} />
-        </span>
-      )}
     </td>
   );
 }

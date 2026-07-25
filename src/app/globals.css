@@ -2,10 +2,10 @@
   color-scheme: light dark;
   --type-11: 11px;
   --type-12: 12px;
-  --type-13: 13px;
   --type-14: 14px;
   --type-16: 16px;
   --type-20: 20px;
+  --type-26: 26px;
   --type-34: 34px;
   --weight-regular: 400;
   --weight-medium: 500;
@@ -22,30 +22,41 @@
   --radius-sm: 6px;
   --radius-lg: 12px;
   --radius-pill: 999px;
+  --control-height: 36px;
+  /* Optical inset: aligns section text with the table's cell padding, which sits
+     1px of border inside the shell. Not part of the spacing scale. */
+  --inset-optical: 2px;
+  --col-rank: 66px;
+  --col-model: 250px;
+  --col-index: 116px;
+  --col-benchmark: 138px;
+  --col-price: 140px;
   --shadow-overlay: 0 16px 36px rgba(28, 25, 23, 0.18);
   --shadow-scroll-hint:
-    1px 0 0 var(--hairline), 7px 0 12px -12px rgba(28, 25, 23, 0.6);
+    1px 0 0 var(--rule), 7px 0 12px -12px rgba(28, 25, 23, 0.6);
   /* Static light values first: pre-light-dark() browsers degrade to light theme */
   --page: #f6f4ee;
   --surface: #fdfcf8;
   --ink: #1c1917;
   --ink-secondary: #57534a;
-  --hairline: #e2ddd0;
+  --ink-muted: #6f6862;
+  --rule: #e2ddd0;
+  --rule-strong: #8a8374;
   --accent: #a63a22;
   --hover: rgba(166, 58, 34, 0.05);
   --detail: rgba(166, 58, 34, 0.04);
   --row-hover: #f2eee4;
-  --control-border: #8a8374;
   --page: light-dark(#f6f4ee, #131110);
   --surface: light-dark(#fdfcf8, #1b1815);
   --ink: light-dark(#1c1917, #f0ede6);
   --ink-secondary: light-dark(#57534a, #a39c8f);
-  --hairline: light-dark(#e2ddd0, #2e2a25);
+  --ink-muted: light-dark(#6f6862, #938c80);
+  --rule: light-dark(#e2ddd0, #2e2a25);
+  --rule-strong: light-dark(#8a8374, #757060);
   --accent: light-dark(#a63a22, #d96c4f);
   --hover: light-dark(rgba(166, 58, 34, 0.05), rgba(217, 108, 79, 0.09));
   --detail: light-dark(rgba(166, 58, 34, 0.04), rgba(217, 108, 79, 0.07));
   --row-hover: light-dark(#f2eee4, #251f19);
-  --control-border: #8a8374;
   font-family: var(--font-ui), system-ui, -apple-system, "Segoe UI", sans-serif;
   background: var(--page);
   color: var(--ink);
@@ -138,9 +149,7 @@ label {
     background-color 120ms ease,
     border-color 120ms ease,
     box-shadow 120ms ease,
-    opacity 120ms ease,
-    text-decoration-color 120ms ease,
-    transform 120ms ease;
+    text-decoration-color 120ms ease;
 }
 
 svg {
@@ -171,11 +180,11 @@ svg {
   top: var(--space-3);
   left: var(--space-3);
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink);
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   font-weight: var(--weight-bold);
   transform: translateY(-160%);
   transition: transform 120ms ease;
@@ -198,8 +207,8 @@ svg {
   column-gap: var(--space-4);
   row-gap: var(--space-3);
   align-items: start;
-  margin-bottom: var(--space-5);
-  padding: var(--space-3) 2px var(--space-4);
+  margin-bottom: var(--space-6);
+  padding: var(--space-3) var(--inset-optical) var(--space-4);
   border-bottom: 3px double var(--ink);
 }
 
@@ -242,10 +251,9 @@ svg {
   grid-row: 2;
   align-self: end;
   margin: 0;
-  color: var(--ink-secondary);
-  font-family: var(--font-mono), monospace;
-  font-size: var(--type-11);
-  line-height: 1.7;
+  color: var(--ink-muted);
+  font-size: var(--type-12);
+  line-height: 1.5;
   text-align: right;
   white-space: nowrap;
 }
@@ -262,11 +270,11 @@ svg {
 .header-actions > a,
 .theme-toggle {
   display: inline-flex;
-  min-height: 34px;
+  min-height: var(--control-height);
   gap: var(--space-2);
   align-items: center;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink-secondary);
@@ -277,15 +285,14 @@ svg {
 
 .header-actions > a:hover,
 .theme-toggle:hover {
-  border-color: var(--control-border);
+  border-color: var(--rule-strong);
   color: var(--ink);
 }
 
 .theme-toggle {
-  width: 34px;
-  min-width: 34px;
-  height: 34px;
-  min-height: 34px;
+  width: var(--control-height);
+  min-width: var(--control-height);
+  height: var(--control-height);
   justify-content: center;
   padding: 0;
   cursor: pointer;
@@ -302,11 +309,10 @@ svg {
 .section-kicker,
 .detail-eyebrow {
   margin: 0 0 var(--space-2);
-  color: var(--ink-secondary);
-  font-family: var(--font-mono), monospace;
+  color: var(--ink-muted);
   font-size: var(--type-11);
-  font-weight: var(--weight-medium);
-  letter-spacing: 0.14em;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -315,40 +321,42 @@ svg {
 }
 
 .controls-shell {
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--rule);
   border-bottom: 0;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   background: var(--surface);
 }
 
+/* No horizontal padding here: the tab's own inset supplies the gutter, so the
+   first tab's text lands on the same x as the search field below it. */
 .category-tabs {
   display: flex;
   gap: var(--space-1);
-  padding: var(--space-2);
+  padding: var(--space-2) 0;
   overflow-x: auto;
-  border-bottom: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--rule);
   scrollbar-width: thin;
 }
 
 .category-tab {
   position: relative;
   flex: 0 0 auto;
-  min-height: 34px;
-  padding: var(--space-2) var(--space-3);
+  min-height: var(--control-height);
+  padding: var(--space-2);
   border: 0;
   border-radius: 0;
   background: transparent;
   color: var(--ink-secondary);
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   font-weight: var(--weight-semibold);
   cursor: pointer;
 }
 
 .category-tab::after {
   position: absolute;
-  right: var(--space-3);
+  right: var(--space-2);
   bottom: 0;
-  left: var(--space-3);
+  left: var(--space-2);
   height: 2px;
   background: var(--accent);
   content: "";
@@ -380,12 +388,12 @@ svg {
 
 .search-control {
   display: flex;
-  width: min(250px, 100%);
-  min-height: 36px;
+  width: min(280px, 100%);
+  min-height: var(--control-height);
   gap: var(--space-2);
   align-items: center;
   padding: 0 var(--space-3);
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius-sm);
   background: var(--page);
   color: var(--ink-secondary);
@@ -413,7 +421,7 @@ svg {
   outline: 0;
   background: transparent;
   color: var(--ink);
-  font-size: var(--type-13);
+  font-size: var(--type-14);
 }
 
 .search-control input::placeholder {
@@ -428,15 +436,15 @@ svg {
 
 .provider-filter summary {
   display: flex;
-  min-height: 36px;
+  min-height: var(--control-height);
   gap: var(--space-2);
   align-items: center;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink-secondary);
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   font-weight: var(--weight-medium);
   list-style: none;
   cursor: pointer;
@@ -485,7 +493,7 @@ svg {
   left: 0;
   width: 240px;
   padding: var(--space-2);
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius-lg);
   background: var(--surface);
   box-shadow: var(--shadow-overlay);
@@ -510,13 +518,13 @@ svg {
 
 .provider-menu label {
   display: flex;
-  min-height: 33px;
+  min-height: var(--control-height);
   gap: var(--space-2);
   align-items: center;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
   color: var(--ink-secondary);
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   cursor: pointer;
 }
 
@@ -539,7 +547,7 @@ svg {
   margin-top: var(--space-2);
   padding: var(--space-2);
   border: 0;
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--rule);
   background: transparent;
   color: var(--ink-secondary);
   font-size: var(--type-12);
@@ -548,7 +556,7 @@ svg {
 }
 
 .provider-done {
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius-sm);
   background: var(--page);
   color: var(--ink);
@@ -556,25 +564,25 @@ svg {
 
 .toggle-control {
   display: flex;
-  min-height: 36px;
+  min-height: var(--control-height);
   gap: var(--space-2);
   align-items: center;
   padding: var(--space-2);
   color: var(--ink-secondary);
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   white-space: nowrap;
   cursor: pointer;
 }
 
 .filter-result {
   margin-left: auto;
-  color: var(--ink-secondary);
+  color: var(--ink-muted);
   font-size: var(--type-12);
   white-space: nowrap;
 }
 
 .clear-filters {
-  min-height: 34px;
+  min-height: var(--control-height);
   padding: var(--space-1) var(--space-2);
   border: 0;
   background: transparent;
@@ -582,28 +590,36 @@ svg {
   font-size: var(--type-12);
   font-weight: var(--weight-semibold);
   text-decoration: underline;
-  text-decoration-color: var(--hairline);
+  text-decoration-color: var(--rule);
   text-underline-offset: 3px;
   cursor: pointer;
 }
 
+/* Visible wherever the table scrolls; hidden (but still announced) once the
+   board goes fluid at 1540px. */
 .table-scroll-instructions {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+  padding: var(--space-2);
+  margin: 0;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  border-right: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink-muted);
+  font-size: var(--type-11);
+  line-height: 1.4;
+  text-overflow: ellipsis;
   white-space: nowrap;
-  border: 0;
 }
 
+/* Below the fluid breakpoint this is a proper grid viewport: it must stay a
+   scroll container in both axes, because `position: sticky` on thead needs a
+   scrollport to stick to. (overflow-x: auto with overflow-y: visible computes
+   the y axis to auto anyway, so a "horizontal only" variant is not available.) */
 .table-scroll {
   max-width: 100%;
   max-height: min(72vh, 720px);
   overflow: auto;
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--rule);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   background: var(--surface);
   overscroll-behavior-inline: contain;
@@ -616,7 +632,10 @@ svg {
 
 .leaderboard-table {
   width: 100%;
-  min-width: calc(572px + var(--benchmark-count) * 138px);
+  min-width: calc(
+    var(--col-rank) + var(--col-model) + var(--col-index) + var(--col-price) +
+      var(--benchmark-count) * var(--col-benchmark)
+  );
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -625,7 +644,7 @@ svg {
 .leaderboard-table th,
 .leaderboard-table td {
   padding: var(--space-2);
-  border-bottom: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--rule);
   text-align: left;
   vertical-align: middle;
 }
@@ -639,9 +658,9 @@ svg {
   padding-bottom: var(--space-2);
   background: var(--surface);
   color: var(--ink-secondary);
-  font-size: var(--type-11);
+  font-size: var(--type-12);
   font-weight: var(--weight-semibold);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -653,7 +672,7 @@ svg {
 
 .leaderboard-table .rank-column,
 .leaderboard-table .rank-cell {
-  width: 66px;
+  width: var(--col-rank);
   text-align: center;
 }
 
@@ -662,7 +681,7 @@ svg {
   position: sticky;
   z-index: 10;
   left: 0;
-  width: 250px;
+  width: var(--col-model);
   transition: box-shadow 120ms ease;
 }
 
@@ -681,20 +700,32 @@ svg {
 
 .index-column,
 .index-cell {
-  width: 116px;
+  width: var(--col-index);
 }
 
 .benchmark-column {
-  width: 138px;
+  width: var(--col-benchmark);
 }
 
+/* Benchmark labels are mixed-case, so they need no uppercase tracking. They
+   truncate rather than overflow: the tooltip icon shares the cell and the full
+   name is in the tooltip, so a spilling label would render underneath it. */
 .benchmark-column .sort-button > span:first-child {
+  overflow: hidden;
+  letter-spacing: normal;
+  text-overflow: ellipsis;
   text-transform: none;
+}
+
+/* Scoped tabs render "Reasoning Index" etc., which cannot fit the column on one
+   line; wrapping keeps the label inside its cell instead of overlapping GPQA. */
+.index-column .sort-button > span:first-child {
+  white-space: normal;
 }
 
 .price-column,
 .price-cell {
-  width: 140px;
+  width: var(--col-price);
 }
 
 .column-header-controls {
@@ -764,7 +795,7 @@ svg {
   left: 50%;
   width: 275px;
   padding: var(--space-4);
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius-lg);
   background: var(--surface);
   box-shadow: var(--shadow-overlay);
@@ -797,7 +828,7 @@ svg {
 
 .tooltip-panel .tooltip-meta {
   padding-top: var(--space-2);
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--rule);
   font-size: var(--type-11);
 }
 
@@ -808,7 +839,7 @@ svg {
 }
 
 .sort-indicator {
-  color: var(--ink-secondary);
+  color: var(--ink-muted);
   font-size: var(--type-12);
   line-height: 1;
   opacity: 0;
@@ -822,7 +853,7 @@ svg {
 }
 
 .header-note {
-  color: var(--ink-secondary);
+  color: var(--ink-muted);
   font-size: var(--type-11);
   font-weight: var(--weight-semibold);
   letter-spacing: 0;
@@ -830,7 +861,7 @@ svg {
 }
 
 .model-row {
-  height: 48px;
+  height: 56px;
   background: var(--surface);
   cursor: pointer;
   scroll-margin-top: 44px;
@@ -864,7 +895,7 @@ svg {
 .rank-cell {
   color: var(--ink);
   font-family: var(--font-mono), monospace;
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   font-variant-numeric: tabular-nums;
   font-weight: var(--weight-medium);
 }
@@ -902,7 +933,7 @@ svg {
   min-height: 24px;
   gap: var(--space-2);
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 0;
   border: 0;
   background: transparent;
@@ -927,31 +958,48 @@ svg {
 .model-name {
   min-width: 0;
   overflow: hidden;
-  font-size: var(--type-14);
+  font-size: var(--type-16);
   font-weight: var(--weight-semibold);
   letter-spacing: -0.015em;
+  line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.reasoning-effort-label {
+/* One pill, four variants. Every badge inherits shape, border and type from
+   .badge; a variant may only declare what genuinely differs. */
+.badge {
+  display: inline-flex;
   flex: 0 0 auto;
-  justify-content: center;
+  width: fit-content;
+  align-items: center;
   padding: 2px var(--space-2);
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius-pill);
-  color: var(--ink-secondary);
-  font-family: var(--font-mono), monospace;
+  color: var(--ink-muted);
   font-size: var(--type-11);
   font-weight: var(--weight-medium);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.reasoning-effort-label {
+  justify-content: center;
   text-transform: lowercase;
 }
 
 .disclosure-icon {
   flex: 0 0 auto;
-  color: var(--ink-secondary);
-  font-size: var(--type-16);
+  color: var(--ink-muted);
+  font-size: var(--type-14);
   font-weight: var(--weight-regular);
+  transition: color 120ms ease;
+}
+
+.model-row:hover .disclosure-icon,
+.model-row.is-expanded .disclosure-icon,
+.model-trigger:focus-visible .disclosure-icon {
+  color: var(--ink);
 }
 
 .model-meta {
@@ -959,45 +1007,21 @@ svg {
   min-width: 0;
   gap: var(--space-2);
   align-items: center;
-  margin-top: 3px;
+  margin-top: var(--space-1);
   overflow: hidden;
-  color: var(--ink-secondary);
+  color: var(--ink-muted);
   font-size: var(--type-11);
   font-weight: var(--weight-regular);
+  line-height: 1.4;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.open-weights-label {
-  flex: 0 0 auto;
-  padding: 2px var(--space-2);
-  border: 1px solid var(--control-border);
-  border-radius: var(--radius-pill);
-  color: var(--ink-secondary);
-  font-family: var(--font-mono), monospace;
-  font-size: var(--type-11);
-  font-weight: var(--weight-medium);
-}
-
-.badge {
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  color: var(--ink-secondary);
-  line-height: 1.2;
   white-space: nowrap;
 }
 
 .leaderboard-table .numeric-cell {
   text-align: right;
   font-family: var(--font-mono), monospace;
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   font-variant-numeric: tabular-nums;
-}
-
-.leaderboard-table .score-cell {
-  padding-top: var(--space-2);
-  padding-bottom: var(--space-2);
 }
 
 .score-value-line {
@@ -1026,50 +1050,30 @@ svg {
 }
 
 .score-report-badge {
-  padding: 2px var(--space-1);
-  border: 1px solid var(--control-border);
-  border-radius: var(--radius-pill);
-  font-family: var(--font-mono), monospace;
-  font-size: var(--type-11);
-  font-weight: var(--weight-medium);
-}
-
-.score-bar {
-  display: block;
-  width: 100%;
-  max-width: 132px;
-  height: 4px;
-  margin-top: var(--space-2);
-  margin-left: auto;
-  overflow: hidden;
-  border-radius: var(--radius-pill);
-  background: var(--hairline);
-}
-
-.score-bar-fill {
-  display: block;
-  height: 100%;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-  transition: width 240ms ease;
+  padding-right: var(--space-1);
+  padding-left: var(--space-1);
 }
 
 .leaderboard-table .index-cell {
-  font-size: var(--type-14);
-  font-weight: var(--weight-bold);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: var(--type-20);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
 }
 
 .missing-value {
-  color: var(--ink-secondary);
+  color: var(--ink-muted);
   font-weight: var(--weight-regular);
 }
 
 .insufficient-label {
   display: inline-block;
   max-width: 92px;
-  color: var(--ink-secondary);
+  color: var(--ink-muted);
+  font-family: var(--font-ui), system-ui, sans-serif;
   font-size: var(--type-11);
   font-weight: var(--weight-medium);
+  letter-spacing: normal;
   line-height: 1.2;
 }
 
@@ -1084,7 +1088,9 @@ svg {
 }
 
 .empty-state strong {
-  font-size: var(--type-14);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: var(--type-20);
+  font-weight: var(--weight-semibold);
 }
 
 .empty-state span {
@@ -1112,7 +1118,7 @@ svg {
 
 .detail-panel {
   padding: var(--space-5) var(--space-6) var(--space-6);
-  border-bottom: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--rule);
   animation: detail-panel-in 180ms ease;
 }
 
@@ -1126,9 +1132,9 @@ svg {
 .detail-heading h3 {
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
-  font-size: var(--type-20);
+  font-size: var(--type-26);
   font-weight: var(--weight-semibold);
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   line-height: 1.2;
 }
 
@@ -1139,12 +1145,16 @@ svg {
   font-weight: var(--weight-semibold);
 }
 
+/* auto-fit tracks, with each cell drawing its own separators as box-shadows.
+   Shadows do not affect layout and the container clips the trailing ones, so a
+   partial last row leaves plain surface rather than a gap-coloured block — no
+   per-breakpoint border patching needed. */
 .model-metadata {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 0;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   margin: var(--space-5) 0 var(--space-6);
-  border: 1px solid var(--hairline);
+  overflow: hidden;
+  border: 1px solid var(--rule);
   border-radius: var(--radius-lg);
   background: var(--surface);
 }
@@ -1152,52 +1162,49 @@ svg {
 .model-metadata > div {
   min-width: 0;
   padding: var(--space-3) var(--space-4);
-  border-right: 1px solid var(--hairline);
-}
-
-.model-metadata > div:last-child {
-  border-right: 0;
+  box-shadow:
+    1px 0 0 var(--rule),
+    0 1px 0 var(--rule);
 }
 
 .model-metadata dt {
   margin-bottom: var(--space-1);
-  color: var(--ink-secondary);
-  font-family: var(--font-mono), monospace;
+  color: var(--ink-muted);
   font-size: var(--type-11);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
   letter-spacing: 0.055em;
   text-transform: uppercase;
 }
 
 .model-metadata dd {
   margin: 0;
-  overflow: hidden;
   color: var(--ink-secondary);
   font-size: var(--type-12);
   font-weight: var(--weight-medium);
-  text-overflow: ellipsis;
 }
 
 .detail-scores h4 {
   margin: 0 0 var(--space-3);
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   font-weight: var(--weight-bold);
   letter-spacing: -0.01em;
 }
 
 .detail-score-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid var(--hairline);
-  border-left: 1px solid var(--hairline);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
 }
 
 .detail-score {
   min-width: 0;
   padding: var(--space-4);
-  border-right: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline);
-  background: var(--surface);
+  box-shadow:
+    1px 0 0 var(--rule),
+    0 1px 0 var(--rule);
   font-size: var(--type-12);
 }
 
@@ -1219,15 +1226,7 @@ svg {
 }
 
 .detail-score > .measurement-label {
-  width: fit-content;
   margin: var(--space-2) 0 0;
-  padding: 3px var(--space-2);
-  border: 1px solid var(--control-border);
-  border-radius: var(--radius-pill);
-  color: var(--ink-secondary);
-  font-family: var(--font-mono), monospace;
-  font-size: var(--type-11);
-  font-weight: var(--weight-medium);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -1252,37 +1251,30 @@ svg {
 }
 
 .source-line span {
-  color: var(--ink-secondary);
+  color: var(--ink-muted);
   font-family: var(--font-mono), monospace;
   font-size: var(--type-11);
 }
 
 .detail-score > .missing-score-copy {
   margin-top: var(--space-3);
+  color: var(--ink-muted);
 }
 
 .methodology {
-  padding: var(--space-4) 2px 0;
+  padding: var(--space-4) var(--inset-optical) 0;
 }
 
+/* Title left, body right — the same rail rhythm the sections below use. */
 .methodology-intro {
   display: grid;
-  grid-template-columns: minmax(150px, 0.4fr) minmax(0, 1.45fr) auto;
+  grid-template-columns: minmax(150px, 0.4fr) minmax(0, 1.45fr);
   column-gap: var(--space-6);
   align-items: start;
 }
 
-.methodology-intro .section-kicker {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-}
-
-.methodology-intro h1,
-.methodology-intro > p:last-child {
-  grid-column: 2;
-}
-
 .methodology-intro h1 {
+  grid-column: 1;
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
   font-size: var(--type-34);
@@ -1291,9 +1283,10 @@ svg {
   line-height: 1.1;
 }
 
-.methodology-intro > p:last-child {
+.methodology-intro > p {
+  grid-column: 2;
   max-width: 660px;
-  margin: var(--space-5) 0 0;
+  margin: 0;
   color: var(--ink-secondary);
   font-size: var(--type-16);
   line-height: 1.65;
@@ -1301,39 +1294,29 @@ svg {
 
 .method-sections {
   margin-top: var(--space-7);
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--rule);
 }
 
 .method-section {
   display: grid;
-  grid-template-columns: minmax(150px, 0.4fr) minmax(0, 1.45fr) auto;
+  grid-template-columns: minmax(150px, 0.4fr) minmax(0, 1.45fr);
   column-gap: var(--space-6);
   align-items: start;
-  padding: var(--space-6) 2px;
-  border-bottom: 1px solid var(--hairline);
+  padding: var(--space-6) var(--inset-optical);
+  border-bottom: 1px solid var(--rule);
 }
 
 .method-rail {
-  display: flex;
-  flex-direction: column;
   grid-column: 1;
-  gap: var(--space-3);
-}
-
-.method-number {
-  color: var(--ink-secondary);
-  font-family: var(--font-mono), monospace;
-  font-size: var(--type-11);
-  font-variant-numeric: tabular-nums;
-  font-weight: var(--weight-medium);
 }
 
 .method-rail h2 {
   margin: 0;
-  font-size: var(--type-16);
-  font-weight: var(--weight-bold);
-  letter-spacing: -0.02em;
-  line-height: 1.3;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: var(--type-20);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
 }
 
 .method-body {
@@ -1360,14 +1343,14 @@ svg {
   border-left: 3px solid var(--accent);
   color: var(--ink);
   font-family: var(--font-mono), monospace;
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   font-weight: var(--weight-medium);
   line-height: 1.6;
 }
 
 .method-example-scroll {
   overflow-x: auto;
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-sm);
   background: var(--surface);
 }
@@ -1381,7 +1364,7 @@ svg {
 .method-example th,
 .method-example td {
   padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--rule);
   text-align: right;
   white-space: nowrap;
 }
@@ -1408,7 +1391,7 @@ svg {
 }
 
 .method-example tbody th {
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   font-weight: var(--weight-semibold);
 }
 
@@ -1441,8 +1424,7 @@ svg {
 
 .method-benchgroup h3 {
   margin: 0 0 var(--space-1);
-  color: var(--ink-secondary);
-  font-family: var(--font-mono), monospace;
+  color: var(--ink-muted);
   font-size: var(--type-11);
   font-weight: var(--weight-semibold);
   letter-spacing: 0.06em;
@@ -1461,11 +1443,11 @@ svg {
   column-gap: var(--space-4);
   align-items: baseline;
   padding: var(--space-3) 0;
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--rule);
 }
 
 .bench-name {
-  font-size: var(--type-13);
+  font-size: var(--type-14);
   font-weight: var(--weight-semibold);
   letter-spacing: -0.01em;
 }
@@ -1492,7 +1474,7 @@ svg {
   gap: var(--space-5);
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-5) 2px;
+  padding: var(--space-5) var(--inset-optical);
   color: var(--ink-secondary);
   font-size: var(--type-12);
   line-height: 1.55;
@@ -1515,8 +1497,8 @@ svg {
   gap: var(--space-6);
   align-items: start;
   margin-top: var(--space-7);
-  padding: var(--space-6) 2px 0;
-  border-top: 1px solid var(--hairline);
+  padding: var(--space-6) var(--inset-optical) 0;
+  border-top: 1px solid var(--rule);
 }
 
 .site-footer > .wordmark {
@@ -1552,7 +1534,7 @@ svg {
 
 .not-found {
   max-width: 560px;
-  padding: var(--space-7) 2px var(--space-8);
+  padding: var(--space-7) var(--inset-optical) var(--space-8);
 }
 
 .not-found h1 {
@@ -1586,9 +1568,9 @@ svg {
 }
 
 .global-error-actions button {
-  min-height: 38px;
+  min-height: var(--control-height);
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink);
@@ -1604,7 +1586,21 @@ svg {
   background: var(--hover);
 }
 
-@media (min-width: 1024px) {
+/* The eight benchmark columns plus the four fixed ones need ~1460px to render
+   a full label and its tooltip. The shell caps content at 1476px, so the table
+   only goes fluid once the viewport can actually show it; below this it keeps
+   full-width columns and scrolls sideways behind the pinned model column. */
+@media (min-width: 1540px) {
+  .table-scroll-instructions {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
   .table-scroll {
     max-height: none;
     overflow: visible;
@@ -1622,7 +1618,7 @@ svg {
 
   .rank-column,
   .rank-cell {
-    width: 5%;
+    width: 4%;
   }
 
   .model-column,
@@ -1632,7 +1628,7 @@ svg {
 
   .index-column,
   .index-cell {
-    width: 8%;
+    width: 10%;
   }
 
   .benchmark-column {
@@ -1645,37 +1641,25 @@ svg {
   }
 
   .leaderboard-table[data-sparse="true"] .benchmark-column {
-    width: 138px;
+    width: var(--col-benchmark);
   }
 
   .price-column,
   .price-cell {
-    width: 10%;
+    width: 11%;
   }
 
   .column-header-controls {
     gap: 1px;
   }
 
-  .benchmark-column .column-header-controls {
-    position: relative;
-    padding-right: var(--space-4);
-  }
-
   .benchmark-column .sort-button {
     gap: 2px;
+    min-width: 0;
   }
 
   .benchmark-column .sort-button > span:first-child {
     min-width: 0;
-    white-space: nowrap;
-  }
-
-  .benchmark-column .benchmark-tooltip {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
   }
 
   .tooltip-trigger {
@@ -1701,24 +1685,6 @@ svg {
     margin-left: 0;
   }
 
-  .table-scroll-instructions {
-    position: static;
-    width: auto;
-    height: auto;
-    padding: var(--space-2);
-    margin: 0;
-    overflow: hidden;
-    clip: auto;
-    border-right: 1px solid var(--hairline);
-    border-left: 1px solid var(--hairline);
-    background: var(--surface);
-    color: var(--ink-secondary);
-    font-size: var(--type-11);
-    line-height: 1.4;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
   .table-scroll {
     max-height: min(70vh, 680px);
   }
@@ -1735,51 +1701,20 @@ svg {
     width: min(calc(100vw - var(--space-6)), 720px);
   }
 
-  .model-metadata {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .model-metadata > div {
-    border-right: 1px solid var(--hairline);
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  .model-metadata > div:nth-child(3n) {
-    border-right: 0;
-  }
-
-  .model-metadata > div:last-child {
-    grid-column: 1 / -1;
-    border-right: 0;
-    border-bottom: 0;
-  }
-
-  .detail-score-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .methodology-intro {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-4);
   }
 
-  .methodology-intro .section-kicker,
   .methodology-intro h1,
-  .methodology-intro > p:last-child {
+  .methodology-intro > p {
     grid-column: 1;
-  }
-
-  .methodology-intro .section-kicker {
-    grid-row: auto;
   }
 
   .method-section {
     grid-template-columns: minmax(0, 1fr);
     row-gap: var(--space-4);
-    padding: var(--space-5) 2px;
-  }
-
-  .method-rail {
-    gap: var(--space-2);
+    padding: var(--space-5) var(--inset-optical);
   }
 
   .method-body {
@@ -1834,7 +1769,8 @@ svg {
 
   .header-actions > a,
   .theme-toggle {
-    min-height: 32px;
+    --control-height: 32px;
+
     padding: var(--space-1) var(--space-2);
   }
 
@@ -1844,36 +1780,22 @@ svg {
     overflow-x: visible;
   }
 
-  .category-tab {
-    padding-right: var(--space-2);
-    padding-left: var(--space-2);
-  }
-
+  /* --control-height above already sizes it; this only reclaims the padding
+     the shared .header-actions rule applies to link-shaped controls. */
   .theme-toggle {
-    width: 32px;
-    min-width: 32px;
-    height: 32px;
-    min-height: 32px;
     padding: 0;
   }
 
+  /* Rank column is hidden here, so it contributes no width. */
   .leaderboard-table {
-    min-width: calc(414px + var(--benchmark-count) * 138px);
+    --col-rank: 0px;
+    --col-model: 190px;
+    --col-index: 84px;
   }
 
   .rank-column,
   .rank-cell {
     display: none;
-  }
-
-  .model-column,
-  .model-cell {
-    width: 190px;
-  }
-
-  .index-column,
-  .index-cell {
-    width: 84px;
   }
 
   .mobile-rank {
@@ -1917,31 +1839,6 @@ svg {
 
   .detail-heading {
     flex-direction: column;
-  }
-
-  .model-metadata {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .model-metadata > div,
-  .model-metadata > div:nth-child(3n) {
-    grid-column: auto;
-    border-right: 1px solid var(--hairline);
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  .model-metadata > div:nth-child(even) {
-    border-right: 0;
-  }
-
-  .model-metadata > div:last-child {
-    grid-column: 1 / -1;
-    border-right: 0;
-    border-bottom: 0;
-  }
-
-  .detail-score-grid {
-    grid-template-columns: 1fr;
   }
 
   .method-sections {
