@@ -25,6 +25,7 @@ const row = (id: string, name: string): LeaderboardRow => {
     coverageCount: 1,
     coverageTotal: 1,
     coverageRatio: 1,
+    estimatedCount: 0,
   };
 
   return {
@@ -50,6 +51,7 @@ const row = (id: string, name: string): LeaderboardRow => {
     coverageCount: rowScope.coverageCount,
     coverageTotal: rowScope.coverageTotal,
     coverageRatio: rowScope.coverageRatio,
+    estimatedCount: rowScope.estimatedCount,
     rank: rowScope.rank,
   };
 };

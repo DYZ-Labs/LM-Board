@@ -87,8 +87,11 @@ export function DetailPanel({
             <div>
               <dt>Index coverage</dt>
               <dd>
-                {row.coverageCount} of {row.coverageTotal} benchmarks (
+                {row.coverageCount} of {row.coverageTotal} benchmarks measured (
                 {Math.round(row.coverageRatio * 100)}%)
+                {row.estimatedCount > 0
+                  ? `; ${row.estimatedCount} estimated for the Index`
+                  : null}
               </dd>
             </div>
           </dl>
