@@ -6,7 +6,9 @@ import { validateDataIntegrity } from "@/lib/dataIntegrity";
 import {
   RANK_SCOPES,
   benchmarksForScope,
+  buildBenchmarkDistributions,
   calculateLmBoardIndex,
+  estimateMissingScores,
   type RankScope,
 } from "@/lib/index";
 import {
@@ -24,6 +26,7 @@ export type LeaderboardScope = {
   coverageCount: number;
   coverageTotal: number;
   coverageRatio: number;
+  estimatedCount: number;
 };
 
 export type LeaderboardRow = {
@@ -36,6 +39,7 @@ export type LeaderboardRow = {
   coverageCount: number;
   coverageTotal: number;
   coverageRatio: number;
+  estimatedCount: number;
   rank: number | null;
 };
 
@@ -58,6 +62,14 @@ const nameCollator = new Intl.Collator("en", {
   numeric: true,
   sensitivity: "base",
 });
+
+// Indexes are quantised before they are compared for ranking, so that floating
+// point noise in an average cannot split two models that scored identically.
+const RANK_PRECISION = 6;
+
+function quantizeIndex(value: number) {
+  return Number(value.toFixed(RANK_PRECISION));
+}
 
 function summarizeReasoningEffort(
   reasoningEffort: string | null,
@@ -95,17 +107,24 @@ export function loadLeaderboardData(): LeaderboardData {
     scoresByModel.set(score.modelId, modelScores);
   }
 
+  const distributions = buildBenchmarkDistributions(scores, benchmarks);
   const rowsWithoutRanks: LeaderboardRow[] = models.map((model) => {
     const modelScores = scoresByModel.get(model.id) ?? [];
     const reasoningEffort = modelScores[0]?.reasoningEffort ?? null;
     const scoreLookup = new Map(
       modelScores.map((score) => [score.benchmarkId, score]),
     );
+    const estimatedScores = estimateMissingScores(
+      modelScores,
+      benchmarks,
+      distributions,
+    );
     const scopes = Object.fromEntries(
       RANK_SCOPES.map((scope) => {
         const indexResult = calculateLmBoardIndex(
           modelScores,
           benchmarksForScope(benchmarks, scope),
+          estimatedScores,
         );
 
         return [
@@ -116,6 +135,7 @@ export function loadLeaderboardData(): LeaderboardData {
             coverageCount: indexResult.scoredCount,
             coverageTotal: indexResult.totalCount,
             coverageRatio: indexResult.coverage,
+            estimatedCount: indexResult.estimatedCount,
           },
         ];
       }),
@@ -137,6 +157,7 @@ export function loadLeaderboardData(): LeaderboardData {
       coverageCount: overallScope.coverageCount,
       coverageTotal: overallScope.coverageTotal,
       coverageRatio: overallScope.coverageRatio,
+      estimatedCount: overallScope.estimatedCount,
       rank: null,
     } satisfies LeaderboardRow;
   });
@@ -145,20 +166,31 @@ export function loadLeaderboardData(): LeaderboardData {
     RANK_SCOPES.map((scope) => {
       const rankedRows = rowsWithoutRanks
         .filter((row) => row.scopes[scope].index !== null)
-        .sort((left, right) => {
-          const leftIndex = left.scopes[scope].index as number;
-          const rightIndex = right.scopes[scope].index as number;
+        .map((row) => ({
+          row,
+          index: quantizeIndex(row.scopes[scope].index as number),
+        }))
+        .sort(
+          (left, right) =>
+            right.index - left.index ||
+            nameCollator.compare(left.row.model.name, right.row.model.name),
+        );
+      const ranks = new Map<string, number>();
+      let currentRank = 0;
+      let previousIndex: number | null = null;
 
-          return (
-            rightIndex - leftIndex ||
-            nameCollator.compare(left.model.name, right.model.name)
-          );
-        });
+      // Standard competition ranking: models with an identical index share a
+      // rank, and the next distinct index skips the ranks the tie consumed.
+      rankedRows.forEach(({ row, index }, position) => {
+        if (previousIndex === null || index !== previousIndex) {
+          currentRank = position + 1;
+          previousIndex = index;
+        }
 
-      return [
-        scope,
-        new Map(rankedRows.map((row, index) => [row.model.id, index + 1])),
-      ];
+        ranks.set(row.model.id, currentRank);
+      });
+
+      return [scope, ranks];
     }),
   ) as Record<RankScope, Map<string, number>>;
   const rows = rowsWithoutRanks.map((row) => {

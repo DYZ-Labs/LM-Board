@@ -23,17 +23,44 @@ const CATEGORY_LABELS: Record<Benchmark["category"], string> = {
 };
 
 // Illustrative four-benchmark tab: coverage bar is ceil(4 × 0.6) = 3.
+// Model B sits at the midpoint of the three benchmarks it was measured on, so
+// its Bench 2 gap is estimated at the midpoint of Bench 2: (90.0 + 96.0) / 2.
 const EXAMPLE_BENCHMARKS = ["Bench 1", "Bench 2", "Bench 3", "Bench 4"];
 
 const EXAMPLE_ROWS: {
   rank: string | null;
   model: string;
   index: string | null;
-  scores: (string | null)[];
+  scores: ({ value: string; estimated?: boolean } | null)[];
 }[] = [
-  { rank: "1", model: "Model B", index: "86.0", scores: ["92.0", null, "88.0", "78.0"] },
-  { rank: "2", model: "Model A", index: "81.0", scores: ["80.0", "90.0", "70.0", "84.0"] },
-  { rank: null, model: "Model C", index: null, scores: ["95.0", "96.0", null, null] },
+  {
+    rank: "1",
+    model: "Model B",
+    index: "87.8",
+    scores: [
+      { value: "92.0" },
+      { value: "93.0", estimated: true },
+      { value: "88.0" },
+      { value: "78.0" },
+    ],
+  },
+  {
+    rank: "2",
+    model: "Model A",
+    index: "81.0",
+    scores: [
+      { value: "80.0" },
+      { value: "90.0" },
+      { value: "70.0" },
+      { value: "84.0" },
+    ],
+  },
+  {
+    rank: null,
+    model: "Model C",
+    index: null,
+    scores: [{ value: "95.0" }, { value: "96.0" }, null, null],
+  },
 ];
 
 export function Methodology({
@@ -104,14 +131,25 @@ export function Methodology({
           </header>
           <div className="method-body">
             <p>
-              A model&apos;s Index is the plain average of its scores on the
-              benchmarks it has results for. Every benchmark counts equally
-              &mdash; no weighting, no Elo, no adjustments. A missing score is
-              left out of the average; it is never counted as zero.
+              A model&apos;s Index is the plain average of its scores across
+              every benchmark on the tab. Every benchmark counts equally
+              &mdash; no weighting, no Elo, no adjustments.
             </p>
             <p className="formula">
               Index = sum of a model&apos;s scores &divide; number of benchmarks
-              it has scores on
+              on the tab
+            </p>
+            <p>
+              Where a model has no result, the average uses an estimate rather
+              than skipping the benchmark: the model&apos;s standing on the
+              benchmarks it <em>was</em> measured on, read off the missing
+              benchmark&apos;s own spread of published results. A model that
+              ranks mid-field elsewhere is credited a mid-field result, so
+              skipping a benchmark neither helps nor hurts. A missing score is
+              never counted as zero, and an estimate is never published as a
+              score &mdash; the table still shows &ldquo;&mdash;&rdquo; in that
+              column, and the model row reports how many of its benchmarks were
+              estimated.
             </p>
             <figure className="method-example">
               <div className="method-example-scroll">
@@ -159,10 +197,24 @@ export function Methodology({
                         {row.scores.map((score, scoreIndex) => (
                           <td
                             key={EXAMPLE_BENCHMARKS[scoreIndex]}
-                            className={score === null ? "missing-value" : undefined}
+                            className={
+                              score === null || score.estimated
+                                ? "missing-value"
+                                : undefined
+                            }
                             aria-label={score === null ? "No score" : undefined}
                           >
-                            {score ?? <>&mdash;</>}
+                            {score === null ? (
+                              <>&mdash;</>
+                            ) : score.estimated ? (
+                              <>
+                                {score.value}
+                                <span aria-hidden="true"> est.</span>
+                                <span className="sr-only"> estimated</span>
+                              </>
+                            ) : (
+                              score.value
+                            )}
                           </td>
                         ))}
                       </tr>
@@ -172,10 +224,12 @@ export function Methodology({
               </div>
               <figcaption>
                 An illustrative tab with four benchmarks, where ranking requires
-                three. Model B ranks first because its missing score is left out
-                of its average &mdash; not counted as zero. Model C scores well
-                but covers only two of four benchmarks, so it keeps its scores
-                and gets no rank.
+                three. Model B ranks first on the strength of the three
+                benchmarks it was measured on; its Bench 2 gap is estimated at
+                the level it performs elsewhere, so the omission is neither a
+                penalty nor a free pass. Model C scores well but covers only two
+                of four benchmarks, so it keeps its scores and gets no rank
+                &mdash; and no estimates.
               </figcaption>
             </figure>
             <p>
@@ -197,9 +251,17 @@ export function Methodology({
               currently {minimumCoverageCount} of {percentBenchmarkCount}.
               Below that bar a model still appears with every score it has, but
               shows &ldquo;Insufficient data&rdquo; in place of an Index and
-              &ldquo;&mdash;&rdquo; in place of a rank. Without this rule, a
-              model evaluated
+              &ldquo;&mdash;&rdquo; in place of a rank. Only measured results
+              count toward the bar &mdash; estimates fill the gaps of a model
+              that already cleared it, never carry a model over it. Without this
+              rule, a model evaluated
               only on its strongest few benchmarks could top the table.
+            </p>
+            <p>
+              Models with the same Index share the same rank, and the next
+              distinct Index skips the ranks the tie used up &mdash; two models
+              tied at 2nd are followed by a 4th, not a 3rd. Nothing outside the
+              scores breaks a tie.
             </p>
             <p>
               Search and filters never change the numbers: they only hide rows,

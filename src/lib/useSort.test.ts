@@ -24,6 +24,7 @@ const scope = (index: number | null, rank: number | null): LeaderboardScope => (
   coverageCount: index === null ? 0 : 1,
   coverageTotal: 1,
   coverageRatio: index === null ? 0 : 1,
+  estimatedCount: 0,
 });
 
 const row = ({
@@ -69,6 +70,7 @@ const row = ({
     coverageCount: rowScope.coverageCount,
     coverageTotal: rowScope.coverageTotal,
     coverageRatio: rowScope.coverageRatio,
+    estimatedCount: rowScope.estimatedCount,
     rank,
   };
 };
