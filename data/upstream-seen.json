@@ -5281,6 +5281,65 @@
       "status": "ignored",
       "firstSeen": "2026-07-24",
       "note": "pre-automation backlog (seed 2026-07-24)"
+    },
+    {
+      "aaId": "b8fc61f7-5e9a-49e6-8547-6ac56db24627",
+      "aaSlug": "claude-opus-5",
+      "aaName": "Claude Opus 5 (Adaptive Reasoning, Max Effort)",
+      "creator": "anthropic",
+      "status": "added",
+      "modelId": "anthropic-claude-opus-5",
+      "firstSeen": "2026-07-25",
+      "note": "scaffolded (auto)"
+    },
+    {
+      "aaId": "712be54a-77ae-41b2-9a58-21181479d6ee",
+      "aaSlug": "claude-opus-5-high",
+      "aaName": "Claude Opus 5 (Adaptive Reasoning, High Effort)",
+      "creator": "anthropic",
+      "status": "added",
+      "modelId": "anthropic-claude-opus-5",
+      "firstSeen": "2026-07-25",
+      "note": "scaffolded (auto)"
+    },
+    {
+      "aaId": "1305c921-7aaa-4d6d-99b5-99b3acf15e19",
+      "aaSlug": "claude-opus-5-xhigh",
+      "aaName": "Claude Opus 5 (Adaptive Reasoning, Xhigh Effort)",
+      "creator": "anthropic",
+      "status": "added",
+      "modelId": "anthropic-claude-opus-5",
+      "firstSeen": "2026-07-25",
+      "note": "scaffolded (auto)"
+    },
+    {
+      "aaId": "20928ba9-3a3f-415f-9519-b84ff64ecf34",
+      "aaSlug": "claude-opus-5-low",
+      "aaName": "Claude Opus 5 (Adaptive Reasoning, Low Effort)",
+      "creator": "anthropic",
+      "status": "added",
+      "modelId": "anthropic-claude-opus-5",
+      "firstSeen": "2026-07-25",
+      "note": "scaffolded (auto)"
+    },
+    {
+      "aaId": "ff51be8f-e362-4a7e-9043-687ba15de207",
+      "aaSlug": "claude-opus-5-medium",
+      "aaName": "Claude Opus 5 (Adaptive Reasoning, Medium Effort)",
+      "creator": "anthropic",
+      "status": "added",
+      "modelId": "anthropic-claude-opus-5",
+      "firstSeen": "2026-07-25",
+      "note": "scaffolded (auto)"
+    },
+    {
+      "aaId": "8decf027-5114-4721-9ee1-81c0552980a0",
+      "aaSlug": "agnes-2-5-pro-alpha",
+      "aaName": "Agnes 2.5 Pro Alpha",
+      "creator": "agnes-ai",
+      "status": "ignored",
+      "firstSeen": "2026-07-25",
+      "note": "provider not tracked (auto)"
     }
   ]
 }

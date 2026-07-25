@@ -742,5 +742,18 @@
     "releaseDate": "2026-04-08",
     "openWeights": false,
     "url": "https://ai.meta.com/blog/introducing-muse-spark-msl/"
+  },
+  {
+    "id": "anthropic-claude-opus-5",
+    "name": "Claude Opus 5",
+    "lab": "Anthropic",
+    "releaseDate": "2026-07-24",
+    "openWeights": false,
+    "contextWindow": 1000000,
+    "pricing": {
+      "input": 5,
+      "output": 25
+    },
+    "url": "https://www.anthropic.com/news/claude-opus-5"
   }
 ]
