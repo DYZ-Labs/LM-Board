@@ -1,0 +1,199 @@
+/* ===========================================================================
+   Motion — interaction classes, orchestration, scroll-linked behaviour, and a
+   designed reduced-motion mode. Spec: REDESIGN_PLAN.md §4.3.
+
+   Binding rules:
+     1. Only transform, opacity and filter are ever animated.
+     2. box-shadow is never animated — elevation changes fade an ::after that
+        carries the shadow.
+     3. will-change is set on hover/focus intent only, never at rest.
+     4. At most two backdrop-filter elements composited at once.
+   =========================================================================== */
+@layer motion {
+
+
+/* -- Interaction classes --------------------------------------------------
+   Applied as a transition shorthand. The cubic-bezier declaration comes
+   first so browsers without linear() support fall back to it: an unparsable
+   linear() invalidates only the later declaration. */
+.mo-instant {
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart),
+    border-color var(--dur-instant) var(--ease-out-quart),
+    opacity var(--dur-instant) var(--ease-out-quart),
+    text-decoration-color var(--dur-instant) var(--ease-out-quart),
+    text-decoration-thickness var(--dur-instant) var(--ease-out-quart);
+}
+
+.mo-state {
+  transition: transform var(--dur-snap) var(--ease-out-quart);
+  transition: transform var(--dur-snap) var(--ease-snap);
+}
+
+.mo-reveal {
+  transition:
+    transform var(--dur-glide) var(--ease-out-expo),
+    opacity var(--dur-glide) var(--ease-out-expo);
+  transition:
+    transform var(--dur-glide) var(--ease-glide),
+    opacity var(--dur-glide) var(--ease-glide);
+}
+
+.mo-transform {
+  transition: transform var(--dur-settle) var(--ease-out-expo);
+  transition: transform var(--dur-settle) var(--ease-settle);
+}
+
+/* -- Keyframes ------------------------------------------------------------ */
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes enter-scale {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+}
+
+@keyframes enter-toast {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes draw-check {
+  from {
+    stroke-dashoffset: 16;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-2px);
+  }
+
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+/* -- Orchestration --------------------------------------------------------
+   Children enter on an index-derived delay. The cap matters: a 62-row table
+   would otherwise take 1.7s to finish appearing. --i is set inline from the
+   map index; rows past the cap appear with no delay. */
+.stagger > * {
+  animation: enter-up var(--dur-glide) var(--ease-glide) backwards;
+  animation-delay: calc(min(var(--i, 0), var(--stagger-cap)) * var(--stagger-step));
+}
+
+/* -- Scroll-linked --------------------------------------------------------
+   Pure CSS, pure enhancement. Browsers without scroll-driven animations get
+   the resting state and lose nothing functional. */
+@supports (animation-timeline: scroll()) {
+  .scroll-rail {
+    transform-origin: 0 0;
+    animation: scroll-progress linear;
+    animation-timeline: scroll(root block);
+  }
+
+  @keyframes scroll-progress {
+    from {
+      transform: scaleY(0);
+    }
+
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  .readout-parallax {
+    animation: readout-recede linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 320px;
+  }
+
+  @keyframes readout-recede {
+    to {
+      opacity: 0.25;
+      transform: translateY(-24px) scale(0.94);
+    }
+  }
+}
+
+/* -- View transitions between projections --------------------------------- */
+@supports (view-transition-name: none) {
+  ::view-transition-group(board) {
+    animation-duration: var(--dur-settle);
+    animation-timing-function: var(--ease-settle);
+  }
+}
+
+/* -- Reduced motion -------------------------------------------------------
+   A designed mode, not a blanket disable. Transform, parallax, stagger and
+   ambient loops are removed; colour and opacity feedback survives at 90-120ms
+   because removing it makes state changes harder to follow, not easier. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-snap: 90ms;
+    --dur-glide: 120ms;
+    --dur-settle: 120ms;
+    --dur-bounce: 0ms;
+    --dur-ambient: 0ms;
+    --ease-snap: linear;
+    --ease-glide: linear;
+    --ease-settle: linear;
+    --ease-bounce: linear;
+    --stagger-step: 0ms;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-timeline: none !important;
+  }
+
+  .stagger > * {
+    animation: none;
+  }
+
+  .mo-state,
+  .mo-transform {
+    transition-property: opacity;
+  }
+
+  .mo-reveal {
+    transition-property: opacity;
+  }
+}
+
+}

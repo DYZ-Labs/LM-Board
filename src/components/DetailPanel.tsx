@@ -1,23 +1,11 @@
+import Link from "next/link";
+
 import { Badge } from "@/components/Badge";
+import { CopyLinkButton } from "@/components/CopyLinkButton";
+import { ExternalIcon } from "@/components/Icon";
 import type { LeaderboardRow } from "@/lib/data";
-import { formatPrice } from "@/lib/format";
+import { formatCount, formatDate, formatPrice, formatScore } from "@/lib/format";
 import type { Benchmark } from "@/lib/schema";
-
-const scoreFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
-const numberFormatter = new Intl.NumberFormat("en-US");
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-  timeZone: "UTC",
-});
-
-function formatDate(date: string) {
-  return dateFormatter.format(new Date(`${date}T00:00:00Z`));
-}
 
 type DetailPanelProps = {
   row: LeaderboardRow;
@@ -25,30 +13,41 @@ type DetailPanelProps = {
   colSpan: number;
 };
 
-export function DetailPanel({
-  row,
-  benchmarks,
-  colSpan,
-}: DetailPanelProps) {
+/**
+ * A preview of /model/[id]. The full, linkable record lives on its own route;
+ * this panel exists so a comparison can be made without leaving the board.
+ */
+export function DetailPanel({ row, benchmarks, colSpan }: DetailPanelProps) {
   const { model } = row;
 
   return (
     <tr className="detail-row" id={`details-${model.id}`}>
       <td colSpan={colSpan}>
-        <section
-          className="detail-panel"
-          aria-label={`${model.name} details`}
-        >
+        <section className="detail-panel" aria-label={`${model.name} details`}>
           <div className="detail-heading">
             <div>
-              <p className="detail-eyebrow">Model details</p>
+              <p className="detail-eyebrow">Model record</p>
               <h2>{model.name}</h2>
             </div>
-            <a href={model.url} target="_blank" rel="noreferrer">
-              Official model page
-              <span aria-hidden="true"> ↗</span>
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
+            <div className="detail-actions">
+              <CopyLinkButton
+                href={`/model/${model.id}`}
+                label="Copy link"
+                confirmation={`Link to ${model.name} copied`}
+              />
+              <Link className="btn" href={`/model/${model.id}`}>
+                Full record
+              </Link>
+              <a
+                className="btn link-external"
+                href={model.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Official page <ExternalIcon className="ext" />
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </div>
           </div>
 
           <dl className="model-metadata">
@@ -68,7 +67,7 @@ export function DetailPanel({
               <dt>Context</dt>
               <dd>
                 {model.contextWindow
-                  ? `${numberFormatter.format(model.contextWindow)} tokens`
+                  ? `${formatCount(model.contextWindow)} tokens`
                   : "Not listed"}
               </dd>
             </div>
@@ -80,17 +79,17 @@ export function DetailPanel({
               <dt>Price / Mtok</dt>
               <dd>
                 {model.pricing
-                  ? `$${formatPrice(model.pricing.input)} input · $${formatPrice(model.pricing.output)} output`
+                  ? `$${formatPrice(model.pricing.input)} in · $${formatPrice(model.pricing.output)} out`
                   : "Not listed"}
               </dd>
             </div>
             <div>
               <dt>Index coverage</dt>
               <dd>
-                {row.coverageCount} of {row.coverageTotal} benchmarks measured (
+                {row.coverageCount} of {row.coverageTotal} measured (
                 {Math.round(row.coverageRatio * 100)}%)
                 {row.estimatedCount > 0
-                  ? `; ${row.estimatedCount} estimated for the Index`
+                  ? `; ${row.estimatedCount} estimated`
                   : null}
               </dd>
             </div>
@@ -106,16 +105,14 @@ export function DetailPanel({
                   <article className="detail-score" key={benchmark.id}>
                     <div className="detail-score-heading">
                       <h4>{benchmark.name}</h4>
-                      <strong className="numeric-cell">
-                        {score ? scoreFormatter.format(score.value) : "—"}
+                      <strong className="num">
+                        {score ? formatScore(score.value) : "—"}
                       </strong>
                     </div>
                     {score ? (
                       <>
                         {score.selfReported ? (
-                          <Badge className="measurement-label">
-                            Self-reported measurement
-                          </Badge>
+                          <Badge tone="warn">Self-reported measurement</Badge>
                         ) : null}
                         <p>
                           <strong>Settings:</strong>{" "}
@@ -123,21 +120,24 @@ export function DetailPanel({
                         </p>
                         <p className="source-line">
                           <a
+                            className="link-external"
                             href={score.source.url}
                             target="_blank"
                             rel="noreferrer"
                           >
-                            View score source
-                            <span aria-hidden="true"> ↗</span>
+                            View score source <ExternalIcon className="ext" />
                             <span className="sr-only">
-                              {" "}(opens in a new tab)
+                              {" "}
+                              (opens in a new tab)
                             </span>
                           </a>
-                          <span>Retrieved {formatDate(score.source.retrieved)}</span>
+                          <span>
+                            Retrieved {formatDate(score.source.retrieved)}
+                          </span>
                         </p>
                       </>
                     ) : (
-                      <p className="missing-score-copy">
+                      <p className="missing-value">
                         No curated score is currently available.
                       </p>
                     )}

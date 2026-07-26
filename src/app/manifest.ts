@@ -9,8 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Benchmark scores for frontier AI models.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f6f4ee",
-    theme_color: "#131110",
+    background_color: "#0b0d10",
+    theme_color: "#0b0d10",
     icons: [
       {
         src: "/icon.svg",

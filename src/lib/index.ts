@@ -26,6 +26,22 @@ export type BenchmarkDistributions = ReadonlyMap<string, readonly number[]>;
 /** Benchmark id to estimated value, for benchmarks a model has no score on. */
 export type EstimatedScores = ReadonlyMap<string, number>;
 
+/**
+ * The coverage bar for a set of benchmarks: how many measured scores a model
+ * needs before it is ranked. Shared by the board's Index tooltip and the
+ * methodology page so the two can never quote different numbers.
+ */
+export function coverageThreshold(benchmarks: readonly Benchmark[]) {
+  const percentBenchmarkCount = benchmarks.filter(
+    (benchmark) => benchmark.unit === "percent",
+  ).length;
+
+  return {
+    percentBenchmarkCount,
+    minimumCoverageCount: Math.ceil(percentBenchmarkCount * MIN_INDEX_COVERAGE),
+  };
+}
+
 export function benchmarksForScope(
   benchmarks: readonly Benchmark[],
   scope: RankScope,
@@ -61,7 +77,7 @@ export function buildBenchmarkDistributions(
  * occupy, so a model is placed neither above nor below the models it scored
  * exactly level with.
  */
-function percentileOf(sorted: readonly number[], value: number): number {
+export function percentileOf(sorted: readonly number[], value: number): number {
   let below = 0;
   let equal = 0;
 

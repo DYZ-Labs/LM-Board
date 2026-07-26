@@ -56,6 +56,7 @@ const row = ({
     },
     reasoningEffort: null,
     reasoningEffortLabel: null,
+    rampByBenchmark: {},
     scoresByBenchmark: {
       bench: benchmarkScore === null ? null : score(id, benchmarkScore),
     },

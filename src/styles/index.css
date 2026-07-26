@@ -1,0 +1,24 @@
+/* ===========================================================================
+   Observatory — stylesheet entry point.
+
+   Layer order is declared once, here, and is the only thing that decides
+   which rule wins. Because every file lives in a layer, specificity fights
+   cannot happen across concerns and `!important` is never needed to resolve
+   them. Later layers beat earlier ones regardless of selector weight.
+
+   Each file opens its own `@layer <name> { }` block rather than relying on
+   `@import ... layer(name)`. Next's CSS loader compiles that supplemental
+   form into `@media layer(name)` — an invalid media query — which silently
+   drops every rule inside it. Declaring the layer in the file itself
+   produces the same cascade and survives the pipeline.
+   =========================================================================== */
+
+@layer tokens, base, motion, layout, components, projections, utilities;
+
+@import url("./tokens.css");
+@import url("./base.css");
+@import url("./motion.css");
+@import url("./layout.css");
+@import url("./components.css");
+@import url("./projections.css");
+@import url("./utilities.css");

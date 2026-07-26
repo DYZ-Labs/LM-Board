@@ -1,29 +1,25 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
+import { Archivo, Geist_Mono } from "next/font/google";
 
 import { siteUrl } from "@/lib/site";
 
 import "./globals.css";
 
-const displayFont = Newsreader({
+// Two variable faces, latin only. Archivo's width axis is load-bearing rather
+// than decorative: benchmark headers render at wdth 84, which is what lets a
+// label like "Terminal-Bench v2.1" fit a 108px column without truncation.
+const uiFont = Archivo({
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  axes: ["opsz"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const uiFont = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  axes: ["wdth"],
   variable: "--font-ui",
   display: "swap",
 });
 
-const monoFont = IBM_Plex_Mono({
+// Every numeral on the site — scores, the Index, ranks, prices, dates.
+const dataFont = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-mono",
+  variable: "--font-data",
   display: "swap",
 });
 
@@ -108,10 +104,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: "light dark",
+  colorScheme: "dark light",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f4ee" },
-    { media: "(prefers-color-scheme: dark)", color: "#131110" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f6f9" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0d10" },
   ],
 };
 
@@ -124,12 +120,18 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${displayFont.variable} ${uiFont.variable} ${monoFont.variable}`}
+      className={`${uiFont.variable} ${dataFont.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitializationScript }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Same-origin: serves /_vercel/insights/script.js and beacons to
+            /_vercel/insights/event, so the CSP in vercel.json needs no change
+            (script-src 'self', connect-src 'self'). Cookieless. */}
+        <Analytics />
+      </body>
     </html>
   );
 }

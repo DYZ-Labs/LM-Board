@@ -1,35 +1,122 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
+
+import { ExternalIcon, InfoIcon } from "@/components/Icon";
+
+const HOVER_INTENT_MS = 240;
+const PANEL_WIDTH = 280;
+const EDGE_GUTTER = 12;
 
 type TooltipProps = {
   label: string;
-  description: string;
-  meta: string;
-  sourceUrl: string;
+  description: ReactNode;
+  meta?: ReactNode;
+  sourceUrl?: string;
+  sourceLabel?: string;
+  /** Replaces the default info icon — used for inline text triggers. */
+  triggerContent?: ReactNode;
+  triggerClassName?: string;
+  triggerLabel?: string;
 };
 
+/**
+ * A disclosure, not a dialog. The previous implementation set role="dialog"
+ * and aria-haspopup="dialog" on a control that opens on mouseenter, which some
+ * screen readers announce as a modal.
+ *
+ * The panel is portalled into <body> so it is never clipped by the board's
+ * scroll container, and it stays hoverable and dismissible per WCAG 1.4.13.
+ */
 export function Tooltip({
   label,
   description,
   meta,
   sourceUrl,
+  sourceLabel = "Benchmark source",
+  triggerContent,
+  triggerClassName = "tooltip-trigger",
+  triggerLabel,
 }: TooltipProps) {
   const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [mounted, setMounted] = useState(false);
   const panelId = useId();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const hostRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const intentTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => setMounted(true), []);
+
+  const place = useCallback(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+
+    const rect = trigger.getBoundingClientRect();
+    const maxLeft = window.innerWidth - PANEL_WIDTH - EDGE_GUTTER;
+    const left = Math.min(
+      Math.max(EDGE_GUTTER, rect.left + rect.width / 2 - PANEL_WIDTH / 2),
+      Math.max(EDGE_GUTTER, maxLeft),
+    );
+    const panelHeight = panelRef.current?.offsetHeight ?? 200;
+    const below = rect.bottom + 8;
+    // Flip above the trigger when the panel would run off the bottom.
+    const top =
+      below + panelHeight > window.innerHeight - EDGE_GUTTER
+        ? Math.max(EDGE_GUTTER, rect.top - panelHeight - 8)
+        : below;
+
+    setPosition({ top, left });
+  }, []);
+
+  function cancelIntent() {
+    if (intentTimer.current) {
+      clearTimeout(intentTimer.current);
+      intentTimer.current = null;
+    }
+  }
+
+  function openNow() {
+    cancelIntent();
+    place();
+    setOpen(true);
+  }
+
+  function openWithIntent() {
+    cancelIntent();
+    intentTimer.current = setTimeout(openNow, HOVER_INTENT_MS);
+  }
+
+  function closeNow() {
+    cancelIntent();
+    setOpen(false);
+  }
+
+  useEffect(() => cancelIntent, []);
 
   useEffect(() => {
     if (!open) return;
 
+    place();
+
     function handlePointerDown(event: PointerEvent) {
+      if (!(event.target instanceof Node)) return;
       if (
-        event.target instanceof Node &&
-        !containerRef.current?.contains(event.target)
+        hostRef.current?.contains(event.target) ||
+        panelRef.current?.contains(event.target)
       ) {
-        setOpen(false);
+        return;
       }
+      setOpen(false);
     }
 
     function handleKeyDown(event: KeyboardEvent) {
@@ -39,63 +126,79 @@ export function Tooltip({
       }
     }
 
+    // The panel is fixed to the viewport, so any scroll moves it off its
+    // trigger. Reposition rather than close: closing on scroll makes the
+    // content impossible to read on a touch device.
+    const reposition = () => place();
+
     document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("scroll", reposition, true);
+    window.addEventListener("resize", reposition);
 
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("scroll", reposition, true);
+      window.removeEventListener("resize", reposition);
     };
-  }, [open]);
+  }, [open, place]);
+
+  const panel = (
+    <div
+      id={panelId}
+      ref={panelRef}
+      className="tooltip-panel"
+      hidden={!open}
+      style={{ top: position.top, left: position.left }}
+      onMouseEnter={cancelIntent}
+      onMouseLeave={closeNow}
+    >
+      <strong>{label}</strong>
+      <p>{description}</p>
+      {meta ? <p className="tooltip-meta">{meta}</p> : null}
+      {sourceUrl ? (
+        <a
+          className="link-external"
+          href={sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {sourceLabel} <ExternalIcon className="ext" />
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      ) : null}
+    </div>
+  );
 
   return (
     <div
-      className="benchmark-tooltip"
-      ref={containerRef}
-      onMouseEnter={() => setOpen(true)}
+      className="tooltip-host"
+      ref={hostRef}
+      onMouseEnter={openWithIntent}
       onMouseLeave={() => {
-        if (!containerRef.current?.contains(document.activeElement)) {
-          setOpen(false);
-        }
-      }}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) {
-          setOpen(false);
+        cancelIntent();
+        if (!hostRef.current?.contains(document.activeElement)) {
+          closeNow();
         }
       }}
     >
       <button
         ref={triggerRef}
         type="button"
-        className="tooltip-trigger"
-        aria-label={`About ${label}`}
+        className={triggerClassName}
+        aria-label={triggerLabel ?? `About ${label}`}
         aria-expanded={open}
         aria-controls={panelId}
-        aria-haspopup="dialog"
-        onClick={() => setOpen((current) => !current)}
+        onClick={() => (open ? closeNow() : openNow())}
+        onFocus={openNow}
+        onBlur={(event) => {
+          if (!panelRef.current?.contains(event.relatedTarget)) closeNow();
+        }}
       >
-        <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14">
-          <circle cx="8" cy="8" r="6.25" fill="none" />
-          <path d="M8 7.1v4" />
-          <circle cx="8" cy="4.8" r=".65" fill="currentColor" stroke="none" />
-        </svg>
+        {triggerContent ?? <InfoIcon />}
       </button>
-      <div
-        id={panelId}
-        className="tooltip-panel"
-        role="dialog"
-        aria-label={`${label} benchmark details`}
-        hidden={!open}
-      >
-        <strong>{label}</strong>
-        <p>{description}</p>
-        <p className="tooltip-meta">{meta}</p>
-        <a href={sourceUrl} target="_blank" rel="noreferrer">
-          Benchmark source
-          <span aria-hidden="true"> ↗</span>
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
-      </div>
+      {mounted ? createPortal(panel, document.body) : null}
     </div>
   );
 }

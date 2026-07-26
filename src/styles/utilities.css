@@ -1,0 +1,139 @@
+/* ===========================================================================
+   Utilities — accessibility helpers and the touch-target guarantee.
+   =========================================================================== */
+@layer utilities {
+
+
+.sr-only {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: var(--s-5);
+  left: var(--s-5);
+  padding: var(--s-4) var(--s-6);
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--r-2);
+  background: var(--bg-overlay);
+  box-shadow: var(--e-4);
+  font-size: var(--t-13);
+  font-weight: var(--w-strong);
+  color: var(--fg-primary);
+  transform: translateY(-180%);
+  transition: transform var(--dur-snap) var(--ease-out-quart);
+  transition: transform var(--dur-snap) var(--ease-snap);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.stack {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.row {
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.text-tertiary {
+  color: var(--fg-tertiary);
+}
+
+.text-secondary {
+  color: var(--fg-secondary);
+}
+
+/* -- Touch targets --------------------------------------------------------
+   Every interactive control gets a 44x44 CSS-px activation area on coarse
+   pointers through an invisible halo. The control keeps its rendered size and
+   max() leaves already-large controls alone. This list is exhaustive by
+   design: the previous implementation covered three controls and missed the
+   five most-used ones (audit item A5). */
+@media (pointer: coarse) {
+  .btn,
+  .btn-icon,
+  .tab,
+  .sort-button,
+  .model-trigger,
+  .tooltip-trigger,
+  .check,
+  .segmented button,
+  .spark-bar,
+  .field-clear,
+  .palette-item,
+  .disclosure summary,
+  .insufficient-label {
+    position: relative;
+  }
+
+  .btn::after,
+  .btn-icon::after,
+  .tab::after,
+  .sort-button::after,
+  .model-trigger::after,
+  .tooltip-trigger::after,
+  .check::after,
+  .segmented button::after,
+  .spark-bar::after,
+  .field-clear::after,
+  .palette-item::after,
+  .disclosure summary::after,
+  .insufficient-label::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    content: "";
+    transform: translate(-50%, -50%);
+  }
+
+  /* The disclosure chevron is a real ::after with borders, so it needs the
+     halo on a different pseudo-element. */
+  .disclosure summary::after {
+    position: static;
+    width: 6px;
+    height: 6px;
+    transform: rotate(45deg);
+  }
+
+  .disclosure summary::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    content: "";
+    transform: translate(-50%, -50%);
+  }
+
+  .disclosure[open] summary::after {
+    transform: rotate(225deg);
+  }
+
+  /* Spark bars sit 4px apart; a 44px halo on each would overlap its
+     neighbours and steal their taps. They get a taller strip instead, and the
+     full numeric table is one control away. */
+  .spark-bar::after {
+    width: 100%;
+    height: 44px;
+  }
+}
+
+}
