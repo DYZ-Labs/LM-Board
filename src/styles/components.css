@@ -1,0 +1,718 @@
+/* ===========================================================================
+   Components — every interactive class and its full state matrix.
+   Spec: REDESIGN_PLAN.md §4.4.
+   =========================================================================== */
+@layer components {
+
+
+/* -- Surface -------------------------------------------------------------- */
+.surface {
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-4);
+  background: var(--bg-raised);
+  box-shadow: var(--e-2);
+}
+
+@supports (corner-shape: squircle) {
+  .surface,
+  .popover,
+  .badge,
+  .btn {
+    corner-shape: squircle;
+  }
+}
+
+/* -- Buttons -------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  gap: var(--s-3);
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: var(--s-3) var(--s-5);
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--r-2);
+  background: transparent;
+  font-size: var(--t-12);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-12);
+  color: var(--fg-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart),
+    border-color var(--dur-instant) var(--ease-out-quart),
+    transform var(--dur-snap) var(--ease-out-quart);
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart),
+    border-color var(--dur-instant) var(--ease-out-quart),
+    transform var(--dur-snap) var(--ease-snap);
+}
+
+.btn:hover {
+  border-color: var(--signal-600);
+  background: var(--bg-hover);
+  color: var(--fg-primary);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  color: var(--fg-disabled);
+  border-color: var(--line-subtle);
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  border-color: var(--line-strong);
+  background: var(--bg-active);
+  color: var(--fg-primary);
+  font-weight: var(--w-strong);
+  box-shadow: var(--e-1);
+}
+
+.btn-primary:hover {
+  background: var(--bg-hover);
+  border-color: var(--signal-500);
+}
+
+.btn-primary:active {
+  transform: scale(0.975);
+}
+
+.btn.is-error {
+  border-color: var(--warn);
+  animation: nudge var(--dur-snap) var(--ease-out-quart);
+}
+
+/* Icon button — theme toggle, tooltip trigger, row overflow. */
+.btn-icon {
+  display: grid;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--r-2);
+  background: transparent;
+  color: var(--fg-tertiary);
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart),
+    transform var(--dur-snap) var(--ease-snap);
+}
+
+.btn-icon:hover {
+  background: var(--bg-hover);
+  color: var(--fg-primary);
+}
+
+.btn-icon:active {
+  transform: scale(0.92);
+}
+
+.btn-icon svg {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.theme-toggle svg {
+  transition: transform var(--dur-snap) var(--ease-snap);
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(20deg);
+}
+
+/* -- Tabs -----------------------------------------------------------------
+   A real tablist with a single tab stop and a shared underline that slides
+   between tabs rather than fading in place. */
+.tablist {
+  position: relative;
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: var(--s-2);
+  scrollbar-width: none;
+}
+
+.tablist::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  position: relative;
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--r-2);
+  background: transparent;
+  font-size: var(--t-13);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-13);
+  color: var(--fg-secondary);
+  white-space: nowrap;
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart),
+    transform var(--dur-snap) var(--ease-snap);
+}
+
+.tab:hover {
+  background: var(--bg-hover);
+  color: var(--fg-primary);
+}
+
+.tab:active {
+  transform: scale(0.985);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--fg-primary);
+  font-weight: var(--w-strong);
+}
+
+.tab-underline {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  height: 2px;
+  border-radius: var(--r-full);
+  background: var(--signal-500);
+  box-shadow: 0 0 8px var(--signal-glow);
+  transform: translateX(var(--tab-x, 0)) scaleX(var(--tab-w, 0));
+  transform-origin: 0 50%;
+  width: 1px;
+  transition: transform var(--dur-snap) var(--ease-out-quart);
+  transition: transform var(--dur-snap) var(--ease-snap);
+  pointer-events: none;
+}
+
+/* -- Text input ----------------------------------------------------------- */
+.field {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  width: min(300px, 100%);
+  min-height: 32px;
+  padding: 0 var(--s-5);
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--r-2);
+  background: var(--bg-inset);
+  color: var(--fg-tertiary);
+  transition:
+    border-color var(--dur-instant) var(--ease-out-quart),
+    box-shadow var(--dur-instant) var(--ease-out-quart);
+}
+
+.field:hover {
+  border-color: var(--line-strong);
+}
+
+.field:focus-within {
+  border-color: var(--signal-500);
+  box-shadow: var(--ring);
+}
+
+.field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: var(--t-13);
+  color: var(--fg-primary);
+}
+
+.field svg {
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-width: 1.6;
+}
+
+.field-clear {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: var(--r-full);
+  background: transparent;
+  color: var(--fg-tertiary);
+  opacity: 0;
+  transition: opacity var(--dur-instant) var(--ease-out-quart);
+}
+
+.field:focus-within .field-clear,
+.field.has-value .field-clear {
+  opacity: 1;
+}
+
+.field-clear:hover {
+  background: var(--bg-active);
+  color: var(--fg-primary);
+}
+
+/* -- Checkbox ------------------------------------------------------------- */
+.check {
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
+  min-height: 30px;
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-2);
+  font-size: var(--t-13);
+  color: var(--fg-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart);
+}
+
+.check:hover {
+  background: var(--bg-hover);
+  color: var(--fg-primary);
+}
+
+.check input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--signal-500);
+  transition: transform var(--dur-snap) var(--ease-snap);
+}
+
+.check:active input {
+  transform: scale(0.9);
+}
+
+/* -- Popover / menu ------------------------------------------------------- */
+.popover {
+  position: absolute;
+  z-index: 70;
+  top: calc(100% + var(--s-3));
+  left: 0;
+  width: 244px;
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  background: var(--bg-overlay);
+  box-shadow: var(--e-4);
+  animation: enter-scale var(--dur-glide) var(--ease-glide);
+  transform-origin: top left;
+}
+
+.popover fieldset {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.popover legend {
+  padding: var(--s-2) var(--s-4) var(--s-4);
+  font-size: var(--t-10);
+  font-weight: var(--w-bold);
+  letter-spacing: var(--ls-10);
+  text-transform: uppercase;
+  color: var(--fg-tertiary);
+}
+
+.popover-actions {
+  display: flex;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--line-subtle);
+}
+
+.popover-actions .btn {
+  flex: 1;
+}
+
+.disclosure {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.disclosure summary {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  min-height: 32px;
+  padding: var(--s-3) var(--s-5);
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--r-2);
+  background: transparent;
+  font-size: var(--t-12);
+  font-weight: var(--w-medium);
+  color: var(--fg-secondary);
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    border-color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart);
+}
+
+.disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure summary:hover {
+  border-color: var(--signal-600);
+  background: var(--bg-hover);
+  color: var(--fg-primary);
+}
+
+.disclosure summary::after {
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-right: 1.5px solid currentcolor;
+  border-bottom: 1.5px solid currentcolor;
+  content: "";
+  transform: rotate(45deg);
+  transition: transform var(--dur-snap) var(--ease-snap);
+}
+
+.disclosure[open] summary::after {
+  margin-top: 2px;
+  transform: rotate(225deg);
+}
+
+.count-pip {
+  display: grid;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 var(--s-2);
+  place-items: center;
+  border-radius: var(--r-full);
+  background: var(--signal-500);
+  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
+  font-size: var(--t-10);
+  font-weight: var(--w-bold);
+  color: var(--bg-base);
+}
+
+/* -- Badges --------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--s-2);
+  width: fit-content;
+  padding: 1px var(--s-3);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-full);
+  background: var(--bg-inset);
+  font-size: var(--t-10);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-11);
+  line-height: 1.5;
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+
+.badge-warn {
+  border-color: color-mix(in srgb, var(--warn) 40%, transparent);
+  color: var(--warn);
+}
+
+.badge-pos {
+  border-color: color-mix(in srgb, var(--pos) 40%, transparent);
+  color: var(--pos);
+}
+
+.badge-signal {
+  border-color: color-mix(in srgb, var(--signal-500) 40%, transparent);
+  color: var(--signal-500);
+}
+
+/* -- Tooltip (a disclosure, not a dialog — fixes audit item A3) ------------ */
+.tooltip-host {
+  position: relative;
+  flex: 0 0 auto;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.tooltip-trigger {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: var(--r-full);
+  background: transparent;
+  color: var(--fg-tertiary);
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart);
+}
+
+.tooltip-trigger:hover,
+.tooltip-trigger[aria-expanded="true"] {
+  background: var(--bg-active);
+  color: var(--fg-primary);
+}
+
+.tooltip-trigger svg {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-width: 1.4;
+}
+
+/* Fixed, and rendered through a portal into <body>: the board's scroll
+   container clips its vertical axis (overflow-y: clip), which would otherwise
+   cut every header tooltip in half. */
+.tooltip-panel {
+  position: fixed;
+  z-index: 80;
+  width: 280px;
+  padding: var(--s-6);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  background: var(--bg-overlay);
+  box-shadow: var(--e-4);
+  font-family: var(--font-ui, system-ui), system-ui, sans-serif;
+  font-size: var(--t-12);
+  font-weight: var(--w-text);
+  letter-spacing: var(--ls-12);
+  line-height: var(--lh-12);
+  text-align: left;
+  text-transform: none;
+  color: var(--fg-primary);
+  animation: enter-scale var(--dur-glide) var(--ease-glide);
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.tooltip-panel[hidden] {
+  display: none;
+}
+
+.tooltip-panel strong {
+  display: block;
+  margin-bottom: var(--s-3);
+  font-size: var(--t-12);
+  font-weight: var(--w-bold);
+}
+
+.tooltip-panel p {
+  color: var(--fg-secondary);
+}
+
+.tooltip-panel p + p {
+  margin-top: var(--s-4);
+}
+
+.tooltip-meta {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-subtle);
+  font-size: var(--t-11);
+}
+
+.tooltip-panel a {
+  display: inline-block;
+  margin-top: var(--s-4);
+  font-size: var(--t-11);
+  font-weight: var(--w-strong);
+  color: var(--signal-500);
+}
+
+.tooltip-panel a:hover {
+  text-decoration: underline;
+}
+
+/* -- Toast ---------------------------------------------------------------- */
+.toast-region {
+  position: fixed;
+  z-index: 200;
+  right: var(--gutter);
+  bottom: var(--s-7);
+  display: grid;
+  gap: var(--s-3);
+  justify-items: end;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
+  padding: var(--s-4) var(--s-6);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  background: var(--bg-overlay);
+  box-shadow: var(--e-4);
+  font-size: var(--t-12);
+  font-weight: var(--w-medium);
+  color: var(--fg-primary);
+  animation: enter-toast var(--dur-bounce) var(--ease-bounce);
+  pointer-events: auto;
+}
+
+.toast svg {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.toast-pos svg {
+  stroke: var(--pos);
+  stroke-dasharray: 16;
+  animation: draw-check var(--dur-snap) var(--ease-out-quart) backwards;
+}
+
+.toast-warn svg {
+  stroke: var(--warn);
+}
+
+/* -- Command palette ------------------------------------------------------ */
+.palette-backdrop {
+  position: fixed;
+  z-index: 300;
+  inset: 0;
+  display: grid;
+  padding: clamp(48px, 12vh, 140px) var(--gutter) var(--s-9);
+  place-items: start center;
+  background: color-mix(in srgb, var(--bg-void) 62%, transparent);
+  animation: enter-up var(--dur-glide) var(--ease-glide);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .palette-backdrop {
+    backdrop-filter: blur(6px);
+  }
+}
+
+.palette {
+  width: min(620px, 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--r-4);
+  background: var(--bg-overlay);
+  box-shadow: var(--e-5);
+  overflow: hidden;
+}
+
+.palette-input {
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
+  padding: var(--s-6);
+  border-bottom: 1px solid var(--line-subtle);
+}
+
+.palette-input input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: var(--t-17);
+  color: var(--fg-primary);
+}
+
+.palette-input svg {
+  flex: 0 0 auto;
+  fill: none;
+  stroke: var(--fg-tertiary);
+  stroke-linecap: round;
+  stroke-width: 1.6;
+}
+
+.palette-results {
+  max-height: min(420px, 52vh);
+  margin: 0;
+  padding: var(--s-3);
+  overflow-y: auto;
+  list-style: none;
+}
+
+.palette-item {
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--s-4) var(--s-5);
+  border: 0;
+  border-radius: var(--r-2);
+  background: transparent;
+  font-size: var(--t-13);
+  color: var(--fg-secondary);
+  text-align: left;
+}
+
+.palette-item[aria-selected="true"] {
+  background: var(--bg-active);
+  color: var(--fg-primary);
+}
+
+.palette-item .kind {
+  font-size: var(--t-10);
+  letter-spacing: var(--ls-10);
+  text-transform: uppercase;
+  color: var(--fg-tertiary);
+}
+
+.palette-empty {
+  padding: var(--s-8);
+  font-size: var(--t-13);
+  color: var(--fg-tertiary);
+  text-align: center;
+}
+
+/* -- Links ---------------------------------------------------------------- */
+.link {
+  color: var(--fg-primary);
+  text-decoration-line: underline;
+  text-decoration-color: var(--line-interactive);
+  text-decoration-thickness: 1px;
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    text-decoration-color var(--dur-instant) var(--ease-out-quart),
+    text-decoration-thickness var(--dur-instant) var(--ease-out-quart);
+}
+
+.link:hover {
+  text-decoration-color: var(--signal-500);
+  text-decoration-thickness: 2px;
+}
+
+.link-external .ext {
+  display: inline-block;
+  transition: transform var(--dur-snap) var(--ease-snap);
+}
+
+.link-external:hover .ext {
+  transform: translate(1px, -1px);
+}
+
+}

@@ -51,3 +51,8 @@ jobs:
             echo "::error::Homepage HTML exceeds the 1 MiB budget."
             exit 1
           fi
+
+      # Transfer-size budgets plus a content smoke check: a build that rendered
+      # an empty board would pass every byte budget on its own.
+      - name: Check design-system budgets and page content
+        run: npm run measure -- --check

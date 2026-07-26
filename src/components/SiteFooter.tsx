@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type SiteFooterProps = {
   repositoryUrl: string | null;
   pageLink?: { href: string; label: string };
@@ -13,9 +15,10 @@ export function SiteFooter({
         LM Board
       </a>
       <p>
-        An independent index of curated benchmark results. Benchmark scores
-        are independently measured by{" "}
+        An independent index of curated benchmark results. Benchmark scores are
+        independently measured by{" "}
         <a
+          className="link link-external"
           href="https://artificialanalysis.ai/"
           target="_blank"
           rel="noreferrer"
@@ -26,7 +29,9 @@ export function SiteFooter({
         . Not affiliated with any model providers or benchmark authors.
       </p>
       <nav aria-label="Footer navigation">
-        <a href={pageLink.href}>{pageLink.label}</a>
+        <Link href={pageLink.href}>{pageLink.label}</Link>
+        <Link href="/compare">Compare</Link>
+        <a href="/feed.xml">Changes</a>
         {repositoryUrl ? (
           <a href={repositoryUrl} target="_blank" rel="noreferrer">
             GitHub

@@ -21,7 +21,9 @@ export default function NotFound() {
           The address may have changed or never existed. The leaderboard itself
           is one click away.
         </p>
-        <Link href="/">Back to the leaderboard</Link>
+        <Link className="btn btn-primary" href="/">
+          Back to the leaderboard
+        </Link>
       </section>
     </main>
   );

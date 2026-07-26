@@ -1,0 +1,283 @@
+/* ===========================================================================
+   Observatory — design tokens
+   The single source of truth for every value in the system. Nothing outside
+   this file may declare a raw colour, size, shadow, duration or easing.
+   Spec: REDESIGN_PLAN.md §4.1 and §4.3.
+   =========================================================================== */
+@layer tokens {
+
+
+:root {
+  color-scheme: dark light;
+
+  /* -- Colour: static dark fallback -------------------------------------
+     Declared before the light-dark() versions so pre-2024 browsers, which
+     drop the light-dark() declarations as invalid at computed-value time,
+     land on a complete dark theme rather than a half-styled page. The design
+     is dark-first, so degrading to dark is the correct failure mode. */
+  --bg-void: #07080a;
+  --bg-base: #0b0d10;
+  --bg-raised: #101317;
+  --bg-overlay: #161a1f;
+  --bg-inset: #08090c;
+  --bg-hover: #171b21;
+  --bg-active: #1d222a;
+  --fg-primary: #e8ecf2;
+  --fg-secondary: #a3adbb;
+  --fg-tertiary: #79838f;
+  --fg-disabled: #4a525d;
+  --line-subtle: #1a1e24;
+  --line: #232830;
+  --line-interactive: #616b78;
+  --line-strong: #3a424d;
+  --signal-300: #8cc7ff;
+  --signal-500: #4da3ff;
+  --signal-600: #2e8af0;
+  --signal-glow: rgba(77, 163, 255, 0.35);
+  --warn: #e2a03f;
+  --pos: #4fbf8b;
+  --ground-1: #131a24;
+  --ground-2: #0b0d10;
+  --ground-3: #07080a;
+  --grain-opacity: 0.028;
+  --score-1: #16212e;
+  --score-2: #1c3045;
+  --score-3: #254466;
+  --score-4: #305e90;
+  --score-5: #4083cc;
+  --specular: rgba(255, 255, 255, 0.055);
+
+  /* -- Colour: single-sourced dual theme --------------------------------- */
+  --bg-void: light-dark(#e9edf3, #07080a);
+  --bg-base: light-dark(#f4f6f9, #0b0d10);
+  --bg-raised: light-dark(#ffffff, #101317);
+  --bg-overlay: light-dark(#ffffff, #161a1f);
+  --bg-inset: light-dark(#eaeef3, #08090c);
+  --bg-hover: light-dark(#edf1f6, #171b21);
+  --bg-active: light-dark(#e2e8f0, #1d222a);
+  --fg-primary: light-dark(#0d1117, #e8ecf2);
+  --fg-secondary: light-dark(#454f5b, #a3adbb);
+  --fg-tertiary: light-dark(#616c7a, #79838f);
+  --fg-disabled: light-dark(#98a2af, #4a525d);
+  --line-subtle: light-dark(#ebeef3, #1a1e24);
+  --line: light-dark(#d5dbe3, #232830);
+  --line-interactive: light-dark(#7a8492, #616b78);
+  --line-strong: light-dark(#9aa4b2, #3a424d);
+  --signal-300: light-dark(#4da3ff, #8cc7ff);
+  --signal-500: light-dark(#0a66c2, #4da3ff);
+  --signal-600: light-dark(#08528f, #2e8af0);
+  --signal-glow: light-dark(rgba(10, 102, 194, 0.22), rgba(77, 163, 255, 0.35));
+  --warn: light-dark(#8a5a00, #e2a03f);
+  --pos: light-dark(#0e7a4f, #4fbf8b);
+  --ground-1: light-dark(#ffffff, #131a24);
+  --ground-2: light-dark(#f4f6f9, #0b0d10);
+  --ground-3: light-dark(#e9edf3, #07080a);
+  --specular: light-dark(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.055));
+
+  /* Magnitude ramp. One hue, five luminance steps — the encoding is
+     luminance rather than hue, so it is CVD-safe by construction, and the
+     numeral is always printed above it (never colour alone). */
+  --score-1: light-dark(#e2edf8, #16212e);
+  --score-2: light-dark(#c4daf0, #1c3045);
+  --score-3: light-dark(#9dc2e7, #254466);
+  --score-4: light-dark(#6ca3da, #305e90);
+  --score-5: light-dark(#2f7dcb, #4083cc);
+
+  /* -- Typography -------------------------------------------------------- */
+  --t-10: 10px;
+  --t-11: 11px;
+  --t-12: 12px;
+  --t-13: 13px;
+  --t-15: 15px;
+  --t-17: 17px;
+  --t-21: 21px;
+  --t-27: 27px;
+  --t-h2: clamp(30px, 1.6vw + 20px, 42px);
+  --t-h1: clamp(40px, 4.2vw + 18px, 78px);
+  --t-readout: clamp(64px, 10vw + 8px, 156px);
+
+  --lh-10: 1.4;
+  --lh-11: 1.45;
+  --lh-12: 1.5;
+  --lh-13: 1.55;
+  --lh-15: 1.6;
+  --lh-17: 1.65;
+  --lh-21: 1.35;
+  --lh-27: 1.22;
+  --lh-h2: 1.12;
+  --lh-h1: 1;
+  --lh-readout: 0.86;
+
+  --ls-10: 0.09em;
+  --ls-11: 0.05em;
+  --ls-12: 0.015em;
+  --ls-13: 0.005em;
+  --ls-15: 0;
+  --ls-17: -0.008em;
+  --ls-21: -0.018em;
+  --ls-27: -0.024em;
+  --ls-h2: -0.03em;
+  --ls-h1: -0.038em;
+  --ls-readout: -0.05em;
+
+  /* Optically compensated: large type takes less weight, small type more. */
+  --w-display: 300;
+  --w-text: 400;
+  --w-medium: 480;
+  --w-strong: 580;
+  --w-bold: 680;
+
+  /* Archivo's width axis, driven through font-variation-settings. */
+  --wd-condensed: 84;
+  --wd-normal: 100;
+  --wd-wide: 112;
+
+  /* -- Spacing ----------------------------------------------------------- */
+  --s-1: 2px;
+  --s-2: 4px;
+  --s-3: 6px;
+  --s-4: 8px;
+  --s-5: 12px;
+  --s-6: 16px;
+  --s-7: 20px;
+  --s-8: 28px;
+  --s-9: 40px;
+  --s-10: 56px;
+  --s-11: 80px;
+  --s-12: 112px;
+  --s-13: 160px;
+
+  --rail-max: 1680px;
+  --gutter: clamp(16px, 3vw, 56px);
+  --measure: 68ch;
+
+  /* -- Radii ------------------------------------------------------------- */
+  --r-1: 3px;
+  --r-2: 5px;
+  --r-3: 8px;
+  --r-4: 14px;
+  --r-5: 22px;
+  --r-full: 999px;
+
+  /* -- Elevation ---------------------------------------------------------
+     The shadow *colours* carry the theme, so each level is composed exactly
+     once. Defining the levels per theme instead meant three copies of every
+     box-shadow (fallback, prefers-color-scheme, data-theme) in the bundle. */
+  --spec-edge: light-dark(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.06));
+  --shade-contact: light-dark(rgba(13, 17, 23, 0.06), rgba(0, 0, 0, 0.55));
+  --shade-ambient: light-dark(rgba(13, 17, 23, 0.09), rgba(0, 0, 0, 0.55));
+  --shade-deep: light-dark(rgba(13, 17, 23, 0.14), rgba(0, 0, 0, 0.7));
+
+  --e-0: none;
+  --e-1: inset 0 1px 0 var(--spec-edge), 0 1px 1px var(--shade-contact);
+  --e-2:
+    inset 0 1px 0 var(--spec-edge), 0 1px 2px var(--shade-contact),
+    0 4px 10px -4px var(--shade-ambient);
+  --e-3:
+    inset 0 1px 0 var(--spec-edge), 0 2px 4px var(--shade-contact),
+    0 10px 24px -8px var(--shade-ambient);
+  --e-4:
+    inset 0 1px 0 var(--spec-edge), 0 4px 8px var(--shade-contact),
+    0 18px 40px -12px var(--shade-deep);
+  --e-5:
+    inset 0 1px 0 var(--spec-edge), 0 8px 16px var(--shade-contact),
+    0 32px 72px -16px var(--shade-deep);
+
+  --ring: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--signal-500);
+  --ring-glow:
+    0 0 0 2px var(--bg-base), 0 0 0 4px var(--signal-500),
+    0 0 16px var(--signal-glow);
+
+  /* -- Motion (spec §4.3) ------------------------------------------------
+     Springs solved offline as mass-spring-damper systems (x0=0, v0=0,
+     target 1) and compiled to linear() stops at a 0.5% settle threshold.
+     The stiffness/damping/mass triples are the source of truth; the
+     linear() strings are their output. Do not hand-edit the stops. */
+
+  /* snap — stiffness 945, damping 55.3, mass 1 → zeta 0.90 */
+  --dur-snap: 190ms;
+  --ease-snap: linear(
+    0, 0.0598, 0.1903, 0.342, 0.488, 0.6154, 0.72, 0.8021, 0.8641, 0.9095,
+    0.9418, 0.964, 0.979, 0.9887, 0.9947, 1
+  );
+
+  /* glide — stiffness 214, damping 25.2, mass 1 → zeta 0.86 */
+  --dur-glide: 340ms;
+  --ease-glide: linear(
+    0, 0.0246, 0.0859, 0.1688, 0.2621, 0.3581, 0.4515, 0.5387, 0.618, 0.6882,
+    0.7492, 0.8013, 0.8451, 0.8813, 0.9108, 0.9345, 0.9533, 0.9679, 0.9791,
+    0.9875, 0.9936, 1
+  );
+
+  /* settle — stiffness 184, damping 27.1, mass 1 → zeta 1.00, critically damped */
+  --dur-settle: 560ms;
+  --ease-settle: linear(
+    0, 0.0376, 0.1238, 0.2307, 0.3416, 0.4471, 0.5424, 0.6257, 0.6968, 0.7563,
+    0.8054, 0.8455, 0.878, 0.904, 0.9248, 0.9413, 0.9543, 0.9645, 0.9725,
+    0.9788, 0.9836, 0.9874, 0.9903, 0.9926, 0.9943, 1
+  );
+
+  /* bounce — stiffness 175, damping 14.6, mass 1 → zeta 0.55, +12.5% overshoot */
+  --dur-bounce: 480ms;
+  --ease-bounce: linear(
+    0, 0.0221, 0.081, 0.1664, 0.2688, 0.3803, 0.4941, 0.605, 0.7089, 0.8028,
+    0.885, 0.9543, 1.0107, 1.0545, 1.0866, 1.1081, 1.1204, 1.125, 1.1232,
+    1.1166, 1.1065, 1.094, 1.0802, 1.0659, 1.0519, 1.0387, 1.0267, 1.0162,
+    1.0072, 1
+  );
+
+  --dur-instant: 90ms;
+  --dur-ambient: 4000ms;
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
+
+  --stagger-step: 28ms;
+  --stagger-cap: 11;
+
+  /* -- Board geometry ----------------------------------------------------
+     Table view: 52 + 264 + 128 + 8x108 + 116 = 1424px, down from 1676px.
+     Archivo at wdth 84 is what lets a benchmark label fit 108px. */
+  --col-rank: 52px;
+  --col-model: 264px;
+  --col-index: 128px;
+  --col-bench: 108px;
+  --col-price: 116px;
+  --col-spark: 152px;
+  --row-h: 36px;
+  --header-h: 40px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  /* Not light-dark(): opacity takes a <number>, and light-dark() only
+     accepts <color>. Declaring it there silently invalidates the property. */
+  --grain-opacity: 0.018;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --grain-opacity: 0.018;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* Density is a data attribute on the board, not a media query: it is a user
+   choice carried in the URL. */
+[data-density="comfortable"] {
+  --row-h: 46px;
+}
+
+[data-density="compact"] {
+  --row-h: 36px;
+}
+
+[data-density="data"] {
+  --row-h: 28px;
+}
+
+}

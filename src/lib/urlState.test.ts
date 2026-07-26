@@ -40,6 +40,7 @@ const row = (id: string, name: string): LeaderboardRow => {
     reasoningEffort: null,
     reasoningEffortLabel: null,
     scoresByBenchmark: {},
+    rampByBenchmark: {},
     scopes: {
       overall: rowScope,
       reasoning: rowScope,

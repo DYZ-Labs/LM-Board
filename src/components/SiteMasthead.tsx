@@ -4,14 +4,13 @@ import type { ReactNode } from "react";
 type SiteMastheadProps = {
   /**
    * "home" renders the wordmark as the page <h1> and keeps the
-   * #leaderboard-heading id that the leaderboard table is labelled by.
-   * "link" points back to the leaderboard. "static" renders plain text, for
-   * the global error boundary, which sits outside the router.
+   * #leaderboard-heading id that the board is labelled by. "link" points back
+   * to the leaderboard. "static" renders plain text, for the global error
+   * boundary, which sits outside the router.
    */
   variant?: "home" | "link" | "static";
   id?: string;
   actions?: ReactNode;
-  meta?: ReactNode;
 };
 
 const TAGLINE = "Benchmark scores for frontier AI models";
@@ -20,7 +19,6 @@ export function SiteMasthead({
   variant = "link",
   id,
   actions,
-  meta,
 }: SiteMastheadProps) {
   const wordmark =
     variant === "home" ? (
@@ -43,14 +41,13 @@ export function SiteMasthead({
         ) : (
           wordmark
         )}
-        <p>{TAGLINE}</p>
+        <p className="site-tagline">{TAGLINE}</p>
       </div>
       {actions ? (
         <nav className="header-actions" aria-label="Site controls">
           {actions}
         </nav>
       ) : null}
-      {meta ? <p className="masthead-meta">{meta}</p> : null}
     </header>
   );
 }

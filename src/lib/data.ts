@@ -11,6 +11,7 @@ import {
   estimateMissingScores,
   type RankScope,
 } from "@/lib/index";
+import { rampStep, type RampStep } from "@/lib/ramp";
 import {
   BenchmarksFileSchema,
   ModelsFileSchema,
@@ -34,6 +35,12 @@ export type LeaderboardRow = {
   reasoningEffort: string | null;
   reasoningEffortLabel: ReasoningEffortLabel | null;
   scoresByBenchmark: Record<string, Score | null>;
+  /**
+   * Luminance step per benchmark, precomputed at build time from that
+   * benchmark's own distribution. Derived data, so it lives with the row
+   * rather than being recomputed on every client render.
+   */
+  rampByBenchmark: Record<string, RampStep | null>;
   scopes: Record<RankScope, LeaderboardScope>;
   index: number | null;
   coverageCount: number;
@@ -151,6 +158,16 @@ export function loadLeaderboardData(): LeaderboardData {
           benchmark.id,
           scoreLookup.get(benchmark.id) ?? null,
         ]),
+      ),
+      rampByBenchmark: Object.fromEntries(
+        benchmarks.map((benchmark) => {
+          const score = scoreLookup.get(benchmark.id);
+
+          return [
+            benchmark.id,
+            score ? rampStep(distributions, benchmark.id, score.value) : null,
+          ];
+        }),
       ),
       scopes,
       index: overallScope.index,

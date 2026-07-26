@@ -79,11 +79,11 @@ export function Methodology({
 
   return (
     <section
-      className="methodology"
+      className="longform"
       id="methodology"
       aria-label="Methodology"
     >
-      <div className="methodology-intro">
+      <div className="longform-intro">
         <h1>Methodology</h1>
         <p>
           LM Board runs no evaluations of its own. It collects scores that labs
@@ -119,7 +119,7 @@ export function Methodology({
               </a>
               . When a score does come from the model&apos;s maker, it stays
               on the board but carries the{" "}
-              <Badge className="score-report-badge">Vendor</Badge> mark you see
+              <Badge tone="warn">Vendor</Badge> mark you see
               next to scores in the table.
             </p>
           </div>
@@ -189,9 +189,7 @@ export function Methodology({
                         </th>
                         <td className="example-index">
                           {row.index ?? (
-                            <span className="insufficient-label">
-                              Insufficient data
-                            </span>
+                            <span className="text-tertiary">Insufficient data</span>
                           )}
                         </td>
                         {row.scores.map((score, scoreIndex) => (

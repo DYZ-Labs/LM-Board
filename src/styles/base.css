@@ -1,0 +1,198 @@
+/* ===========================================================================
+   Base — reset, document typography, the ground plane, and focus.
+   =========================================================================== */
+@layer base {
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  /* The var() fallback matters wherever --font-ui is undefined — any document
+     that does not receive next/font's className on <html>. Without it the
+     declaration is invalid at computed-value time and font-family drops to its
+     initial value, which is Times. (global-error.tsx used to be that document;
+     it now ships its own self-contained styles instead.) */
+  font-family: var(--font-ui, system-ui), system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  font-size: var(--t-15);
+  font-weight: var(--w-text);
+  line-height: var(--lh-15);
+  color: var(--fg-primary);
+  /* M1 — atmospheric ground. light-dark() is valid inside gradient stops, so
+     both themes live in one declaration. `fixed` keeps it off the scroll
+     repaint path. */
+  background: var(--bg-base);
+  background-image: radial-gradient(
+    120% 78% at 50% -12%,
+    var(--ground-1) 0%,
+    var(--ground-2) 52%,
+    var(--ground-3) 100%
+  );
+  background-attachment: fixed;
+}
+
+/* M2 — grain. A 379-byte data: SVG, legal under the CSP's
+   `img-src 'self' data:`. No blend mode: a fixed low-opacity layer avoids
+   forcing the whole page into a single blending group. */
+body::before {
+  content: "";
+  position: fixed;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch' seed='7'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Everything the app renders sits above the grain. */
+body > * {
+  position: relative;
+  z-index: 2;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+dl,
+dd {
+  margin: 0;
+}
+
+button,
+input,
+select,
+summary,
+textarea {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+button,
+input {
+  padding: 0;
+}
+
+button,
+input:where([type="button"], [type="reset"], [type="submit"]) {
+  -webkit-appearance: button;
+  appearance: button;
+  background-color: transparent;
+  background-image: none;
+  cursor: pointer;
+}
+
+input[type="search"] {
+  -webkit-appearance: textfield;
+  appearance: textfield;
+  outline-offset: -2px;
+}
+
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+button,
+summary,
+label {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+  text-underline-offset: 0.22em;
+}
+
+svg {
+  display: block;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* -- Numerals -------------------------------------------------------------
+   Every number in the product renders in the data face with tabular figures,
+   so columns of digits align on the decimal at any weight. */
+.num,
+.numeric-cell,
+.rank-cell {
+  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* -- Focus ----------------------------------------------------------------
+   One ring everywhere. It carries its own 2px spacer in the page ground, so
+   it stays legible on every surface, and it is a box-shadow rather than an
+   outline so a scroll container cannot clip it (fixes audit item A4). */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: var(--r-2);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::selection {
+  background: var(--signal-glow);
+  color: var(--fg-primary);
+}
+
+::placeholder {
+  color: var(--fg-tertiary);
+  opacity: 1;
+}
+
+/* Scrollbars read as part of the instrument rather than the OS. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: var(--r-full);
+  background: var(--line-strong);
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-tertiary);
+  background-clip: content-box;
+}
+
+}

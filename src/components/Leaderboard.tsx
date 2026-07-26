@@ -2,38 +2,53 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import {
-  CategoryTabs,
-  type Category,
-} from "@/components/CategoryTabs";
+import { CategoryTabs, type Category } from "@/components/CategoryTabs";
+import { CommandPalette } from "@/components/CommandPalette";
 import { FilterBar } from "@/components/FilterBar";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
+import { ScatterPlot } from "@/components/ScatterPlot";
 import type { LeaderboardData } from "@/lib/data";
+import { DEFAULT_SORT, sortLeaderboardRows, useSort } from "@/lib/useSort";
 import {
-  DEFAULT_SORT,
-  sortLeaderboardRows,
-  useSort,
-} from "@/lib/useSort";
-import {
+  DEFAULT_DENSITY,
+  DEFAULT_VIEW,
+  PROFILE_BREAKPOINT,
   categoryFromUrl,
+  densityFromUrl,
   isDefaultSort,
   modelFragment,
   needsDirectionParameter,
   rowFromFragment,
   sortFromUrl,
   sortKey,
+  viewFromUrl,
+  type Density,
+  type ViewMode,
 } from "@/lib/urlState";
+
+const BOARD_PANEL_ID = "board-panel";
 
 type LeaderboardProps = {
   data: LeaderboardData;
+  minimumCoverageCount: number;
+  percentBenchmarkCount: number;
 };
 
-export function Leaderboard({ data }: LeaderboardProps) {
+export function Leaderboard({
+  data,
+  minimumCoverageCount,
+  percentBenchmarkCount,
+}: LeaderboardProps) {
   const [category, setCategory] = useState<Category>("overall");
   const [selectedLabs, setSelectedLabs] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [openWeightsOnly, setOpenWeightsOnly] = useState(false);
   const [expandedModelId, setExpandedModelId] = useState<string | null>(null);
+  const [view, setView] = useState<ViewMode>(DEFAULT_VIEW);
+  // The responsive default is not the user's choice, so it must not end up in
+  // a shared URL. Only an explicit switch is serialised.
+  const [viewExplicit, setViewExplicit] = useState(false);
+  const [density, setDensity] = useState<Density>(DEFAULT_DENSITY);
   const [urlStateReady, setUrlStateReady] = useState(false);
   const { sort, setSort, requestSort } = useSort();
 
@@ -42,9 +57,7 @@ export function Leaderboard({ data }: LeaderboardProps) {
       Object.fromEntries(
         data.benchmarks.map((benchmark) => {
           const values = data.rows
-            .map(
-              (row) => row.scoresByBenchmark[benchmark.id]?.value ?? null,
-            )
+            .map((row) => row.scoresByBenchmark[benchmark.id]?.value ?? null)
             .filter((value): value is number => value !== null);
 
           return [benchmark.id, values.length > 0 ? Math.max(...values) : null];
@@ -57,9 +70,7 @@ export function Leaderboard({ data }: LeaderboardProps) {
     () =>
       category === "overall"
         ? data.benchmarks
-        : data.benchmarks.filter(
-            (benchmark) => benchmark.category === category,
-          ),
+        : data.benchmarks.filter((benchmark) => benchmark.category === category),
     [category, data.benchmarks],
   );
   const normalizedQuery = query.trim().toLocaleLowerCase("en");
@@ -102,9 +113,8 @@ export function Leaderboard({ data }: LeaderboardProps) {
       case "benchmark": {
         const benchmarkId = sort.column.id;
         return (
-          data.benchmarks.find(
-            (benchmark) => benchmark.id === benchmarkId,
-          )?.name ?? "benchmark score"
+          data.benchmarks.find((benchmark) => benchmark.id === benchmarkId)
+            ?.name ?? "benchmark score"
         );
       }
     }
@@ -135,13 +145,26 @@ export function Leaderboard({ data }: LeaderboardProps) {
           ? DEFAULT_SORT
           : requestedSort;
       const fragment = window.location.hash.slice(1);
-      const expandedRow = fragment
-        ? rowFromFragment(fragment, data.rows)
-        : null;
+      const expandedRow = fragment ? rowFromFragment(fragment, data.rows) : null;
+      const requestedView = viewFromUrl(params.get("view"));
 
       setCategory(nextCategory);
       setSort(nextSort);
       setExpandedModelId(expandedRow?.model.id ?? null);
+      setDensity(densityFromUrl(params.get("density")));
+
+      if (requestedView) {
+        setView(requestedView);
+        setViewExplicit(true);
+      } else {
+        // The server always renders the full table so every number is in the
+        // static HTML. Narrow viewports switch to the projection that fits.
+        setView(
+          window.innerWidth < PROFILE_BREAKPOINT ? "profile" : DEFAULT_VIEW,
+        );
+        setViewExplicit(false);
+      }
+
       setUrlStateReady(true);
     }
 
@@ -179,28 +202,44 @@ export function Leaderboard({ data }: LeaderboardProps) {
       }
     }
 
+    if (viewExplicit) {
+      url.searchParams.set("view", view);
+    } else {
+      url.searchParams.delete("view");
+    }
+
+    if (density === DEFAULT_DENSITY) {
+      url.searchParams.delete("density");
+    } else {
+      url.searchParams.set("density", density);
+    }
+
     const expandedRow = expandedModelId
       ? data.rows.find((row) => row.model.id === expandedModelId)
       : null;
 
     if (expandedRow) {
       url.hash = modelFragment(expandedRow.model.name);
-    } else if (
-      url.hash &&
-      rowFromFragment(url.hash.slice(1), data.rows)
-    ) {
+    } else if (url.hash && rowFromFragment(url.hash.slice(1), data.rows)) {
       url.hash = "";
     }
 
     window.history.replaceState(window.history.state, "", url);
-  }, [category, data.rows, expandedModelId, sort, urlStateReady]);
+  }, [
+    category,
+    data.rows,
+    density,
+    expandedModelId,
+    sort,
+    urlStateReady,
+    view,
+    viewExplicit,
+  ]);
 
   useEffect(() => {
     if (!urlStateReady || !expandedModelId) return;
 
-    const expandedRow = data.rows.find(
-      (row) => row.model.id === expandedModelId,
-    );
+    const expandedRow = data.rows.find((row) => row.model.id === expandedModelId);
     if (!expandedRow) return;
 
     const frame = window.requestAnimationFrame(() => {
@@ -226,8 +265,7 @@ export function Leaderboard({ data }: LeaderboardProps) {
       data.benchmarks
         .filter(
           (benchmark) =>
-            nextCategory === "overall" ||
-            benchmark.category === nextCategory,
+            nextCategory === "overall" || benchmark.category === nextCategory,
         )
         .map((benchmark) => benchmark.id),
     );
@@ -260,18 +298,32 @@ export function Leaderboard({ data }: LeaderboardProps) {
     setExpandedModelId((current) => (current === modelId ? null : modelId));
   }
 
+  function handleViewChange(nextView: ViewMode) {
+    setView(nextView);
+    setViewExplicit(true);
+  }
+
   return (
     <section
       className="leaderboard"
       id="leaderboard"
       aria-labelledby="leaderboard-heading"
+      data-density={density}
     >
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-        Sorted by {sortLabel}, {sort.direction === "asc" ? "ascending" : "descending"}.
+        Sorted by {sortLabel},{" "}
+        {sort.direction === "asc" ? "ascending" : "descending"}. Showing{" "}
+        {view} projection.
       </p>
 
-      <div className="controls-shell">
-        <CategoryTabs value={category} onChange={handleCategoryChange} />
+      <div className="command-bar">
+        <div className="command-row command-row-tabs">
+          <CategoryTabs
+            value={category}
+            onChange={handleCategoryChange}
+            panelId={BOARD_PANEL_ID}
+          />
+        </div>
         <FilterBar
           labs={data.labs}
           selectedLabs={selectedLabs}
@@ -279,24 +331,45 @@ export function Leaderboard({ data }: LeaderboardProps) {
           openWeightsOnly={openWeightsOnly}
           resultCount={filteredRows.length}
           totalCount={data.rows.length}
+          view={view}
+          density={density}
           onQueryChange={setQuery}
           onToggleLab={toggleLab}
           onOpenWeightsChange={setOpenWeightsOnly}
           onClear={clearFilters}
+          onViewChange={handleViewChange}
+          onDensityChange={setDensity}
         />
       </div>
 
-      <LeaderboardTable
-        rows={sortedRows}
-        category={category}
-        allBenchmarks={data.benchmarks}
-        visibleBenchmarks={visibleBenchmarks}
-        bestScores={bestScores}
-        sort={sort}
-        expandedModelId={expandedModelId}
-        onSort={requestSort}
-        onToggleDetails={toggleDetails}
-      />
+      <div
+        className="board-shell"
+        id={BOARD_PANEL_ID}
+        role="tabpanel"
+        aria-labelledby={`tab-${category}`}
+      >
+        {view === "plot" ? (
+          <ScatterPlot rows={sortedRows} category={category} />
+        ) : (
+          <LeaderboardTable
+            rows={sortedRows}
+            category={category}
+            allBenchmarks={data.benchmarks}
+            visibleBenchmarks={visibleBenchmarks}
+            bestScores={bestScores}
+            sort={sort}
+            expandedModelId={expandedModelId}
+            view={view}
+            minimumCoverageCount={minimumCoverageCount}
+            percentBenchmarkCount={percentBenchmarkCount}
+            onSort={requestSort}
+            onToggleDetails={toggleDetails}
+            onClearFilters={clearFilters}
+          />
+        )}
+      </div>
+
+      <CommandPalette rows={data.rows} benchmarks={data.benchmarks} />
     </section>
   );
 }

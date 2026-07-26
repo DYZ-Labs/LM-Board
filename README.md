@@ -4,7 +4,11 @@ LM Board is a static, curated leaderboard for frontier language-model benchmark 
 
 This repository implements the MVP described in [PLAN.md](./PLAN.md): a Next.js 15 App Router project, shared Zod data schemas, live-sourced seed data, build-time integrity validation, a polished interactive leaderboard, and a dependency-free static export.
 
-The leaderboard computes a transparent coverage-gated Index for Overall and each benchmark category, with canonical ranks precomputed per scope. It supports sorting every column, switches benchmark columns and scoped ranking by category, combines provider/search/open-weight filters, and exposes an inline source panel for every model and score. Category, sort, direction, and expanded-model state are reflected in the URL so a specific view can be shared directly.
+The leaderboard computes a transparent coverage-gated Index for Overall and each benchmark category, with canonical ranks precomputed per scope. It supports sorting every column, switches benchmark columns and scoped ranking by category, combines provider/search/open-weight filters, and exposes an inline source panel for every model and score. Category, sort, direction, projection, density, and expanded-model state are reflected in the URL so a specific view can be shared directly.
+
+The board renders in three projections — `table` (every benchmark column), `profile` (compact, with a per-model score spark) and `plot` (price against Index) — at three row densities. The server always renders the full table so every number is in the static HTML; viewports narrower than 1440px hydrate into `profile`, which fits without sideways scrolling down to 390px. Every model also has its own citable record at `/model/<id>`, and `/compare` puts up to four models side by side.
+
+The visual system is documented in [REDESIGN_PLAN.md](./REDESIGN_PLAN.md) and implemented as cascade layers in `src/styles/`.
 
 ## Requirements
 
@@ -35,8 +39,12 @@ NEXT_PUBLIC_GITHUB_REPOSITORY_URL=https://github.com/owner/lmboard
 ```bash
 npm run validate:data
 npm run typecheck
+npm test
 npm run build
+npm run measure          # transfer-size budgets + content smoke check; --check exits non-zero
 ```
+
+`npm test` runs two Vitest projects: `lib` (index math, sort comparators, URL parsing, data assembly, palette contrast, discovery core — Node environment) and `ui` (component behaviour and an axe-core accessibility pass — jsdom). The contrast suite parses `src/styles/tokens.css` directly, so editing a colour token is checked against WCAG rather than against a stale copy of the palette.
 
 `npm run build` validates all records and cross-file references before Next.js creates a static export in `out/`. Validation fails on malformed records, duplicate IDs, dangling score references, duplicate model/benchmark score pairs, or percent values outside `0–100`.
 
