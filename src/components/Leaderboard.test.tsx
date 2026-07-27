@@ -616,7 +616,7 @@ describe("table semantics", () => {
 
     const indexHeader = screen
       .getByRole("button", {
-        name: /^Sort by LM Index/,
+        name: /^Sort by LM Intelligence Index/,
       })
       .closest("th")!;
     const actions = within(indexHeader).getAllByRole("button");
@@ -720,20 +720,20 @@ describe("projections", () => {
     );
   });
 
-  it("shows the short Index name and expands it on hover", () => {
+  it("uses the Intelligence Index name in the label and hover text", () => {
     render(board());
 
     const indexSort = screen.getByRole("button", {
-      name: /^Sort by LM Index/,
+      name: /^Sort by LM Intelligence Index/,
     });
-    expect(indexSort).toHaveTextContent("LM Index");
+    expect(indexSort).toHaveTextContent("LM Intelligence Index");
     expect(indexSort.querySelector("[title]")).toHaveAttribute(
       "title",
-      "LM Board Intelligence Index",
+      "LM Intelligence Index",
     );
     expect(
       screen.getByRole("button", {
-        name: "About LM Board Intelligence Index",
+        name: "About LM Intelligence Index",
       }),
     ).toBeInTheDocument();
   });

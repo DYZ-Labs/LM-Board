@@ -99,7 +99,7 @@ export function Readout({
           </div>
 
           <div className="readout-score">
-            <p className="readout-score-label">Overall Index</p>
+            <p className="readout-score-label">LM Intelligence Index</p>
             <p className="readout-value num">{formatScore(overall.index)}</p>
             <p className="readout-field-position num">
               #{overall.rank ?? "—"} of {overall.rankedFieldSize} models

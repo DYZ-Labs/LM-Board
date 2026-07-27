@@ -69,7 +69,6 @@ ${benchmarks}
 ## Pages
 
 - [Leaderboard](${siteUrl}/)
-- [Find the best model for your budget](${siteUrl}/value)
 - [Methodology, in full](${siteUrl}/methodology)
 - [Side-by-side comparison](${siteUrl}/compare)
 

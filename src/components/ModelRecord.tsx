@@ -60,15 +60,6 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
           >
             Compare
           </Link>
-          {model.pricing ? (
-            <Link
-              className="btn"
-              href={`/value?point=${model.id}`}
-              prefetch={false}
-            >
-              View on price plot
-            </Link>
-          ) : null}
           <a
             className="btn link-external"
             href={model.url}
