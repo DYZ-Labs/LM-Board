@@ -119,9 +119,6 @@ describe("ModelRecord standing", () => {
 
     expect(actions.getByRole("link", { name: "Compare" })).toBeInTheDocument();
     expect(
-      actions.getByRole("link", { name: "View on price plot" }),
-    ).toBeInTheDocument();
-    expect(
       actions.getByRole("link", { name: /Provider page/ }),
     ).toBeInTheDocument();
     expect(

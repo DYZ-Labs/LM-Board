@@ -24,7 +24,6 @@ describe("robots.txt contract", () => {
       "/404.txt",
       "/compare.txt",
       "/methodology.txt",
-      "/value.txt",
       "/model/*.txt$",
     ]);
     expect(rules.disallow).not.toContain("/*.txt$");
@@ -37,7 +36,7 @@ describe("sitemap contract", () => {
 
     expect(urls).toContain(`${siteUrl}/compare`);
     expect(urls).toContain(`${siteUrl}/methodology`);
-    expect(urls).toContain(`${siteUrl}/value`);
+    expect(urls).not.toContain(`${siteUrl}/value`);
   });
 
   it("uses each model record's own freshness date", () => {
@@ -98,8 +97,6 @@ describe("llms.txt artifact", () => {
     for (const row of data.rows) {
       expect(text).toContain(`${siteUrl}/model/${row.model.id}`);
     }
-    expect(text).toContain(
-      `- [Find the best model for your budget](${siteUrl}/value)`,
-    );
+    expect(text).not.toContain(`${siteUrl}/value`);
   });
 });

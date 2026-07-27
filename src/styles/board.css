@@ -69,6 +69,7 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 .board {
   width: 100%;
   table-layout: fixed;
+  line-height: 1.35;
 }
 
 .mobile-sort-controls {
@@ -116,13 +117,16 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   z-index: var(--z-sticky-header);
   top: var(--bar-h, 0px);
   height: var(--header-h);
-  background: var(--bg-raised);
-  box-shadow: 0 1px 0 var(--line-subtle);
+  background: linear-gradient(180deg, var(--bg-raised), var(--bg-inset));
+  box-shadow:
+    inset 0 1px 0 var(--spec-edge),
+    0 1px 0 var(--line);
   font-size: var(--t-12);
-  font-weight: var(--w-strong);
+  font-weight: var(--w-medium);
   font-variation-settings: "wdth" var(--wd-condensed);
   letter-spacing: var(--ls-12);
-  color: var(--fg-tertiary);
+  line-height: 1.25;
+  color: var(--fg-secondary);
   white-space: nowrap;
 }
 
@@ -211,7 +215,7 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 }
 
 .sort-button:hover {
-  color: var(--fg-secondary);
+  color: var(--fg-primary);
 }
 
 .sort-button:active {
@@ -243,14 +247,28 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
    behind one header cell, with the column beneath it untinted, read as a stray
    highlight rather than as state. */
 .board th[aria-sort] {
-  color: var(--fg-primary);
+  color: var(--signal-300);
 }
 
 /* -- Rows ----------------------------------------------------------------- */
 .model-row > td,
 .model-row > th {
   height: var(--row-h);
-  transition: background-color var(--dur-instant) var(--ease-out-quart);
+  transition:
+    background-color var(--dur-snap) var(--ease-out-quart),
+    color var(--dur-instant) var(--ease-out-quart);
+}
+
+/* The podium is visible at a glance without turning the first three records
+   into banners. Five percent signal in the existing surface is enough to
+   create depth in both themes while leaving every numeral at full contrast. */
+.model-row.is-podium > td,
+.model-row.is-podium > th {
+  background-color: color-mix(
+    in srgb,
+    var(--bg-raised) 95%,
+    var(--signal-500)
+  );
 }
 
 .model-row:hover > td,
@@ -278,8 +296,9 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 2px;
+  width: 3px;
   background: var(--signal-500);
+  box-shadow: 0 0 var(--s-5) var(--signal-glow);
   transform: scaleY(0);
   transform-origin: 50% 50%;
   transition: transform var(--dur-snap) var(--ease-snap);
@@ -315,9 +334,23 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   height: min(28px, var(--row-h));
   padding: 0;
   border: 0;
+  border-radius: var(--r-2);
   background: transparent;
   color: var(--fg-primary);
   text-align: left;
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart),
+    transform var(--dur-snap) var(--ease-snap);
+}
+
+.model-trigger:hover {
+  background: var(--bg-active);
+  color: var(--signal-300);
+}
+
+.model-trigger:active {
+  transform: scale(0.94);
 }
 
 /* -- Shrink order: the decorations yield, the identity never does ---------
@@ -343,9 +376,9 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
-  font-size: var(--t-13);
+  font-size: var(--t-15);
   font-weight: var(--w-strong);
-  letter-spacing: var(--ls-13);
+  letter-spacing: 0;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--fg-primary);
@@ -360,7 +393,8 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   flex: 0 9999 auto;
   min-width: 0;
   overflow: hidden;
-  font-size: var(--t-10);
+  font-size: var(--t-11);
+  font-weight: var(--w-medium);
   color: var(--fg-tertiary);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -425,7 +459,7 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 
 .rank-cell {
   font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
-  font-size: var(--t-12);
+  font-size: var(--t-13);
   font-variant-numeric: tabular-nums;
   font-weight: var(--w-medium);
   color: var(--fg-secondary);
@@ -457,15 +491,24 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 
 .numeric-cell {
   font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
-  font-size: var(--t-12);
-  font-variant-numeric: tabular-nums;
+  font-size: var(--t-13);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.01em;
   text-align: right;
 }
 
 .index-cell {
-  font-size: var(--t-15);
+  font-size: var(--t-17);
   font-weight: var(--w-strong);
   color: var(--fg-primary);
+}
+
+.model-row.is-podium .index-cell {
+  color: var(--signal-300);
+}
+
+.price-cell {
+  font-size: var(--t-12);
 }
 
 .missing-value {
@@ -480,7 +523,7 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   border: 0;
   background: transparent;
   font-family: var(--font-ui, system-ui), system-ui, sans-serif;
-  font-size: var(--t-10);
+  font-size: var(--t-11);
   font-weight: var(--w-medium);
   letter-spacing: normal;
   color: var(--fg-tertiary);
@@ -790,11 +833,38 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 }
 
 @media (min-width: 1440px) {
+  .board {
+    --col-index: 144px;
+  }
+
+  .board thead th {
+    font-size: var(--t-12);
+    font-variation-settings: "wdth" var(--wd-normal);
+    letter-spacing: var(--ls-12);
+  }
+
+  .board[data-view="table"] .benchmark-column {
+    padding-inline: var(--s-2);
+  }
+
+  .board thead :is(.index-column, .price-column),
+  .board tbody :is(.index-cell, .price-cell) {
+    border-left: 1px solid var(--line-subtle);
+  }
+
+  .board .index-column .sort-button > span:first-child {
+    overflow: visible;
+    line-height: 1.15;
+    text-overflow: clip;
+    text-wrap: balance;
+    white-space: normal;
+  }
+
   /* At full rail width the identifying column gets the useful surplus rather
      than leaving every short numeric track needlessly loose. */
   .board[data-view="table"]:not([data-sparse="true"])
     :is(.model-column, .model-cell) {
-    width: calc(var(--col-model) + var(--s-10));
+    width: calc(var(--col-model) + var(--s-8));
   }
 }
 

@@ -37,7 +37,6 @@ describe("command palette payload", () => {
 describe("global palette route coverage", () => {
   it("mounts the deferred palette without embedding its index on product routes and the 404", () => {
     const routeFiles = [
-      "src/app/value/page.tsx",
       "src/app/compare/page.tsx",
       "src/app/methodology/page.tsx",
       "src/app/model/[id]/page.tsx",

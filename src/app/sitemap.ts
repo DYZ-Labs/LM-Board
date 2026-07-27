@@ -30,12 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
-    {
-      url: `${siteUrl}/value`,
-      lastModified: data.lastUpdated,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
     // One entry per model record. These are the citation surfaces, so they
     // carry their own newest retrieval rather than borrowing an unrelated
     // board-wide update. Scoreless records use their release date.
