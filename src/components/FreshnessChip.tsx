@@ -31,8 +31,10 @@ export function FreshnessChip({ date }: FreshnessChipProps) {
   return (
     <span className={`freshness${isStale ? " is-stale" : ""}`}>
       <span className="live-dot" aria-hidden="true" />
+      {/* "Updated" read as "the board was refreshed", which is a claim about
+          all 456 scores when it is only true of the newest one. */}
       <span>
-        Updated{" "}
+        Newest score{" "}
         <time dateTime={date} title={formatDate(date)}>
           {relative?.label ?? formatDate(date)}
         </time>

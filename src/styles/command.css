@@ -1,0 +1,192 @@
+/* ===========================================================================
+   Command — the sticky command bar above the board: its rows, the
+   result count and the segmented density / projection switches.
+   =========================================================================== */
+@layer projections {
+
+
+/* -- Command bar ----------------------------------------------------------
+   Sticky glass. M5: at most two backdrop-filter elements are composited at
+   once — this one and whichever popover is open. */
+.command-bar {
+  position: sticky;
+  z-index: var(--z-command);
+  top: 0;
+  display: grid;
+  gap: var(--s-3);
+  /* The card opens with one vertical, not four inside 13px: the inline padding
+     lives on the rows, at exactly the value that puts a control's own edge on
+     the table's first cell padding edge below it. */
+  padding: 0 0 var(--s-3);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-4) var(--r-4) 0 0;
+  background: color-mix(in srgb, var(--bg-raised) 82%, transparent);
+  box-shadow: var(--e-3);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .command-bar {
+    backdrop-filter: blur(14px) saturate(150%);
+  }
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .command-bar {
+    background: var(--bg-raised);
+  }
+}
+
+.command-row {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: 0;
+  padding: var(--s-1) var(--s-4);
+}
+
+.command-row > * {
+  min-width: 0;
+}
+
+/* A command popover may be anchored near either viewport edge. Its content
+   scrolls inside the overlay rather than pushing a provider or density control
+   off-screen. The mobile sheet can replace this surface without changing the
+   state API. */
+.command-bar .popover {
+  width: min(320px, calc(100vw - 24px));
+  max-height: min(
+    520px,
+    var(--popover-available-block, calc(100dvh - 96px))
+  );
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.command-bar .disclosure[data-popover-align="end"] .popover {
+  right: 0;
+  left: auto;
+  --popover-origin-inline: right;
+}
+
+.command-bar .disclosure[data-popover-vertical="above"] .popover {
+  top: auto;
+  bottom: calc(100% + var(--s-3));
+  --popover-origin-block: bottom;
+}
+
+.command-row-tabs {
+  border-bottom: 1px solid var(--line-subtle);
+  padding: 0;
+}
+
+/* Second row, and only when something is actually filtering: the trigger said
+   "Providers 2" without naming which two, so a shared link — the product's one
+   conversion action — arrived with the board narrowed and nothing saying why. */
+.filter-chips {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 var(--s-4);
+}
+
+/* The count read as a fourth segment of the control it abutted, because it was
+   an unlabelled "62 / 62" floating 8px from it. The noun is generated rather
+   than shipped: it belongs to the presentation. */
+.result-count {
+  margin-left: auto;
+  margin-right: var(--s-4);
+  font-size: var(--t-12);
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+
+.result-count::after {
+  content: " models";
+}
+
+.result-count[data-filtered="true"] {
+  color: var(--fg-primary);
+  font-weight: var(--w-strong);
+}
+
+.result-count[data-empty="true"] {
+  color: var(--warn);
+}
+
+/* Segmented control — density and projection switches. Two of these sit side
+   by side, so they have to be the same object twice: one track, one chip
+   geometry, one case, and a gap wide enough that six segments do not read as
+   one control with two active items. */
+.segmented {
+  display: flex;
+  gap: 1px;
+  padding: 2px;
+  /* The same edge as .field: both are recessed tracks, and a lighter hairline
+     here made the two read as different classes of object. */
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  background: var(--bg-inset);
+}
+
+.segmented + .segmented {
+  margin-left: var(--s-7);
+}
+
+.segmented button {
+  display: grid;
+  min-width: 30px;
+  height: 26px;
+  padding: 0 var(--s-4);
+  place-items: center;
+  border: 0;
+  border-radius: var(--r-1);
+  background: transparent;
+  font-size: var(--t-11);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-12);
+  color: var(--fg-tertiary);
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart),
+    transform var(--dur-snap) var(--ease-snap);
+}
+
+.segmented button:hover {
+  color: var(--fg-primary);
+}
+
+.segmented button:active {
+  transform: scale(0.94);
+}
+
+/* The chip is a raised surface on a recessed track, in both themes. It used to
+   be --bg-active on --bg-inset, which in light is three units of luminance:
+   only the text weight signalled which segment was on. */
+.segmented button[aria-pressed="true"] {
+  background: var(--bg-raised);
+  font-weight: var(--w-strong);
+  color: var(--fg-primary);
+  box-shadow: 0 0 0 1px var(--line-subtle), var(--e-1);
+}
+
+@media (max-width: 560px) {
+  .command-row {
+    gap: var(--s-2);
+  }
+
+  .field {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Density changes table row height; the CSS card projection does not consume
+     that token, so exposing the control on a phone would be a no-op. */
+  .density-disclosure {
+    display: none;
+  }
+}
+
+}

@@ -1,24 +1,23 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { repositoryUrl } from "@/lib/site";
 
 type SiteMastheadProps = {
   /**
-   * "home" renders the wordmark as the page <h1> and keeps the
-   * #leaderboard-heading id that the board is labelled by. "link" points back
-   * to the leaderboard. "static" renders plain text, for the global error
-   * boundary, which sits outside the router.
+   * "home" keeps the in-page top link. The visible page h1 lives in Readout,
+   * where it describes the product rather than repeating the brand. "link"
+   * points home; "static" is plain text outside the router.
    */
   variant?: "home" | "link" | "static";
+  current?: "leaderboard" | "value" | "compare" | "methodology";
   id?: string;
-  actions?: ReactNode;
 };
-
-const TAGLINE = "Benchmark scores for frontier AI models";
 
 export function SiteMasthead({
   variant = "link",
+  current,
   id,
-  actions,
 }: SiteMastheadProps) {
   const wordmark =
     variant === "home" ? (
@@ -26,7 +25,12 @@ export function SiteMasthead({
         LM Board
       </a>
     ) : variant === "link" ? (
-      <Link className="wordmark" href="/" aria-label="LM Board home">
+      <Link
+        className="wordmark"
+        href="/"
+        aria-label="LM Board home"
+        prefetch={false}
+      >
         LM Board
       </Link>
     ) : (
@@ -35,19 +39,58 @@ export function SiteMasthead({
 
   return (
     <header className="site-header" id={id}>
-      <div className="site-identity">
-        {variant === "home" ? (
-          <h1 id="leaderboard-heading">{wordmark}</h1>
-        ) : (
-          wordmark
-        )}
-        <p className="site-tagline">{TAGLINE}</p>
-      </div>
-      {actions ? (
-        <nav className="header-actions" aria-label="Site controls">
-          {actions}
-        </nav>
-      ) : null}
+      <div className="site-identity">{wordmark}</div>
+      {variant === "static" ? null : (
+        <>
+          {/* Navigation sits with the identity, actions sit at the far edge —
+              the two clusters are different kinds of thing and reading them as
+              one run-on string is what happens when they share a corner. */}
+          <nav className="site-nav" aria-label="Sections">
+            <Link
+              href="/"
+              prefetch={false}
+              aria-current={current === "leaderboard" ? "page" : undefined}
+            >
+              Leaderboard
+            </Link>
+            <Link
+              href="/value"
+              prefetch={false}
+              aria-current={current === "value" ? "page" : undefined}
+            >
+              Value
+            </Link>
+            <Link
+              href="/compare"
+              prefetch={false}
+              aria-current={current === "compare" ? "page" : undefined}
+            >
+              Compare
+            </Link>
+            <Link
+              href="/methodology"
+              prefetch={false}
+              aria-current={current === "methodology" ? "page" : undefined}
+            >
+              Methodology
+            </Link>
+          </nav>
+          <div className="header-actions">
+            {repositoryUrl ? (
+              <a
+                className="site-nav-aside"
+                href={repositoryUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            ) : null}
+            <ThemeToggle />
+          </div>
+        </>
+      )}
     </header>
   );
 }

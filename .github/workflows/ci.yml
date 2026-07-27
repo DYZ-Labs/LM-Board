@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,10 +16,12 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -26,33 +29,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Type-check
-        run: npm run typecheck
-
-      - name: Test
-        run: npm test
-
-      - name: Validate data and build static export
+      - name: Run repository checks
         env:
           NEXT_PUBLIC_SITE_URL: https://www.checklmboard.xyz
           NEXT_PUBLIC_GITHUB_REPOSITORY_URL: https://github.com/DYZ-Labs/LM-Board
-        run: npm run build
-
-      - name: Check homepage HTML budget
-        env:
-          MAX_HOMEPAGE_BYTES: "1048576"
-        run: |
-          page_bytes=$(wc -c < out/index.html)
-          echo "Homepage HTML: $page_bytes bytes (limit: $MAX_HOMEPAGE_BYTES)"
-          if [ "$page_bytes" -gt "$MAX_HOMEPAGE_BYTES" ]; then
-            echo "::error::Homepage HTML exceeds the 1 MiB budget."
-            exit 1
-          fi
-
-      # Transfer-size budgets plus a content smoke check: a build that rendered
-      # an empty board would pass every byte budget on its own.
-      - name: Check design-system budgets and page content
-        run: npm run measure -- --check
+        run: npm run check

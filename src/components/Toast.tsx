@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { AlertIcon, CheckIcon } from "@/components/Icon";
+import { AlertIcon, CheckIcon, CloseIcon } from "@/components/Icon";
 
 export type ToastTone = "pos" | "warn";
 
@@ -25,17 +25,21 @@ function emit() {
   for (const listener of listeners) listener(toasts);
 }
 
+function dismiss(id: number) {
+  toasts = toasts.filter((item) => item.id !== id);
+  emit();
+}
+
 export function toast(message: string, tone: ToastTone = "pos") {
   const entry = { id: nextId++, message, tone };
   toasts = [...toasts, entry];
   emit();
 
-  // Errors stay until dismissed by the next action; confirmations expire.
+  // Confirmations expire on their own; errors wait to be read. An error that
+  // waits must still be closable, or it sits over the board for the rest of the
+  // session — see the dismiss control below.
   if (tone === "pos") {
-    setTimeout(() => {
-      toasts = toasts.filter((item) => item.id !== entry.id);
-      emit();
-    }, AUTO_DISMISS_MS);
+    setTimeout(() => dismiss(entry.id), AUTO_DISMISS_MS);
   }
 }
 
@@ -49,6 +53,21 @@ export function ToastRegion() {
     };
   }, []);
 
+  // Escape clears whatever is showing, so a persistent error never needs the
+  // mouse. Bound only while something is up.
+  useEffect(() => {
+    if (items.length === 0) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      toasts = [];
+      emit();
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [items.length]);
+
   return (
     <div
       className="toast-region"
@@ -60,6 +79,18 @@ export function ToastRegion() {
         <div key={item.id} className={`toast toast-${item.tone}`}>
           {item.tone === "pos" ? <CheckIcon /> : <AlertIcon />}
           <span>{item.message}</span>
+          {/* Only the persistent tone needs a control; adding one to a
+              confirmation that vanishes in 4s is a button nobody can hit. */}
+          {item.tone === "warn" ? (
+            <button
+              type="button"
+              className="toast-dismiss"
+              aria-label="Dismiss message"
+              onClick={() => dismiss(item.id)}
+            >
+              <CloseIcon size={11} />
+            </button>
+          ) : null}
         </div>
       ))}
     </div>

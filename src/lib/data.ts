@@ -28,6 +28,30 @@ export type LeaderboardScope = {
   coverageTotal: number;
   coverageRatio: number;
   estimatedCount: number;
+  /**
+   * Models that clear the coverage bar in this scope — the denominator `rank`
+   * was measured against. It rides on the scope so no surface can render a
+   * rank without the field it means anything relative to.
+   */
+  rankedFieldSize: number;
+};
+
+/** The measured span of one benchmark across the whole dataset. */
+export type BenchmarkDomain = {
+  min: number;
+  max: number;
+};
+
+/** The rank-1 model of a scope, flattened for a headline. */
+export type LeaderboardLeader = {
+  modelId: string;
+  name: string;
+  lab: string;
+  index: number;
+  coverageCount: number;
+  coverageTotal: number;
+  estimatedCount: number;
+  rankedFieldSize: number;
 };
 
 export type LeaderboardRow = {
@@ -42,12 +66,6 @@ export type LeaderboardRow = {
    */
   rampByBenchmark: Record<string, RampStep | null>;
   scopes: Record<RankScope, LeaderboardScope>;
-  index: number | null;
-  coverageCount: number;
-  coverageTotal: number;
-  coverageRatio: number;
-  estimatedCount: number;
-  rank: number | null;
 };
 
 export type LeaderboardData = {
@@ -56,6 +74,41 @@ export type LeaderboardData = {
   labs: string[];
   lastUpdated: string;
   scoreCount: number;
+  /**
+   * Keyed by benchmark id, over every score in the dataset. A bar that encodes
+   * standing within a benchmark has to be scaled by the whole measured field —
+   * scaling it by whichever rows a client happens to be holding would make the
+   * same score draw a different length on a filtered board.
+   */
+  benchmarkDomains: Record<string, BenchmarkDomain>;
+  /** Earliest retrieval date in the dataset; `lastUpdated` is the latest. */
+  oldestRetrieved: string;
+  selfReportedCount: number;
+};
+
+/** Client-side shape after the normalized payload has been expanded. */
+export type LeaderboardClientScore = Omit<
+  Score,
+  "modelId" | "benchmarkId" | "reasoningEffort"
+>;
+
+export type LeaderboardClientRow = Omit<
+  LeaderboardRow,
+  "scoresByBenchmark"
+> & {
+  scoresByBenchmark: Record<string, LeaderboardClientScore | null>;
+};
+
+export type LeaderboardClientData = Pick<
+  LeaderboardData,
+  "benchmarks" | "labs" | "benchmarkDomains"
+> & {
+  rows: LeaderboardClientRow[];
+  /**
+   * Rebuilt on expansion rather than transmitted: the ranks it is read off are
+   * already on the wire, so sending it again would only repeat them.
+   */
+  leadersByScope: Record<RankScope, LeaderboardLeader | null>;
 };
 
 export type ReasoningEffortLabel =
@@ -73,6 +126,7 @@ const nameCollator = new Intl.Collator("en", {
 // Indexes are quantised before they are compared for ranking, so that floating
 // point noise in an average cannot split two models that scored identically.
 const RANK_PRECISION = 6;
+let cachedLeaderboardData: LeaderboardData | null = null;
 
 function quantizeIndex(value: number) {
   return Number(value.toFixed(RANK_PRECISION));
@@ -93,6 +147,8 @@ function summarizeReasoningEffort(
 }
 
 export function loadLeaderboardData(): LeaderboardData {
+  if (cachedLeaderboardData !== null) return cachedLeaderboardData;
+
   const models = ModelsFileSchema.parse(modelsJson);
   const benchmarks = BenchmarksFileSchema.parse(benchmarksJson);
   const scores = ScoresFileSchema.parse(scoresJson);
@@ -107,11 +163,32 @@ export function loadLeaderboardData(): LeaderboardData {
   }
 
   const scoresByModel = new Map<string, Score[]>();
+  const benchmarkDomains: Record<string, BenchmarkDomain> = {};
+  let oldestRetrieved = "";
+  let selfReportedCount = 0;
 
   for (const score of scores) {
     const modelScores = scoresByModel.get(score.modelId) ?? [];
     modelScores.push(score);
     scoresByModel.set(score.modelId, modelScores);
+
+    const domain = benchmarkDomains[score.benchmarkId];
+
+    if (domain === undefined) {
+      benchmarkDomains[score.benchmarkId] = {
+        min: score.value,
+        max: score.value,
+      };
+    } else {
+      domain.min = Math.min(domain.min, score.value);
+      domain.max = Math.max(domain.max, score.value);
+    }
+
+    if (oldestRetrieved === "" || score.source.retrieved < oldestRetrieved) {
+      oldestRetrieved = score.source.retrieved;
+    }
+
+    if (score.selfReported) selfReportedCount += 1;
   }
 
   const distributions = buildBenchmarkDistributions(scores, benchmarks);
@@ -143,12 +220,11 @@ export function loadLeaderboardData(): LeaderboardData {
             coverageTotal: indexResult.totalCount,
             coverageRatio: indexResult.coverage,
             estimatedCount: indexResult.estimatedCount,
+            rankedFieldSize: 0,
           },
         ];
       }),
     ) as Record<RankScope, LeaderboardScope>;
-    const overallScope = scopes.overall;
-
     return {
       model,
       reasoningEffort,
@@ -170,12 +246,6 @@ export function loadLeaderboardData(): LeaderboardData {
         }),
       ),
       scopes,
-      index: overallScope.index,
-      coverageCount: overallScope.coverageCount,
-      coverageTotal: overallScope.coverageTotal,
-      coverageRatio: overallScope.coverageRatio,
-      estimatedCount: overallScope.estimatedCount,
-      rank: null,
     } satisfies LeaderboardRow;
   });
 
@@ -217,6 +287,7 @@ export function loadLeaderboardData(): LeaderboardData {
         {
           ...row.scopes[scope],
           rank: ranksByScope[scope].get(row.model.id) ?? null,
+          rankedFieldSize: ranksByScope[scope].size,
         },
       ]),
     ) as Record<RankScope, LeaderboardScope>;
@@ -224,7 +295,6 @@ export function loadLeaderboardData(): LeaderboardData {
     return {
       ...row,
       scopes,
-      rank: scopes.overall.rank,
     };
   });
   const labs = [...new Set(models.map((model) => model.lab))].sort((a, b) =>
@@ -236,11 +306,16 @@ export function loadLeaderboardData(): LeaderboardData {
     "",
   );
 
-  return {
+  cachedLeaderboardData = {
     rows,
     benchmarks,
     labs,
     lastUpdated,
     scoreCount: scores.length,
+    benchmarkDomains,
+    oldestRetrieved,
+    selfReportedCount,
   };
+
+  return cachedLeaderboardData;
 }

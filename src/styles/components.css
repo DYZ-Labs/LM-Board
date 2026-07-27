@@ -5,23 +5,6 @@
 @layer components {
 
 
-/* -- Surface -------------------------------------------------------------- */
-.surface {
-  border: 1px solid var(--line-subtle);
-  border-radius: var(--r-4);
-  background: var(--bg-raised);
-  box-shadow: var(--e-2);
-}
-
-@supports (corner-shape: squircle) {
-  .surface,
-  .popover,
-  .badge,
-  .btn {
-    corner-shape: squircle;
-  }
-}
-
 /* -- Buttons -------------------------------------------------------------- */
 .btn {
   display: inline-flex;
@@ -30,29 +13,27 @@
   justify-content: center;
   min-height: 32px;
   padding: var(--s-3) var(--s-5);
-  border: 1px solid var(--line-interactive);
+  border: 1px solid var(--line);
   border-radius: var(--r-2);
-  background: transparent;
+  background: var(--bg-raised);
+  box-shadow: var(--e-1);
   font-size: var(--t-12);
   font-weight: var(--w-medium);
+  /* Pinned, not inherited: at the document's 1.6 the same min-height produced
+     a 33.2px button beside a 32px field, and four control heights inside
+     450px of toolbar is what makes a bar look assembled rather than drawn. */
+  line-height: var(--lh-12);
   letter-spacing: var(--ls-12);
   color: var(--fg-secondary);
   text-decoration: none;
   white-space: nowrap;
   transition:
-    color var(--dur-instant) var(--ease-out-quart),
-    background-color var(--dur-instant) var(--ease-out-quart),
-    border-color var(--dur-instant) var(--ease-out-quart),
-    transform var(--dur-snap) var(--ease-out-quart);
-  transition:
-    color var(--dur-instant) var(--ease-out-quart),
-    background-color var(--dur-instant) var(--ease-out-quart),
-    border-color var(--dur-instant) var(--ease-out-quart),
-    transform var(--dur-snap) var(--ease-snap);
+    var(--tr-tint), border-color var(--dur-instant) var(--ease-out-quart),
+    var(--tr-press);
 }
 
 .btn:hover {
-  border-color: var(--signal-600);
+  border-color: var(--line-interactive);
   background: var(--bg-hover);
   color: var(--fg-primary);
 }
@@ -68,16 +49,16 @@
 }
 
 .btn-primary {
-  border-color: var(--line-strong);
-  background: var(--bg-active);
-  color: var(--fg-primary);
+  border-color: var(--signal-600);
+  background: var(--signal-500);
+  color: var(--bg-raised);
   font-weight: var(--w-strong);
-  box-shadow: var(--e-1);
 }
 
 .btn-primary:hover {
-  background: var(--bg-hover);
-  border-color: var(--signal-500);
+  background: var(--signal-600);
+  border-color: var(--signal-600);
+  color: var(--bg-raised);
 }
 
 .btn-primary:active {
@@ -101,10 +82,7 @@
   border-radius: var(--r-2);
   background: transparent;
   color: var(--fg-tertiary);
-  transition:
-    color var(--dur-instant) var(--ease-out-quart),
-    background-color var(--dur-instant) var(--ease-out-quart),
-    transform var(--dur-snap) var(--ease-snap);
+  transition: var(--tr-tint), var(--tr-press);
 }
 
 .btn-icon:hover {
@@ -125,7 +103,7 @@
 }
 
 .theme-toggle svg {
-  transition: transform var(--dur-snap) var(--ease-snap);
+  transition: var(--tr-press);
 }
 
 .theme-toggle:hover svg {
@@ -143,7 +121,7 @@
   min-width: 0;
   max-width: 100%;
   overflow-x: auto;
-  padding: var(--s-2);
+  padding: var(--s-4) 0 var(--s-3);
   scrollbar-width: none;
 }
 
@@ -155,7 +133,7 @@
   position: relative;
   flex: 0 0 auto;
   min-height: 30px;
-  padding: var(--s-3) var(--s-5);
+  padding: var(--s-3) var(--s-4);
   border: 0;
   border-radius: var(--r-2);
   background: transparent;
@@ -164,10 +142,7 @@
   letter-spacing: var(--ls-13);
   color: var(--fg-secondary);
   white-space: nowrap;
-  transition:
-    color var(--dur-instant) var(--ease-out-quart),
-    background-color var(--dur-instant) var(--ease-out-quart),
-    transform var(--dur-snap) var(--ease-snap);
+  transition: var(--tr-tint), var(--tr-press);
 }
 
 .tab:hover {
@@ -184,6 +159,10 @@
   font-weight: var(--w-strong);
 }
 
+/* The underline starts unmeasured at width 0, so an unconditional transition
+   animated it out from the left edge of the tablist on hydration — a load
+   artifact on the first element the eye lands on. It only slides once it has
+   somewhere to slide from. */
 .tab-underline {
   position: absolute;
   bottom: 2px;
@@ -191,13 +170,14 @@
   height: 2px;
   border-radius: var(--r-full);
   background: var(--signal-500);
-  box-shadow: 0 0 8px var(--signal-glow);
   transform: translateX(var(--tab-x, 0)) scaleX(var(--tab-w, 0));
   transform-origin: 0 50%;
   width: 1px;
-  transition: transform var(--dur-snap) var(--ease-out-quart);
-  transition: transform var(--dur-snap) var(--ease-snap);
   pointer-events: none;
+}
+
+.tablist[data-measured="true"] .tab-underline {
+  transition: var(--tr-press);
 }
 
 /* -- Text input ----------------------------------------------------------- */
@@ -205,10 +185,10 @@
   display: flex;
   gap: var(--s-3);
   align-items: center;
-  width: min(300px, 100%);
+  width: min(332px, 100%);
   min-height: 32px;
   padding: 0 var(--s-5);
-  border: 1px solid var(--line-interactive);
+  border: 1px solid var(--line);
   border-radius: var(--r-2);
   background: var(--bg-inset);
   color: var(--fg-tertiary);
@@ -218,12 +198,39 @@
 }
 
 .field:hover {
-  border-color: var(--line-strong);
+  border-color: var(--line-interactive);
 }
 
+/* One ring, on the wrapper: the input is a borderless child, so a ring drawn
+   on it would sit inside the field's own edge and read as a second border.
+   Measured before this: the board's search field answered focus with nothing
+   at all — 0px outline on both the input and the wrapper. */
 .field:focus-within {
   border-color: var(--signal-500);
-  box-shadow: var(--ring);
+  outline: 2px solid var(--signal-500);
+  outline-offset: 2px;
+}
+
+/* An inert field must not answer to the pointer. Without this the compare
+   search still lit its border on hover after hitting the four-model cap, so the
+   only signal that it had stopped accepting input was the placeholder text. */
+.field:has(input:disabled) {
+  border-color: var(--line-subtle);
+  background: transparent;
+  color: var(--fg-disabled);
+  cursor: not-allowed;
+}
+
+.field:has(input:disabled):hover {
+  border-color: var(--line-subtle);
+}
+
+.field input:disabled {
+  cursor: not-allowed;
+}
+
+.field input:disabled::placeholder {
+  color: var(--fg-disabled);
 }
 
 .field input {
@@ -242,6 +249,26 @@
   stroke: currentcolor;
   stroke-linecap: round;
   stroke-width: 1.6;
+}
+
+/* Key caps. Stripe prints one inside its sidebar search: it is the only place
+   a shortcut can be advertised without spending a line of chrome, and it
+   yields the moment the field is in use so it never fights .field-clear. */
+.field-key,
+.palette-foot kbd {
+  flex: 0 0 auto;
+  padding: 1px var(--s-2);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-1);
+  font-family: var(--font-ui, system-ui), system-ui, sans-serif;
+  font-size: var(--t-10);
+  line-height: var(--lh-12);
+  color: var(--fg-tertiary);
+}
+
+.field:focus-within .field-key,
+.field.has-value .field-key {
+  display: none;
 }
 
 .field-clear {
@@ -273,16 +300,14 @@
   display: flex;
   gap: var(--s-4);
   align-items: center;
-  min-height: 30px;
+  min-height: 32px;
   padding: var(--s-2) var(--s-4);
   border-radius: var(--r-2);
   font-size: var(--t-13);
   color: var(--fg-secondary);
   cursor: pointer;
   white-space: nowrap;
-  transition:
-    color var(--dur-instant) var(--ease-out-quart),
-    background-color var(--dur-instant) var(--ease-out-quart);
+  transition: var(--tr-tint);
 }
 
 .check:hover {
@@ -290,63 +315,102 @@
   color: var(--fg-primary);
 }
 
+/* The UA checkbox was the only achromatic element on a page whose every other
+   border is on the blue-grey ramp, and the brightest edge in the toolbar. */
 .check input {
+  display: grid;
   width: 15px;
   height: 15px;
+  flex: 0 0 auto;
   margin: 0;
-  accent-color: var(--signal-500);
-  transition: transform var(--dur-snap) var(--ease-snap);
+  place-content: center;
+  appearance: none;
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--r-1);
+  background: var(--bg-raised);
+  transition: var(--tr-tint), var(--tr-press);
+}
+
+.check input::after {
+  width: 4px;
+  height: 8px;
+  border: solid var(--bg-raised);
+  border-width: 0 1.5px 1.5px 0;
+  content: "";
+  transform: translateY(-1px) rotate(45deg);
+  opacity: 0;
+}
+
+.check input:checked {
+  border-color: var(--signal-500);
+  background: var(--signal-500);
+}
+
+.check input:checked::after {
+  opacity: 1;
 }
 
 .check:active input {
   transform: scale(0.9);
 }
 
-/* -- Popover / menu ------------------------------------------------------- */
+/* -- Menus and popovers ---------------------------------------------------
+   One container label, shared by the provider popover, the filter chip row
+   and the palette's groups, so a caps label means the same thing everywhere. */
+.menu-label {
+  font-size: var(--t-10);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-10);
+  text-transform: uppercase;
+  color: var(--fg-tertiary);
+}
+
 .popover {
   position: absolute;
-  z-index: 70;
+  z-index: var(--z-popover);
   top: calc(100% + var(--s-3));
   left: 0;
-  width: 244px;
+  width: 320px;
   padding: var(--s-3);
   border: 1px solid var(--line);
   border-radius: var(--r-3);
   background: var(--bg-overlay);
   box-shadow: var(--e-4);
   animation: enter-scale var(--dur-glide) var(--ease-glide);
-  transform-origin: top left;
+  transform-origin:
+    var(--popover-origin-block, top) var(--popover-origin-inline, left);
 }
 
+/* Two columns, no scroll container: at one column the twelfth provider was
+   sliced horizontally by max-height with no fade and no visible scrollbar. */
 .popover fieldset {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 1px;
   margin: 0;
   padding: 0;
   border: 0;
-  max-height: 320px;
-  overflow-y: auto;
 }
 
-.popover legend {
-  padding: var(--s-2) var(--s-4) var(--s-4);
-  font-size: var(--t-10);
-  font-weight: var(--w-bold);
-  letter-spacing: var(--ls-10);
-  text-transform: uppercase;
-  color: var(--fg-tertiary);
-}
-
-.popover-actions {
+.popover-head {
   display: flex;
-  gap: var(--s-3);
-  margin-top: var(--s-3);
-  padding-top: var(--s-3);
-  border-top: 1px solid var(--line-subtle);
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--s-2) var(--s-4) var(--s-4);
 }
 
-.popover-actions .btn {
-  flex: 1;
+/* Replaces a Done/Clear footer that only duplicated click-outside, Escape and
+   the checkboxes themselves. */
+.popover-link {
+  border: 0;
+  background: transparent;
+  font-size: var(--t-11);
+  font-weight: var(--w-strong);
+  color: var(--signal-500);
+}
+
+.popover-link:hover {
+  text-decoration: underline;
 }
 
 .disclosure {
@@ -360,20 +424,20 @@
   align-items: center;
   min-height: 32px;
   padding: var(--s-3) var(--s-5);
-  border: 1px solid var(--line-interactive);
+  border: 1px solid var(--line);
   border-radius: var(--r-2);
-  background: transparent;
+  background: var(--bg-raised);
+  box-shadow: var(--e-1);
   font-size: var(--t-12);
   font-weight: var(--w-medium);
+  line-height: var(--lh-12);
   color: var(--fg-secondary);
   list-style: none;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
   transition:
-    color var(--dur-instant) var(--ease-out-quart),
-    border-color var(--dur-instant) var(--ease-out-quart),
-    background-color var(--dur-instant) var(--ease-out-quart);
+    var(--tr-tint), border-color var(--dur-instant) var(--ease-out-quart);
 }
 
 .disclosure summary::-webkit-details-marker {
@@ -381,7 +445,7 @@
 }
 
 .disclosure summary:hover {
-  border-color: var(--signal-600);
+  border-color: var(--line-interactive);
   background: var(--bg-hover);
   color: var(--fg-primary);
 }
@@ -394,7 +458,7 @@
   border-bottom: 1.5px solid currentcolor;
   content: "";
   transform: rotate(45deg);
-  transition: transform var(--dur-snap) var(--ease-snap);
+  transition: var(--tr-press);
 }
 
 .disclosure[open] summary::after {
@@ -416,7 +480,11 @@
   color: var(--bg-base);
 }
 
-/* -- Badges --------------------------------------------------------------- */
+/* -- Badges ---------------------------------------------------------------
+   One spec — size, weight, radius, family — with the tone class carrying the
+   only difference. The family has to be stated, not inherited: inside a
+   numeric cell a badge picked up the data face and the same component then
+   rendered as a monospaced pill next to a proportional one. */
 .badge {
   display: inline-flex;
   flex: 0 0 auto;
@@ -424,30 +492,68 @@
   gap: var(--s-2);
   width: fit-content;
   padding: 1px var(--s-3);
-  border: 1px solid var(--line-subtle);
-  border-radius: var(--r-full);
-  background: var(--bg-inset);
+  border: 1px solid var(--line);
+  border-radius: var(--r-1);
+  background: var(--bg-raised);
+  font-family: var(--font-ui, system-ui), system-ui, sans-serif;
   font-size: var(--t-10);
   font-weight: var(--w-medium);
   letter-spacing: var(--ls-11);
-  line-height: 1.5;
+  line-height: var(--lh-12);
   color: var(--fg-tertiary);
   white-space: nowrap;
 }
 
+/* A badge that names an active filter and can retract it. "Providers ⌄ 2"
+   hid which two, so a shared link arrived with the board silently narrowed. */
+.chip {
+  gap: var(--s-2);
+  padding: 1px 1px 1px var(--s-4);
+  border-radius: var(--r-full);
+  font-size: var(--t-11);
+  color: var(--fg-secondary);
+}
+
+.chip-remove {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: var(--r-full);
+  background: transparent;
+  color: var(--fg-tertiary);
+  transition: var(--tr-tint);
+}
+
+.chip-remove:hover {
+  background: var(--bg-active);
+  color: var(--fg-primary);
+}
+
+.chip-clear {
+  border: 0;
+  background: transparent;
+  font-size: var(--t-11);
+  color: var(--fg-tertiary);
+  text-decoration: underline;
+  text-decoration-color: var(--line-interactive);
+  transition: var(--tr-tint);
+}
+
+.chip-clear:hover {
+  color: var(--fg-primary);
+}
+
 .badge-warn {
-  border-color: color-mix(in srgb, var(--warn) 40%, transparent);
+  border-color: color-mix(in srgb, var(--warn) 45%, transparent);
   color: var(--warn);
 }
 
 .badge-pos {
-  border-color: color-mix(in srgb, var(--pos) 40%, transparent);
+  border-color: color-mix(in srgb, var(--pos) 45%, transparent);
   color: var(--pos);
-}
-
-.badge-signal {
-  border-color: color-mix(in srgb, var(--signal-500) 40%, transparent);
-  color: var(--signal-500);
 }
 
 /* -- Tooltip (a disclosure, not a dialog — fixes audit item A3) ------------ */
@@ -460,17 +566,15 @@
 
 .tooltip-trigger {
   display: grid;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   padding: 0;
   place-items: center;
   border: 0;
   border-radius: var(--r-full);
   background: transparent;
   color: var(--fg-tertiary);
-  transition:
-    color var(--dur-instant) var(--ease-out-quart),
-    background-color var(--dur-instant) var(--ease-out-quart);
+  transition: var(--tr-tint);
 }
 
 .tooltip-trigger:hover,
@@ -491,7 +595,7 @@
    cut every header tooltip in half. */
 .tooltip-panel {
   position: fixed;
-  z-index: 80;
+  z-index: var(--z-tooltip);
   width: 280px;
   padding: var(--s-6);
   border: 1px solid var(--line);
@@ -552,7 +656,7 @@
 /* -- Toast ---------------------------------------------------------------- */
 .toast-region {
   position: fixed;
-  z-index: 200;
+  z-index: var(--z-toast);
   right: var(--gutter);
   bottom: var(--s-7);
   display: grid;
@@ -595,98 +699,29 @@
   stroke: var(--warn);
 }
 
-/* -- Command palette ------------------------------------------------------ */
-.palette-backdrop {
-  position: fixed;
-  z-index: 300;
-  inset: 0;
+/* Only the warn tone carries this: it does not auto-expire, so it needs a way
+   out that is not "reload the page". */
+.toast-dismiss {
   display: grid;
-  padding: clamp(48px, 12vh, 140px) var(--gutter) var(--s-9);
-  place-items: start center;
-  background: color-mix(in srgb, var(--bg-void) 62%, transparent);
-  animation: enter-up var(--dur-glide) var(--ease-glide);
-}
-
-@supports (backdrop-filter: blur(1px)) {
-  .palette-backdrop {
-    backdrop-filter: blur(6px);
-  }
-}
-
-.palette {
-  width: min(620px, 100%);
-  border: 1px solid var(--line);
-  border-radius: var(--r-4);
-  background: var(--bg-overlay);
-  box-shadow: var(--e-5);
-  overflow: hidden;
-}
-
-.palette-input {
-  display: flex;
-  gap: var(--s-4);
-  align-items: center;
-  padding: var(--s-6);
-  border-bottom: 1px solid var(--line-subtle);
-}
-
-.palette-input input {
-  width: 100%;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  font-size: var(--t-17);
-  color: var(--fg-primary);
-}
-
-.palette-input svg {
+  width: 20px;
+  height: 20px;
   flex: 0 0 auto;
-  fill: none;
-  stroke: var(--fg-tertiary);
-  stroke-linecap: round;
-  stroke-width: 1.6;
-}
-
-.palette-results {
-  max-height: min(420px, 52vh);
-  margin: 0;
-  padding: var(--s-3);
-  overflow-y: auto;
-  list-style: none;
-}
-
-.palette-item {
-  display: flex;
-  gap: var(--s-4);
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: var(--s-4) var(--s-5);
+  place-items: center;
+  margin-left: var(--s-2);
   border: 0;
-  border-radius: var(--r-2);
+  border-radius: var(--r-full);
   background: transparent;
-  font-size: var(--t-13);
-  color: var(--fg-secondary);
-  text-align: left;
+  color: var(--fg-tertiary);
+  transition: var(--tr-tint);
 }
 
-.palette-item[aria-selected="true"] {
+.toast-dismiss:hover {
   background: var(--bg-active);
   color: var(--fg-primary);
 }
 
-.palette-item .kind {
-  font-size: var(--t-10);
-  letter-spacing: var(--ls-10);
-  text-transform: uppercase;
-  color: var(--fg-tertiary);
-}
-
-.palette-empty {
-  padding: var(--s-8);
-  font-size: var(--t-13);
-  color: var(--fg-tertiary);
-  text-align: center;
+.toast-dismiss svg {
+  stroke: currentcolor;
 }
 
 /* -- Links ---------------------------------------------------------------- */
@@ -708,7 +743,7 @@
 
 .link-external .ext {
   display: inline-block;
-  transition: transform var(--dur-snap) var(--ease-snap);
+  transition: var(--tr-press);
 }
 
 .link-external:hover .ext {

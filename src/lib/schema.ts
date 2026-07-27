@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { BENCHMARK_CATEGORIES } from "@/lib/categories";
+
 const slugSchema = z
   .string()
   .min(1)
@@ -47,7 +49,7 @@ export const BenchmarkSchema = z
   .object({
     id: slugSchema,
     name: z.string().trim().min(1),
-    category: z.enum(["reasoning", "coding", "math", "agentic"]),
+    category: z.enum(BENCHMARK_CATEGORIES),
     description: z.string().trim().min(1),
     unit: z.enum(["percent", "score"]),
     sourceUrl: urlSchema,

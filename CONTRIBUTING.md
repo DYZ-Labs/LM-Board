@@ -52,12 +52,14 @@ The ledger records every Artificial Analysis model id ever seen. Do not delete r
 Run all checks before opening a pull request:
 
 ```bash
-npm run typecheck
-npm run validate:data
-npm run build
+npm run check
 ```
 
-The build must produce a static export in `out/`. If UI behavior changes, check the leaderboard at desktop and narrow widths, in light and dark themes, and with keyboard navigation.
+This is the same lint, type-check, test, data-validation, production-build,
+payload-budget, and content-smoke gate used by CI and Vercel. The build must
+produce a static export in `out/`. If UI behavior changes, check the leaderboard
+at desktop and narrow widths, in light and dark themes, and with keyboard
+navigation.
 
 ## Pull-request checklist
 
@@ -65,5 +67,5 @@ The build must produce a static export in `out/`. If UI behavior changes, check 
 - [ ] Model and benchmark IDs are valid and no pair is duplicated.
 - [ ] Evaluation settings and self-reported status are accurate.
 - [ ] Reasoning-effort labels are consistent across each affected model.
-- [ ] Type checking, data validation, and the static production build pass.
+- [ ] `npm run check` passes.
 - [ ] The change is focused; unrelated formatting or data churn is excluded.

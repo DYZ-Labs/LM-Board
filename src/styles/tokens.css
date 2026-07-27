@@ -17,62 +17,71 @@
      is dark-first, so degrading to dark is the correct failure mode. */
   --bg-void: #07080a;
   --bg-base: #0b0d10;
-  --bg-raised: #101317;
-  --bg-overlay: #161a1f;
-  --bg-inset: #08090c;
-  --bg-hover: #171b21;
-  --bg-active: #1d222a;
+  --bg-raised: #14181d;
+  --bg-overlay: #1b2027;
+  --bg-inset: #0a0d10;
+  --bg-hover: #191e24;
+  --bg-active: #212730;
   --fg-primary: #e8ecf2;
-  --fg-secondary: #a3adbb;
-  --fg-tertiary: #79838f;
+  --fg-secondary: #a7b1bf;
+  --fg-tertiary: #828d9a;
   --fg-disabled: #4a525d;
-  --line-subtle: #1a1e24;
-  --line: #232830;
-  --line-interactive: #616b78;
-  --line-strong: #3a424d;
+  --line-subtle: #2b323c;
+  --line: #3a4250;
+  --line-interactive: #68727f;
+  --line-strong: #48515e;
   --signal-300: #8cc7ff;
   --signal-500: #4da3ff;
   --signal-600: #2e8af0;
   --signal-glow: rgba(77, 163, 255, 0.35);
+  --fg-on-signal: #ffffff;
+  --bg-selected: #1a2b3e;
+  --line-selected: #4da3ff;
   --warn: #e2a03f;
   --pos: #4fbf8b;
-  --ground-1: #131a24;
-  --ground-2: #0b0d10;
-  --ground-3: #07080a;
-  --grain-opacity: 0.028;
   --score-1: #16212e;
   --score-2: #1c3045;
   --score-3: #254466;
   --score-4: #305e90;
   --score-5: #4083cc;
-  --specular: rgba(255, 255, 255, 0.055);
 
-  /* -- Colour: single-sourced dual theme --------------------------------- */
-  --bg-void: light-dark(#e9edf3, #07080a);
-  --bg-base: light-dark(#f4f6f9, #0b0d10);
-  --bg-raised: light-dark(#ffffff, #101317);
-  --bg-overlay: light-dark(#ffffff, #161a1f);
-  --bg-inset: light-dark(#eaeef3, #08090c);
-  --bg-hover: light-dark(#edf1f6, #171b21);
-  --bg-active: light-dark(#e2e8f0, #1d222a);
+  /* -- Colour: single-sourced dual theme ---------------------------------
+     The two themes are separate designs, not inverses of each other, and the
+     difference is where elevation is spent. In light, the page ground is a
+     tinted grey and a raised surface is pure white with a real shadow — the
+     step in fill is what separates them. In dark, shadow contributes nothing
+     against a near-black ground, so separation moves into the hairline:
+     --line-subtle clears 1.38:1 against a raised surface, past the point at
+     which a 1px rule is reliably perceptible. src/lib/contrast.test.ts
+     enforces both, surface-vs-surface as well as ink-vs-surface.
+
+     Both grounds are flat. The radial wash that used to sit here swung 3-4
+     luminance units and only resolved at 3x brightness, so it read as a
+     smudge in light and as nothing at all in dark. */
+  --bg-void: light-dark(#3b4453, #07080a);
+  --bg-base: light-dark(#eaeef5, #0b0d10);
+  --bg-raised: light-dark(#ffffff, #14181d);
+  --bg-overlay: light-dark(#ffffff, #1b2027);
+  --bg-inset: light-dark(#e3e8f1, #0a0d10);
+  --bg-hover: light-dark(#f2f5f9, #191e24);
+  --bg-active: light-dark(#e6ebf3, #212730);
   --fg-primary: light-dark(#0d1117, #e8ecf2);
-  --fg-secondary: light-dark(#454f5b, #a3adbb);
-  --fg-tertiary: light-dark(#616c7a, #79838f);
+  --fg-secondary: light-dark(#454f5b, #a7b1bf);
+  --fg-tertiary: light-dark(#5c6775, #828d9a);
   --fg-disabled: light-dark(#98a2af, #4a525d);
-  --line-subtle: light-dark(#ebeef3, #1a1e24);
-  --line: light-dark(#d5dbe3, #232830);
-  --line-interactive: light-dark(#7a8492, #616b78);
-  --line-strong: light-dark(#9aa4b2, #3a424d);
+  --line-subtle: light-dark(#d3dbe6, #2b323c);
+  --line: light-dark(#bcc6d4, #3a4250);
+  --line-interactive: light-dark(#78838f, #68727f);
+  --line-strong: light-dark(#9aa4b2, #48515e);
   --signal-300: light-dark(#4da3ff, #8cc7ff);
   --signal-500: light-dark(#0a66c2, #4da3ff);
   --signal-600: light-dark(#08528f, #2e8af0);
   --signal-glow: light-dark(rgba(10, 102, 194, 0.22), rgba(77, 163, 255, 0.35));
+  --fg-on-signal: light-dark(#ffffff, #07111c);
+  --bg-selected: light-dark(#dceafb, #1a2b3e);
+  --line-selected: light-dark(#0a66c2, #4da3ff);
   --warn: light-dark(#8a5a00, #e2a03f);
   --pos: light-dark(#0e7a4f, #4fbf8b);
-  --ground-1: light-dark(#ffffff, #131a24);
-  --ground-2: light-dark(#f4f6f9, #0b0d10);
-  --ground-3: light-dark(#e9edf3, #07080a);
-  --specular: light-dark(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.055));
 
   /* Magnitude ramp. One hue, five luminance steps — the encoding is
      luminance rather than hue, so it is CVD-safe by construction, and the
@@ -83,7 +92,11 @@
   --score-4: light-dark(#6ca3da, #305e90);
   --score-5: light-dark(#2f7dcb, #4083cc);
 
-  /* -- Typography -------------------------------------------------------- */
+  /* -- Typography --------------------------------------------------------
+     Ten steps, and the middle of the ladder is real: 15 body, 17 lede,
+     21 / 27 section headings, 34-52 page titles, 48-72 the readout. Nothing
+     jumps more than 2x, so hierarchy is carried by size — uppercase is
+     reserved for container labels of three words or fewer. */
   --t-10: 10px;
   --t-11: 11px;
   --t-12: 12px;
@@ -92,36 +105,30 @@
   --t-17: 17px;
   --t-21: 21px;
   --t-27: 27px;
-  --t-h2: clamp(30px, 1.6vw + 20px, 42px);
-  --t-h1: clamp(40px, 4.2vw + 18px, 78px);
-  --t-readout: clamp(64px, 10vw + 8px, 156px);
+  --t-h1: clamp(34px, 2.4vw + 18px, 52px);
+  --t-readout: clamp(48px, 3.2vw + 18px, 72px);
 
-  --lh-10: 1.4;
-  --lh-11: 1.45;
   --lh-12: 1.5;
   --lh-13: 1.55;
   --lh-15: 1.6;
   --lh-17: 1.65;
-  --lh-21: 1.35;
   --lh-27: 1.22;
-  --lh-h2: 1.12;
-  --lh-h1: 1;
+  --lh-h1: 1.05;
   --lh-readout: 0.86;
 
   --ls-10: 0.09em;
   --ls-11: 0.05em;
   --ls-12: 0.015em;
   --ls-13: 0.005em;
-  --ls-15: 0;
-  --ls-17: -0.008em;
   --ls-21: -0.018em;
   --ls-27: -0.024em;
-  --ls-h2: -0.03em;
-  --ls-h1: -0.038em;
-  --ls-readout: -0.05em;
+  --ls-h1: -0.03em;
+  --ls-readout: -0.035em;
 
-  /* Optically compensated: large type takes less weight, small type more. */
-  --w-display: 300;
+  /* Optically compensated: large type takes less weight, small type more.
+     380 rather than 300 — a 100-unit drop under body weight loses stroke
+     density at display size reversed out of a near-black ground. */
+  --w-display: 380;
   --w-text: 400;
   --w-medium: 480;
   --w-strong: 580;
@@ -145,7 +152,10 @@
   --s-10: 56px;
   --s-11: 80px;
   --s-12: 112px;
-  --s-13: 160px;
+
+  /* The page's vertical rhythm, applied once by .site-shell rather than by
+     every block owning its own padding. */
+  --section-gap: var(--s-10);
 
   --rail-max: 1680px;
   --gutter: clamp(16px, 3vw, 56px);
@@ -156,19 +166,38 @@
   --r-2: 5px;
   --r-3: 8px;
   --r-4: 14px;
-  --r-5: 22px;
   --r-full: 999px;
+
+  /* -- Stacking -----------------------------------------------------------
+     One ordered ladder for page chrome. Local plot layers intentionally sit
+     below the page-content floor; overlays then rise in named steps so a new
+     surface cannot win by guessing a larger integer. */
+  --z-plot-line: 1;
+  --z-content: 2;
+  --z-plot-frontier: 3;
+  --z-plot-point: 4;
+  --z-pinned-cell: 10;
+  --z-sticky-header: 20;
+  --z-pinned-header: 30;
+  --z-command: 40;
+  --z-popover: 70;
+  --z-tooltip: 80;
+  --z-inspector: 90;
+  --z-toast: 200;
+  --z-palette: 300;
+  --z-skip-link: 1000;
 
   /* -- Elevation ---------------------------------------------------------
      The shadow *colours* carry the theme, so each level is composed exactly
      once. Defining the levels per theme instead meant three copies of every
-     box-shadow (fallback, prefers-color-scheme, data-theme) in the bundle. */
+     box-shadow (fallback, prefers-color-scheme, data-theme) in the bundle.
+     Light alphas are the load-bearing ones: on a near-black ground a shadow
+     is invisible and the hairline does the separating instead. */
   --spec-edge: light-dark(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.06));
-  --shade-contact: light-dark(rgba(13, 17, 23, 0.06), rgba(0, 0, 0, 0.55));
-  --shade-ambient: light-dark(rgba(13, 17, 23, 0.09), rgba(0, 0, 0, 0.55));
-  --shade-deep: light-dark(rgba(13, 17, 23, 0.14), rgba(0, 0, 0, 0.7));
+  --shade-contact: light-dark(rgba(16, 24, 40, 0.09), rgba(0, 0, 0, 0.55));
+  --shade-ambient: light-dark(rgba(16, 24, 40, 0.12), rgba(0, 0, 0, 0.55));
+  --shade-deep: light-dark(rgba(16, 24, 40, 0.18), rgba(0, 0, 0, 0.7));
 
-  --e-0: none;
   --e-1: inset 0 1px 0 var(--spec-edge), 0 1px 1px var(--shade-contact);
   --e-2:
     inset 0 1px 0 var(--spec-edge), 0 1px 2px var(--shade-contact),
@@ -184,9 +213,6 @@
     0 32px 72px -16px var(--shade-deep);
 
   --ring: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--signal-500);
-  --ring-glow:
-    0 0 0 2px var(--bg-base), 0 0 0 4px var(--signal-500),
-    0 0 16px var(--signal-glow);
 
   /* -- Motion (spec §4.3) ------------------------------------------------
      Springs solved offline as mass-spring-damper systems (x0=0, v0=0,
@@ -230,10 +256,13 @@
   --dur-ambient: 4000ms;
   --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
 
-  --stagger-step: 28ms;
-  --stagger-cap: 11;
+  /* The system's default hover/press feedback, written once. Controls that
+     also move append their own transform to it. */
+  --tr-tint:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart);
+  --tr-press: transform var(--dur-snap) var(--ease-snap);
 
   /* -- Board geometry ----------------------------------------------------
      Table view: 52 + 264 + 128 + 8x108 + 116 = 1424px, down from 1676px.
@@ -248,18 +277,21 @@
   --header-h: 40px;
 }
 
-:root[data-theme="light"] {
-  color-scheme: light;
-
-  /* Not light-dark(): opacity takes a <number>, and light-dark() only
-     accepts <color>. Declaring it there silently invalidates the property. */
-  --grain-opacity: 0.018;
+/* The spring easings are the design; the cubic-beziers are the fallback for
+   engines that predate linear(). Declared once here rather than as a second
+   `transition` at every call site — a custom property accepts an unsupported
+   value happily, so the substitution has to be guarded, not the declaration. */
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root {
+    --ease-snap: var(--ease-out-quart);
+    --ease-glide: var(--ease-out-expo);
+    --ease-settle: var(--ease-out-expo);
+    --ease-bounce: var(--ease-out-quart);
+  }
 }
 
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --grain-opacity: 0.018;
-  }
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 :root[data-theme="dark"] {

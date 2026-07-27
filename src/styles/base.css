@@ -30,37 +30,14 @@ body {
   font-weight: var(--w-text);
   line-height: var(--lh-15);
   color: var(--fg-primary);
-  /* M1 — atmospheric ground. light-dark() is valid inside gradient stops, so
-     both themes live in one declaration. `fixed` keeps it off the scroll
-     repaint path. */
   background: var(--bg-base);
-  background-image: radial-gradient(
-    120% 78% at 50% -12%,
-    var(--ground-1) 0%,
-    var(--ground-2) 52%,
-    var(--ground-3) 100%
-  );
-  background-attachment: fixed;
 }
 
-/* M2 — grain. A 379-byte data: SVG, legal under the CSP's
-   `img-src 'self' data:`. No blend mode: a fixed low-opacity layer avoids
-   forcing the whole page into a single blending group. */
-body::before {
-  content: "";
-  position: fixed;
-  z-index: 1;
-  inset: 0;
-  pointer-events: none;
-  opacity: var(--grain-opacity);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch' seed='7'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-}
-
-/* Everything the app renders sits above the grain. */
+/* The page's own stacking floor. Sticky and fixed chrome resolves against
+   these, not against whatever the first positioned ancestor happens to be. */
 body > * {
   position: relative;
-  z-index: 2;
+  z-index: var(--z-content);
 }
 
 h1,
@@ -145,13 +122,14 @@ table {
 }
 
 /* -- Focus ----------------------------------------------------------------
-   One ring everywhere. It carries its own 2px spacer in the page ground, so
-   it stays legible on every surface, and it is a box-shadow rather than an
-   outline so a scroll container cannot clip it (fixes audit item A4). */
+   One ring everywhere, drawn as an outline with an offset rather than a
+   box-shadow. The offset gap is transparent, so the ring reads correctly on
+   a raised card and inside a popover instead of painting a spacer in the page
+   ground; and an outline is the only form of ring that survives forced-colors
+   mode, where box-shadow is not painted at all. */
 :focus-visible {
-  outline: none;
-  box-shadow: var(--ring);
-  border-radius: var(--r-2);
+  outline: 2px solid var(--signal-500);
+  outline-offset: 2px;
 }
 
 :focus:not(:focus-visible) {

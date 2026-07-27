@@ -1,20 +1,38 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, MouseEvent } from "react";
 
 import { Badge } from "@/components/Badge";
-import { ExternalIcon } from "@/components/Icon";
+import type { LeaderboardClientScore } from "@/lib/data";
 import { formatDate, formatScore } from "@/lib/format";
-import { rampFill, type RampStep } from "@/lib/ramp";
-import type { Benchmark, Score } from "@/lib/schema";
+import type { ScoreDomain } from "@/lib/ramp";
+import { normalizeToRange } from "@/lib/visualization";
 
 type ScoreCellProps = {
-  score: Score | null;
+  score: LeaderboardClientScore | null;
   isBest: boolean;
-  unit: Benchmark["unit"];
-  ramp: RampStep | null;
+  modelId: string;
+  modelName: string;
+  benchmarkId: string;
   benchmarkName: string;
+  domain: ScoreDomain | undefined;
+  active: boolean;
+  featuredOnMobile: boolean;
+  onInspect: (
+    inspection: ScoreInspection,
+    trigger: HTMLAnchorElement,
+  ) => void;
 };
 
-function hostLabel(url: string) {
+export type ScoreInspection = {
+  id: string;
+  modelId: string;
+  modelName: string;
+  benchmarkId: string;
+  benchmarkName: string;
+  score: LeaderboardClientScore;
+  isBest: boolean;
+};
+
+export function scoreHost(url: string) {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
   } catch {
@@ -25,60 +43,115 @@ function hostLabel(url: string) {
 export function ScoreCell({
   score,
   isBest,
-  unit,
-  ramp,
+  modelId,
+  modelName,
+  benchmarkId,
   benchmarkName,
+  domain,
+  active,
+  featuredOnMobile,
+  onInspect,
 }: ScoreCellProps) {
   if (!score) {
     return (
-      <td className="numeric-cell missing-value" aria-label="No curated score">
+      // The em dash is silent, so this label is the whole cell to anyone
+      // listening — it has to rule out the reading a blank invites, that the
+      // model scored zero. "Measured" is also the word the visible copy uses
+      // for the same fact, in the ribbon and in the Index coverage line.
+      <td
+        className={`numeric-cell score-cell missing-value${featuredOnMobile ? " is-mobile-sort-score" : ""}`}
+        aria-label="Not measured"
+      >
+        {featuredOnMobile ? (
+          <span className="mobile-score-label">{benchmarkName}</span>
+        ) : null}
         —
       </td>
     );
   }
 
-  // Bar length encodes the absolute value; the luminance step encodes standing
-  // within the column. Two readings of one hue — see lib/ramp.ts.
+  const measuredScore = score;
+  const inspectionId = `${modelId}-${benchmarkId}`;
+  const formatted = formatScore(measuredScore.value);
+  const fill = domain
+    ? normalizeToRange(measuredScore.value, domain.min, domain.max)
+    : 0;
   const style = {
-    "--score-step": `var(--score-${ramp ?? 3})`,
-    "--score-fill": unit === "percent" ? rampFill(score.value) : 0,
+    "--inline-score-fill": `${Math.round(fill * 100)}%`,
   } as CSSProperties;
+
+  function inspect(event: MouseEvent<HTMLAnchorElement>) {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    onInspect(
+      {
+        id: inspectionId,
+        modelId,
+        modelName,
+        benchmarkId,
+        benchmarkName,
+        score: measuredScore,
+        isBest,
+      },
+      event.currentTarget,
+    );
+  }
+
+  const sourceLink = (
+    <a
+      className="score-source"
+      href={measuredScore.source.url}
+      target="_blank"
+      rel="noreferrer"
+      aria-haspopup="dialog"
+      aria-expanded={active}
+      aria-controls={active ? "score-inspector" : undefined}
+      onClick={inspect}
+      // The row header supplies the model name in table context. Repeating
+      // it in 456 link names makes navigation noisier as well as bloating
+      // the static payload; the benchmark, host and retrieval date are the
+      // evidence-specific parts the visible number alone cannot carry.
+      aria-label={`${formatted} — ${benchmarkName} source, ${scoreHost(measuredScore.source.url)}, retrieved ${formatDate(measuredScore.source.retrieved)}${isBest ? ". Best score in this column." : ""}`}
+    >
+      {formatted}
+    </a>
+  );
 
   return (
     <td
-      className={`numeric-cell score-cell${isBest ? " is-best" : ""}`}
+      className={`numeric-cell score-cell${isBest ? " is-best" : ""}${featuredOnMobile ? " is-mobile-sort-score" : ""}`}
       style={style}
     >
-      <div className="score-value-line">
-        <span className="score-number">{formatScore(score.value)}</span>
-        {isBest ? (
-          <span className="best-marker">
-            <span className="best-dot" aria-hidden="true" />
-            <span className="sr-only">Best score in this column</span>
-          </span>
-        ) : null}
-        {score.selfReported ? (
+      {featuredOnMobile ? (
+        <span className="mobile-score-label">{benchmarkName}</span>
+      ) : null}
+      {/* The numeral *is* the citation. It used to be a chip revealed on
+          hover, which meant the product's central claim — every number links
+          to its source — was false on any device without a pointer, and the
+          chip was unreachable by tap. A link on the number needs no hover, is
+          in the tab order for free, and gets the whole cell as its target on
+          coarse pointers (see utilities.css). The wrapper only exists for the
+          exceptional vendor badge; 456 ordinary cells stay one link deep. */}
+      {measuredScore.selfReported ? (
+        <span className="score-value-line">
+          {sourceLink}
           <Badge tone="warn" title="Reported by the model's maker">
             <span aria-hidden="true">Vendor</span>
             <span className="sr-only">Self-reported score</span>
           </Badge>
-        ) : null}
-      </div>
-      {/* Provenance at the number rather than behind a click: the citation is
-          the product, and it used to be invisible on the board. */}
-      <a
-        className="source-chip"
-        href={score.source.url}
-        target="_blank"
-        rel="noreferrer"
-        // The row header already supplies the model name to assistive tech in a
-        // table context, so naming it again here only bloats the markup — this
-        // label ships 456 times.
-        aria-label={`Source for ${benchmarkName}: ${hostLabel(score.source.url)}, retrieved ${formatDate(score.source.retrieved)}`}
-      >
-        <ExternalIcon size={9} />
-        {formatDate(score.source.retrieved)}
-      </a>
+        </span>
+      ) : (
+        sourceLink
+      )}
     </td>
   );
 }

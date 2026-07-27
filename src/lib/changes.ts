@@ -9,6 +9,15 @@ export type ChangeSummary = {
   /** Providers represented in the dataset. */
   providers: number;
   lastUpdated: string;
+  /**
+   * The ends of the retrieval window. `refreshedScores` counts only the last
+   * day of it, which understates a dataset collected inside a fortnight; the
+   * window is the honest claim and the stronger one.
+   */
+  oldestRetrieved: string;
+  newestRetrieved: string;
+  /** Scores the model's own maker published, rather than an independent run. */
+  selfReportedCount: number;
 };
 
 const RECENT_RELEASE_DAYS = 45;
@@ -38,5 +47,8 @@ export function summarizeChanges(data: LeaderboardData): ChangeSummary {
     recentModels,
     providers: data.labs.length,
     lastUpdated: data.lastUpdated,
+    oldestRetrieved: data.oldestRetrieved,
+    newestRetrieved: data.lastUpdated,
+    selfReportedCount: data.selfReportedCount,
   };
 }

@@ -1,0 +1,408 @@
+/* Price/Index figure shared by the board projection and /value. Kept separate
+   from record.css so the model-record and compare-only rules are not on the
+   homepage critical path. */
+@layer projections {
+
+.plot-frame {
+  position: relative;
+  padding: var(--s-7) var(--s-7) var(--s-6);
+}
+
+.plot-head h2 {
+  font-size: var(--t-15);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--ls-13);
+}
+
+.plot-sub {
+  margin-top: var(--s-2);
+  font-size: var(--t-12);
+}
+
+.plot-inspector {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.8fr) minmax(0, 2fr) auto;
+  gap: var(--s-6);
+  align-items: center;
+  margin-top: var(--s-6);
+  padding: var(--s-5) var(--s-6);
+  border-block: 1px solid var(--line-subtle);
+}
+
+.plot-inspector h3 {
+  margin-top: var(--s-1);
+  font-size: var(--t-17);
+  font-weight: var(--w-strong);
+}
+
+.plot-inspector dl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(92px, 1fr));
+  gap: var(--s-5);
+}
+
+.plot-inspector dt {
+  font-size: var(--t-11);
+  color: var(--fg-tertiary);
+}
+
+.plot-inspector dd {
+  margin-top: var(--s-1);
+  font-size: var(--t-13);
+  font-weight: var(--w-medium);
+  color: var(--fg-primary);
+}
+
+.plot-stage {
+  padding: var(--s-8) var(--s-6);
+}
+
+.plot-area {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  max-height: 520px;
+  outline: 0;
+}
+
+.plot-area:focus-visible {
+  border-radius: var(--r-2);
+  box-shadow: var(--ring);
+}
+
+.plot-rules {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.plot-rules line {
+  stroke: var(--line-subtle);
+}
+
+.plot-rules .is-major {
+  stroke: var(--line);
+}
+
+.plot-rules .is-axis {
+  stroke: var(--line-strong);
+}
+
+.plot-rules .plot-leader {
+  display: none;
+  stroke: var(--line-interactive);
+}
+
+.plot-front {
+  fill: none;
+  stroke: var(--signal-500);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  opacity: 0.8;
+}
+
+.plot-axis-break {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.plot-y,
+.plot-x,
+.plot-name,
+.plot-tip {
+  position: absolute;
+  white-space: nowrap;
+}
+
+.plot-y,
+.plot-x,
+.plot-name {
+  font-size: var(--t-10);
+  pointer-events: none;
+}
+
+.plot-name,
+.plot-tip {
+  display: flex;
+  gap: var(--s-3);
+  align-items: baseline;
+  font-size: var(--t-11);
+}
+
+.plot-y {
+  left: 0;
+  transform: translate(calc(-100% - var(--s-4)), -50%);
+}
+
+.plot-x {
+  top: 100%;
+  transform: translate(-50%, var(--s-3));
+}
+
+.plot-name {
+  display: none;
+  line-height: 14px;
+  font-weight: var(--w-medium);
+  color: var(--fg-primary);
+}
+
+.plot-name b,
+.plot-tip b,
+.plot-tip i {
+  font-style: normal;
+  font-weight: var(--w-medium);
+}
+
+.plot-name b,
+.plot-tip i {
+  color: var(--fg-tertiary);
+}
+
+.plot-mark {
+  position: absolute;
+  z-index: var(--z-plot-line);
+  display: grid;
+  place-items: center;
+  width: var(--s-8);
+  height: var(--s-8);
+  border-radius: var(--r-full);
+  transform: translate(-50%, -50%);
+  cursor: crosshair;
+}
+
+.plot-mark::before,
+.plot-legend i {
+  content: "";
+  width: var(--s-4);
+  height: var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--signal-500);
+  box-shadow: 0 0 0 2px var(--bg-raised);
+  transition: opacity var(--dur-instant) var(--ease-out-quart);
+}
+
+.plot-mark.is-front::after {
+  content: "";
+  position: absolute;
+  width: var(--s-5);
+  height: var(--s-5);
+  border: 1px solid var(--signal-500);
+  transform: rotate(45deg);
+}
+
+.plot-mark.is-selected {
+  z-index: var(--z-plot-point);
+}
+
+.plot-mark.is-selected::before {
+  box-shadow:
+    0 0 0 2px var(--bg-raised),
+    0 0 0 7px color-mix(in srgb, var(--signal-500) 26%, transparent);
+}
+
+.plot-mark.is-open::before,
+.plot-legend i.is-open {
+  background: var(--bg-raised);
+  box-shadow:
+    inset 0 0 0 2px var(--signal-500),
+    0 0 0 2px var(--bg-raised);
+}
+
+.plot-mark:is(:hover, .is-selected) {
+  z-index: var(--z-plot-frontier);
+}
+
+.plot-area:has(.plot-mark:is(:hover, .is-selected))
+  .plot-mark:not(:hover, .is-selected)::before {
+  opacity: 0.3;
+}
+
+.plot-tip {
+  bottom: calc(100% + var(--s-2));
+  left: 50%;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  background: var(--bg-overlay);
+  color: var(--fg-primary);
+  opacity: 0;
+  transition: opacity var(--dur-instant) var(--ease-out-quart);
+}
+
+.plot-tip.is-flip {
+  right: 50%;
+  left: auto;
+}
+
+.plot-tip.is-under {
+  top: calc(100% + var(--s-2));
+  bottom: auto;
+}
+
+.plot-mark:is(:hover, .is-selected) .plot-tip {
+  opacity: 1;
+}
+
+.plot-legend {
+  display: flex;
+  gap: var(--s-6);
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: var(--s-5);
+  font-size: var(--t-11);
+}
+
+.plot-legend i.is-line {
+  width: var(--s-6);
+  height: var(--s-1);
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 0.8;
+}
+
+@media (min-width: 720px) {
+  .plot-area {
+    aspect-ratio: 920 / 520;
+  }
+}
+
+@media (min-width: 1200px) {
+  .plot-name,
+  .plot-rules .plot-leader {
+    display: flex;
+  }
+}
+
+@media (max-width: 1199px) {
+  .plot-name.is-selected {
+    display: flex;
+  }
+}
+
+.plot-data,
+.plot-excluded {
+  margin-top: var(--s-5);
+  border-top: 1px solid var(--line-subtle);
+  font-size: var(--t-12);
+}
+
+.plot-data > summary,
+.plot-excluded > summary {
+  min-height: 44px;
+  padding: var(--s-4) 0;
+  font-weight: var(--w-medium);
+  color: var(--fg-secondary);
+}
+
+.plot-data .table-region {
+  overflow-x: auto;
+}
+
+.plot-data table {
+  width: 100%;
+  min-width: 620px;
+}
+
+.plot-data caption {
+  padding: var(--s-4) 0;
+  text-align: left;
+  color: var(--fg-tertiary);
+}
+
+.plot-data th,
+.plot-data td {
+  padding: var(--s-3) var(--s-4);
+  border-top: 1px solid var(--line-subtle);
+  text-align: right;
+}
+
+.plot-data th:first-child {
+  text-align: left;
+}
+
+.plot-excluded ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--s-2) var(--s-6);
+  padding: var(--s-4) 0;
+  color: var(--fg-tertiary);
+}
+
+@media (max-width: 720px) {
+  .plot-frame {
+    display: flex;
+    flex-direction: column;
+    padding: var(--s-5) var(--s-4) var(--s-6);
+  }
+
+  .plot-head {
+    order: 0;
+  }
+
+  /* On a visualization route, the figure belongs before its secondary
+     selection readout. This keeps real marks in the first phone viewport
+     instead of making the chart begin below a full inspector card. */
+  .plot-stage {
+    order: 1;
+    padding: var(--s-6) var(--s-5) var(--s-8);
+  }
+
+  .plot-inspector {
+    order: 2;
+    grid-template-columns: 1fr auto;
+    gap: var(--s-4);
+    padding-inline: var(--s-4);
+  }
+
+  .plot-inspector dl {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plot-inspector > .btn {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .plot-legend {
+    order: 3;
+  }
+
+  .plot-data {
+    order: 4;
+  }
+
+  .plot-excluded {
+    order: 5;
+  }
+}
+
+@media (forced-colors: active) {
+  .plot-front {
+    stroke: Highlight;
+  }
+
+  .plot-mark.is-front::after {
+    border-color: Highlight;
+  }
+
+  .plot-mark::before {
+    border: 2px solid CanvasText;
+    background: CanvasText;
+    box-shadow: none;
+  }
+
+  .plot-mark.is-open::before {
+    background: Canvas;
+  }
+
+  .plot-mark.is-selected {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
+}

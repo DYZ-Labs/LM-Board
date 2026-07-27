@@ -1,0 +1,138 @@
+/* Command palette, loaded with its deferred client chunk. */
+@layer components {
+
+.palette-backdrop {
+  position: fixed;
+  z-index: var(--z-palette);
+  inset: 0;
+  display: grid;
+  padding: clamp(48px, 12vh, 140px) var(--gutter) var(--s-9);
+  place-items: start center;
+  background: color-mix(in srgb, var(--bg-void) 62%, transparent);
+  animation: enter-up var(--dur-glide) var(--ease-glide);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .palette-backdrop {
+    backdrop-filter: blur(6px);
+  }
+}
+
+.palette {
+  width: min(620px, 100%);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-4);
+  background: var(--bg-overlay);
+  box-shadow: var(--e-5);
+}
+
+.palette-input {
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
+  padding: var(--s-6);
+  border-bottom: 1px solid var(--line-subtle);
+}
+
+.palette-input input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: var(--t-17);
+  color: var(--fg-primary);
+}
+
+.palette-input svg {
+  flex: 0 0 auto;
+  fill: none;
+  stroke: var(--fg-tertiary);
+  stroke-linecap: round;
+  stroke-width: 1.6;
+}
+
+.palette-results {
+  max-height: min(420px, 52vh);
+  padding: var(--s-3);
+  overflow-y: auto;
+}
+
+.palette-group + .palette-group {
+  margin-top: var(--s-3);
+}
+
+.palette-group .menu-label {
+  display: block;
+  padding: var(--s-3) var(--s-5) var(--s-2);
+}
+
+.palette-item {
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--s-4) var(--s-5);
+  border-radius: var(--r-2);
+  font-size: var(--t-13);
+  color: var(--fg-secondary);
+  cursor: pointer;
+}
+
+.palette-item[aria-selected="true"] {
+  background: var(--bg-active);
+  color: var(--fg-primary);
+}
+
+.palette-detail,
+.palette-rank {
+  color: var(--fg-tertiary);
+}
+
+.palette-item[aria-selected="true"] :is(.palette-detail, .palette-rank) {
+  color: var(--fg-secondary);
+}
+
+.palette-item mark {
+  background: transparent;
+  color: inherit;
+  font-weight: var(--w-bold);
+}
+
+.palette-rank {
+  flex: 0 0 auto;
+  font-size: var(--t-11);
+}
+
+.palette-empty {
+  padding: var(--s-8);
+  font-size: var(--t-13);
+  color: var(--fg-tertiary);
+  text-align: center;
+}
+
+.palette-foot {
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s-3) var(--s-6);
+  border-top: 1px solid var(--line-subtle);
+  font-size: var(--t-11);
+  color: var(--fg-tertiary);
+}
+
+.palette-foot kbd {
+  display: inline-block;
+  min-width: 18px;
+  margin-right: var(--s-1);
+  color: var(--fg-secondary);
+  text-align: center;
+}
+
+.palette-foot kbd:not(:first-child) {
+  margin-left: var(--s-3);
+}
+
+}

@@ -11,14 +11,27 @@
    form into `@media layer(name)` — an invalid media query — which silently
    drops every rule inside it. Declaring the layer in the file itself
    produces the same cascade and survives the pipeline.
+
+   `command.css`, `board.css` and `record.css` are one layer — `projections` —
+   split across three files so the board, the controls above it and the record
+   pages can be worked on independently. Their import order is their cascade
+   order; do not reorder them.
+
+   `responsive.css` holds every viewport override in the system and sits above
+   all of them, so a narrow-viewport rule never has to out-specify the
+   wide-viewport rule it supersedes — and below `utilities`, so the
+   coarse-pointer target guarantee still wins at every width.
    =========================================================================== */
 
-@layer tokens, base, motion, layout, components, projections, utilities;
+@layer tokens, base, motion, layout, components, projections, responsive,
+  utilities;
 
 @import url("./tokens.css");
 @import url("./base.css");
 @import url("./motion.css");
 @import url("./layout.css");
 @import url("./components.css");
-@import url("./projections.css");
+@import url("./command.css");
+@import url("./board.css");
+@import url("./responsive.css");
 @import url("./utilities.css");

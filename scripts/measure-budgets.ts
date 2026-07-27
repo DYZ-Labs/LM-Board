@@ -13,6 +13,8 @@ import { gzipSync } from "node:zlib";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
+import { loadLeaderboardData } from "../src/lib/data";
+
 const OUT = "out";
 
 type Budget = {
@@ -43,7 +45,7 @@ function dirBytes(dir: string) {
   return { total, files };
 }
 
-function cssFiles() {
+function cssFilesOnDisk() {
   const dir = join(OUT, "_next/static/css");
   try {
     return readdirSync(dir)
@@ -52,6 +54,26 @@ function cssFiles() {
   } catch {
     return [];
   }
+}
+
+function linkedCssFiles(html: string) {
+  return [
+    ...new Set(
+      [...html.matchAll(/href="\/_next\/static\/css\/([^"]+\.css)"/g)].map(
+        (match) => match[1],
+      ),
+    ),
+  ].map((name) => join(OUT, "_next/static/css", name));
+}
+
+function linkedJsFiles(html: string) {
+  return [
+    ...new Set(
+      [...html.matchAll(/src="\/_next\/static\/([^"]+\.js)"/g)].map(
+        (match) => match[1],
+      ),
+    ),
+  ].map((name) => join(OUT, "_next/static", name));
 }
 
 function fontFiles() {
@@ -69,11 +91,53 @@ function formatBytes(value: number) {
     : `${value} B`;
 }
 
+function inlineFlightBytes(html: string) {
+  return [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
+    .filter((match) => match[1].includes("self.__next_f.push"))
+    .reduce((total, match) => total + Buffer.byteLength(match[1]), 0);
+}
+
+function elementCount(html: string) {
+  return (html.match(/<[a-z][^!/?\s>]*/gi) ?? []).length;
+}
+
+function htmlText(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
 const homepage = join(OUT, "index.html");
-const css = cssFiles();
+const comparePage = join(OUT, "compare.html");
+const valuePage = join(OUT, "value.html");
+const data = loadLeaderboardData();
+const allCss = cssFilesOnDisk();
 const fonts = fontFiles();
 const fontDir = fonts.length > 0 ? dirBytes(join(OUT, "_next/static/media")) : { total: 0, files: 0 };
 const html = readFileSync(homepage, "utf8");
+const compareHtml = readFileSync(comparePage, "utf8");
+const valueHtml = readFileSync(valuePage, "utf8");
+const homepageCss = linkedCssFiles(html);
+const homepageJs = linkedJsFiles(html);
+const homepageFlightBytes = inlineFlightBytes(html);
+const compareFlightBytes = inlineFlightBytes(compareHtml);
+const valueFlightBytes = inlineFlightBytes(valueHtml);
+const homepageCssText = homepageCss
+  .map((path) => readFileSync(path, "utf8"))
+  .join("\n");
+const compareSection =
+  compareHtml.match(/<section\b[^>]*\bid="compare"[^>]*>/)?.[0] ?? "";
+const compareSkeleton =
+  compareHtml.match(
+    /<table\b[^>]*\bclass="[^"]*\bcompare-grid\b[^"]*\bis-skeleton\b[^"]*"[^>]*>([\s\S]*?)<\/table>/,
+  )?.[1] ?? "";
+const compareSkeletonRows = (
+  compareSkeleton.match(/<th scope="row">/g) ?? []
+).length;
+const expectedCompareRows = 5 + data.benchmarks.length;
 const preloads = (html.match(/as="font"/g) ?? []).length;
 
 // What the browser actually fetches on first paint. next/font emits one file
@@ -92,21 +156,19 @@ const preloadedFontBytes = [...new Set(preloadedFonts)].reduce(
  * estimated before the system was built and came in low: the shipped design
  * carries three projections (table / profile / plot), a command palette, a
  * compare grid, model-record pages and a full state matrix, against the old
- * design's single projection and two routes. Rather than cut those to hit an
- * invented number, the raw budgets are set to measured reality plus ~10%
- * headroom, and the *transfer* budgets — gzip, which is what users actually
- * download — are held at the original targets. The 1 MiB homepage gate in
- * ci.yml is unchanged and remains the hard ceiling.
+ * design's single projection and two routes. The budgets below are based on
+ * the built artefacts, with bounded headroom for normal data growth.
  *
- * Measured at the Observatory rewrite: HTML 638 KB raw / 35.5 KB gzip,
- * CSS 54.3 KB raw / 10.8 KB gzip, fonts 110.6 KB on the critical path
- * (down from 766 KB across 32 files, 7 preloaded).
+ * Measured after normalizing the server-to-client leaderboard payload:
+ * homepage 443 KB raw / 29.4 KB gzip / 54.0 KB Flight; compare 101.2 KB raw /
+ * 92.7 KB Flight. CSS is 57.8 KB raw / 11.3 KB gzip, and fonts are 110.6 KB
+ * on the critical path.
  */
 const budgets: Budget[] = [
   {
     label: "homepage HTML (raw)",
     actual: statSync(homepage).size,
-    budget: 720 * 1024,
+    budget: 520 * 1024,
     unit: "bytes",
   },
   {
@@ -116,16 +178,94 @@ const budgets: Budget[] = [
     unit: "bytes",
   },
   {
-    label: "CSS total (raw)",
-    actual: css.reduce((total, path) => total + statSync(path).size, 0),
+    label: "homepage Flight payload",
+    actual: homepageFlightBytes,
+    budget: 64 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "homepage DOM elements",
+    actual: elementCount(html),
+    budget: 5_200,
+    unit: "count",
+  },
+  {
+    label: "compare HTML (raw)",
+    actual: statSync(comparePage).size,
+    budget: 120 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "compare HTML (gzip)",
+    actual: gzipBytes(comparePage),
+    budget: 14 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "compare Flight payload",
+    actual: compareFlightBytes,
+    budget: 110 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "value HTML (raw)",
+    actual: statSync(valuePage).size,
+    budget: 200 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "value HTML (gzip)",
+    actual: gzipBytes(valuePage),
+    budget: 28 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "value Flight payload",
+    actual: valueFlightBytes,
+    budget: 40 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "value DOM elements",
+    actual: elementCount(valueHtml),
+    budget: 1_400,
+    unit: "count",
+  },
+  {
+    label: "homepage CSS (raw)",
+    actual: homepageCss.reduce((total, path) => total + statSync(path).size, 0),
     budget: 60 * 1024,
     unit: "bytes",
   },
   {
-    label: "CSS total (gzip)",
-    actual: css.reduce((total, path) => total + gzipBytes(path), 0),
+    label: "homepage CSS (gzip)",
+    actual: homepageCss.reduce((total, path) => total + gzipBytes(path), 0),
     budget: 12 * 1024,
     unit: "bytes",
+  },
+  {
+    label: "homepage linked JS (raw)",
+    actual: homepageJs.reduce((total, path) => total + statSync(path).size, 0),
+    budget: 550 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "homepage linked JS (gzip)",
+    actual: homepageJs.reduce((total, path) => total + gzipBytes(path), 0),
+    budget: 180 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "homepage linked requests",
+    actual: 1 + homepageCss.length + homepageJs.length + preloads,
+    budget: 18,
+    unit: "count",
+  },
+  {
+    label: "CSS files on disk",
+    actual: allCss.length,
+    budget: null,
+    unit: "count",
   },
   {
     label: "fonts on critical path",
@@ -151,12 +291,61 @@ const sentinels: { label: string; ok: boolean }[] = [
   { label: "renders the board", ok: /class="board"/.test(html) },
   {
     label: "renders score provenance links",
-    ok: (html.match(/class="source-chip"/g) ?? []).length > 100,
+    ok: (html.match(/class="score-source"/g) ?? []).length === data.scoreCount,
   },
   { label: "renders the readout", ok: /class="readout/.test(html) },
   {
     label: "emits Dataset structured data",
     ok: /"@type":"Dataset"/.test(html),
+  },
+  {
+    label: "measures homepage Flight payload",
+    ok: homepageFlightBytes > 0,
+  },
+  {
+    label: "covers non-default board state before hydration",
+    ok:
+      html.includes("boardPending") &&
+      homepageCssText.includes("data-board-pending"),
+  },
+  {
+    label: "renders compare structure and data",
+    ok:
+      compareSection.includes('aria-label="Compare models"') &&
+      compareSkeletonRows === expectedCompareRows &&
+      data.benchmarks.every((benchmark) =>
+        compareSkeleton.includes(`>${htmlText(benchmark.name)}</th>`),
+      ) &&
+      data.rows.every((row) => compareHtml.includes(row.model.id)),
+  },
+  {
+    label: "measures compare Flight payload",
+    ok: compareFlightBytes > 0,
+  },
+  {
+    label: "ships stable clean and deep-link compare states",
+    ok:
+      compareHtml.includes("compare-initial-empty") &&
+      compareHtml.includes("compare-initial-skeleton") &&
+      compareHtml.includes("comparePending"),
+  },
+  {
+    label: "renders the value plot and its data table",
+    ok:
+      /class="plot-area"/.test(valueHtml) &&
+      /class="plot-data"/.test(valueHtml) &&
+      data.rows.every((row) => valueHtml.includes(row.model.id)),
+  },
+  {
+    label: "keeps score evidence out of the value payload",
+    ok:
+      !valueHtml.includes("scoresByBenchmark") &&
+      !valueHtml.includes("rampByBenchmark") &&
+      !valueHtml.includes("sourceRefs"),
+  },
+  {
+    label: "measures value Flight payload",
+    ok: valueFlightBytes > 0 && valueFlightBytes < homepageFlightBytes,
   },
 ];
 

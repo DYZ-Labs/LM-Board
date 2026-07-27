@@ -5,29 +5,32 @@ type ChangeStripProps = {
   summary: ChangeSummary;
 };
 
+/**
+ * The dataset's freshness, stated as the window it was collected in.
+ *
+ * It used to lead with "What's new — 7 scores retrieved on Jul 25", counting
+ * only the last day of collection. That is the weakest true sentence available:
+ * the whole board was retrieved inside nine days, and a reader who reads "7"
+ * has been told the opposite of what the data supports. The label is gone with
+ * it — the sentence says what it is.
+ */
 export function ChangeStrip({ summary }: ChangeStripProps) {
-  const parts: string[] = [];
-
-  if (summary.refreshedScores > 0) {
-    parts.push(
-      `${summary.refreshedScores} score${summary.refreshedScores === 1 ? "" : "s"} retrieved on ${formatDate(summary.lastUpdated)}`,
-    );
-  }
-  if (summary.recentModels > 0) {
-    parts.push(
-      `${summary.recentModels} model${summary.recentModels === 1 ? "" : "s"} released in the last 45 days`,
-    );
-  }
-
-  if (parts.length === 0) return null;
+  const { oldestRetrieved, newestRetrieved, recentModels } = summary;
 
   return (
-    <p className="change-strip">
-      <strong>What&apos;s new</strong>
-      <span>{parts.join(" · ")}</span>
+    <div className="change-strip">
+      <p>
+        {oldestRetrieved === newestRetrieved
+          ? `All scores retrieved ${formatDate(newestRetrieved)}.`
+          : `All scores retrieved ${formatDate(oldestRetrieved)}–${formatDate(newestRetrieved)}.`}{" "}
+        {recentModels > 0
+          ? `${recentModels} model${recentModels === 1 ? "" : "s"} released in the last 45 days.`
+          : null}
+      </p>
       <a className="link" href="/feed.xml">
-        Change feed
+        Model data feed
+        <span className="sr-only"> (Atom)</span>
       </a>
-    </p>
+    </div>
   );
 }

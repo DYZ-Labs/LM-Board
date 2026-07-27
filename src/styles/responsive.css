@@ -1,0 +1,517 @@
+/* ===========================================================================
+   Responsive — every viewport override in the system, in one place.
+
+   The layer sits above `projections` and below `utilities`, so a narrow-
+   viewport rule beats the wide-viewport rule it supersedes without having to
+   out-specify it, and the coarse-pointer target guarantee still beats both.
+   That is the whole reason this file exists: overrides scattered through five
+   stylesheets were five people's guesses about the same phone.
+
+   Two bands, and both are designs rather than corrections:
+
+     641-1023  the desktop table with one fluid column, so nothing is ever
+               hidden sideways at the widths iPad split view and phone
+               landscape actually land on.
+     <=640     the board is a card list. The row is a grid, not a squeezed
+               table row: at 390px 49 of 62 model names were ellipsised, six
+               of them to the same six characters.
+
+   Selectors carry `[data-view="profile"]` only where the table projection
+   would break without it — the card grid, the cells it places, and the panel
+   that shares its column. Everything else is safe in both projections and
+   pays no scoping tax.
+   =========================================================================== */
+@layer responsive {
+
+
+/* ===========================================================================
+   The spark can never overflow its column
+   ---------------------------------------------------------------------------
+   Eight fixed slots on fixed gaps need 124px of content box. Below 1024 the
+   profile projection's columns are squeezed proportionally to fit the rail, so
+   the run overflowed by up to 53px at 390 and 38px at 768 — bars painting into
+   the index in every row of every capture. Fluid tracks cannot: the run is
+   exactly its own cell, whatever the cell turns out to be.
+   =========================================================================== */
+@media (max-width: 1023px) {
+  .spark {
+    display: grid;
+    grid-template-columns:
+      repeat(var(--benchmark-count, 8), minmax(0, var(--s-4)));
+    gap: var(--s-1);
+    justify-content: end;
+    width: 100%;
+  }
+
+  .spark-slot {
+    width: auto;
+  }
+}
+
+/* ===========================================================================
+   641-1023 — the band nothing was designed for
+   ---------------------------------------------------------------------------
+   The column tokens sum to 712px. Between the phone breakpoint and the width
+   at which the rail can hold them, `.board-scroll` hid 187px of the profile
+   projection behind a scroll the board's own comment calls impossible. Every
+   column except the model takes a fixed width and the model column absorbs the
+   remainder, so the table is exactly as wide as its container at every width
+   in the band and no name has to be cut to get there.
+   =========================================================================== */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .board {
+    --col-rank: 40px;
+    --col-index: 96px;
+    --col-spark: 96px;
+    /* "$10.0 / $50.0" is 94px of tabular figures; under that the pair breaks
+       onto a second line inside a single-line row band, in every row. */
+    --col-price: 112px;
+  }
+
+  .board[data-view="profile"] :is(.model-column, .model-cell) {
+    width: auto;
+  }
+
+  .price-cell {
+    white-space: nowrap;
+  }
+
+  /* The name yields last. Both are flex items of `.model-identification` and
+     only the name carried `min-width: 0`, so it absorbed the whole deficit:
+     four names lost characters at 641 while the provider beside them kept
+     every one of its own. */
+  .model-lab {
+    flex-shrink: 100;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ===========================================================================
+   <=640 — the board is a card list
+   =========================================================================== */
+@media (max-width: 640px) {
+  /* -- Page rhythm --------------------------------------------------------
+     56px between blocks is a desktop measure. Four of them are what put the
+     first row of data 813px down an 844px viewport — a full screen of
+     scrolling before a number. */
+  :root {
+    --section-gap: var(--s-8);
+  }
+
+  .provenance-ribbon,
+  .change-strip {
+    margin-top: var(--s-7);
+  }
+
+  /* -- Command bar --------------------------------------------------------
+     Two deterministic rows instead of one crushed one: search gets the full
+     first row, then filters and projection share the second. At 320px the old
+     grid left 47px for the search input — barely its icon. */
+  .command-bar {
+    gap: var(--s-2);
+    padding-bottom: var(--s-2);
+  }
+
+  .command-row:not(.command-row-tabs) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--s-2) var(--s-3);
+    padding: 0 var(--s-4);
+  }
+
+  .command-row > .field {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .command-row > .row {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .command-row > :is(.result-count, .btn) {
+    display: none;
+  }
+
+  /* FilterBar publishes the exact viewport-clamped offset. Start/end alone
+     cannot contain a near-full-width popover when its trigger is inset. */
+  .command-bar .popover,
+  .command-bar .disclosure[data-popover-align="end"] .popover {
+    right: auto;
+    left: var(--popover-inline-offset, 0px);
+    width: min(320px, calc(100vw - var(--s-9)));
+  }
+
+  .command-bar .disclosure[data-popover-align="end"] .popover {
+    --popover-origin-inline: right;
+  }
+
+  .mobile-sort-controls {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: var(--s-3) var(--s-4);
+    border-bottom: 1px solid var(--line-subtle);
+    background: var(--bg-raised);
+  }
+
+  .mobile-sort-controls label {
+    display: grid;
+    min-width: 0;
+    gap: var(--s-1);
+    flex: 1 1 auto;
+    font-size: var(--t-10);
+    font-weight: var(--w-strong);
+    letter-spacing: var(--ls-10);
+    text-transform: uppercase;
+    color: var(--fg-tertiary);
+  }
+
+  .mobile-sort-controls select {
+    width: 100%;
+    min-height: 36px;
+    padding: 0 var(--s-4);
+    border: 1px solid var(--line);
+    border-radius: var(--r-2);
+    background: var(--bg-inset);
+    font: inherit;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--fg-primary);
+  }
+
+  .mobile-sort-controls .btn {
+    flex: 0 0 auto;
+  }
+
+  .mobile-sort-direction {
+    flex: 0 0 auto;
+  }
+
+  /* Five tabs need 369px at 320. Scrollbars are suppressed, so without an
+     affordance "Agentic" is simply gone — and it is a real tab stop, so a
+     keyboard user reaches a control they cannot see. */
+  .tablist {
+    padding: var(--s-3) 0;
+    scroll-snap-type: x proximity;
+    mask-image: linear-gradient(
+      90deg,
+      currentcolor calc(100% - var(--s-7)),
+      transparent
+    );
+  }
+
+  .tab {
+    scroll-snap-align: center;
+  }
+
+  /* -- The row is a grid --------------------------------------------------
+     Not `display: block` on the table elements: that strips the implicit
+     table / row / cell roles and turns 62 rows of cited measurement into a
+     pile of generics. Only the row changes box type, and the header row is
+     hidden the way every other visually-hidden string here is hidden — a
+     clip-path, not `display: none` — so the column names stay in the
+     accessibility tree and keep naming their cells. Verified with a CDP
+     accessibility-tree dump at 390: table 1, row 63, rowheader 62, cell 248. */
+  .board {
+    --col-rank: 26px;
+  }
+
+  .board-scroll:has(.board) {
+    max-height: none;
+    overflow: visible;
+    scrollbar-gutter: auto;
+  }
+
+  .board[data-view="profile"] thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  /* The panel's cell spans five columns, and a `<tr>` that grids is wrapped in
+     an anonymous single-column row — so under `table-layout: fixed` the board
+     collapsed to a fifth of its width the moment one row was expanded. Taking
+     the panel out of table layout leaves one column for every row to share. It
+     is a container for the panel, not a data cell; the panel's own headings,
+     list and links carry its structure. */
+  [data-view="profile"] .detail-row > td {
+    display: block;
+  }
+
+  .board[data-view="table"] {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .board[data-view="table"] thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .board[data-view="table"] .detail-row > td {
+    display: block;
+  }
+
+  .board[data-view="table"] .model-row {
+    display: grid;
+    grid-template-columns: var(--col-rank) minmax(0, 1fr) auto;
+    grid-template-areas:
+      "rank name index"
+      ".    name meta";
+    gap: var(--s-1) var(--s-4);
+    align-items: center;
+    min-height: 68px;
+    padding: var(--s-4) var(--s-5);
+    border-bottom: 1px solid var(--line-subtle);
+  }
+
+  .board[data-view="table"] .model-row > * {
+    width: auto;
+    height: auto;
+    padding: 0;
+    background: none;
+  }
+
+  .board[data-view="table"] :is(.score-cell, .spark-cell) {
+    display: none;
+  }
+
+  .board[data-view="table"] .model-row.has-mobile-sort-score {
+    grid-template-areas:
+      "rank name index"
+      ".    name score"
+      ".    name meta";
+    min-height: 86px;
+  }
+
+  /* A benchmark sort must never reorder a card list by an invisible value.
+     Surface exactly the active field — including its citation affordance and
+     best-in-column state — without turning every card into an eight-column
+     table again. */
+  .board[data-view="table"] .score-cell.is-mobile-sort-score {
+    display: flex;
+    grid-area: score;
+    gap: var(--s-3);
+    align-items: baseline;
+    justify-content: flex-end;
+    font-size: var(--t-12);
+    white-space: nowrap;
+  }
+
+  .board[data-view="table"] .is-mobile-sort-score .mobile-score-label {
+    display: inline;
+    max-width: 120px;
+    overflow: hidden;
+    font-family: var(--font-ui, system-ui), system-ui, sans-serif;
+    font-size: var(--t-10);
+    color: var(--fg-tertiary);
+    text-overflow: ellipsis;
+  }
+
+  .board[data-view="table"] .is-mobile-sort-score .score-value-line {
+    flex: 0 0 auto;
+  }
+
+  .board[data-view="table"] .score-cell.is-mobile-sort-score::before {
+    display: none;
+  }
+
+  .board[data-view="table"] .rank-cell {
+    position: static;
+    display: table-cell;
+    grid-area: rank;
+    font-size: var(--t-11);
+    text-align: right;
+  }
+
+  .board[data-view="table"] .model-cell {
+    position: static;
+    grid-area: name;
+  }
+
+  .board[data-view="table"] .mobile-evidence-link {
+    display: inline-flex;
+    gap: var(--s-2);
+    align-items: center;
+    min-height: 32px;
+    margin-left: calc(44px + var(--s-3));
+    font-size: var(--t-11);
+    font-weight: var(--w-medium);
+    color: var(--fg-tertiary);
+    text-decoration: underline;
+    text-decoration-color: var(--line-interactive);
+  }
+
+  .board[data-view="table"] .price-cell {
+    grid-area: meta;
+    font-size: var(--t-11);
+    text-align: right;
+    white-space: nowrap;
+    color: var(--fg-tertiary);
+  }
+
+  [data-view="profile"] .model-row {
+    display: grid;
+    grid-template-columns: var(--col-rank) minmax(0, 1fr) auto;
+    grid-template-areas:
+      "rank name index"
+      ".    meta spark";
+    gap: var(--s-2) var(--s-4);
+    align-items: baseline;
+    padding: var(--s-4) var(--s-5);
+    border-bottom: 1px solid var(--line-subtle);
+  }
+
+  /* One rule under the row replaces four per-cell gradients. The gradient
+     dissolved at 4%/96% of each *cell*, so at 60-142px columns it broke into a
+     3-6px gap at every column boundary — four visible breaks per row. The tint
+     moves to the row with it: as cell backgrounds, hover painted three stripes
+     with the gaps still showing between them. */
+  [data-view="profile"] .model-row > * {
+    width: auto;
+    height: auto;
+    padding: 0;
+    background: none;
+  }
+
+  .model-row:hover {
+    background-color: var(--bg-hover);
+  }
+
+  .model-row.is-expanded {
+    background-color: var(--bg-active);
+  }
+
+  [data-view="profile"] .rank-cell {
+    display: table-cell;
+    grid-area: rank;
+    font-size: var(--t-11);
+    text-align: right;
+  }
+
+  [data-view="profile"] .model-cell {
+    position: static;
+    grid-area: name;
+  }
+
+  /* The 2px rail hangs off the leading edge of a cell, which on a card is the
+     inside of the name column rather than the edge of the row. */
+  .model-cell::before {
+    display: none;
+  }
+
+  .index-cell {
+    grid-area: index;
+    font-size: var(--t-17);
+  }
+
+  /* An estimate is a methodological fact, and at 8px on 2px of padding it was
+     an illegible smudge beside the board's primary sort key. */
+  .index-value-line .badge {
+    padding: 0 var(--s-2);
+    font-size: var(--t-10);
+  }
+
+  [data-view="profile"] .price-cell {
+    grid-area: meta;
+    font-size: var(--t-11);
+    text-align: left;
+    white-space: nowrap;
+    color: var(--fg-tertiary);
+  }
+
+  .spark-cell {
+    grid-area: spark;
+    align-self: end;
+  }
+
+  /* The list's own block margin is 1em of the inherited 15px, which a fixed row
+     height used to swallow whole; on a card it added 30px to every row. */
+  .spark {
+    height: var(--s-7);
+    margin: 0;
+  }
+
+  /* -- Identity is never abbreviated --------------------------------------
+     49 of 62 names were ellipsised at 390px: rows 19 and 26 both read
+     "Claude Opu…", 22 and 31 both "Kim…", 23 and 28 both "De…". The name has
+     the full column and wraps rather than losing characters; the two-line
+     clamp is the backstop, not the mechanism. The provider takes its own line
+     rather than competing for the same 200px — inline it wrapped for 15 of 62
+     rows and only for the longest names, and a list that changes rhythm on its
+     own contents reads as broken. */
+  .model-primary-line {
+    flex-wrap: wrap;
+    row-gap: var(--s-1);
+  }
+
+  .model-identification {
+    display: block;
+  }
+
+  .model-name {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: var(--t-15);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* Both were hidden at this width because they did not fit beside a name in a
+     124px column. In a card they do, and they are identity, not decoration:
+     the provider disambiguates six "Claude" rows, and the effort chip is the
+     only thing separating two rows of one model at two settings. */
+  .model-lab {
+    display: block;
+    font-size: var(--t-12);
+  }
+
+  .model-primary-line .badge {
+    display: inline-flex;
+  }
+
+  /* The rank has its own column on a card, so the copy that stood in for it
+     inside the name line is redundant. */
+  .mobile-rank {
+    display: none;
+  }
+
+  .detail-panel {
+    padding: var(--s-7) var(--s-6);
+  }
+
+  .score-inspector {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    max-height: min(78dvh, 640px);
+    overflow-y: auto;
+    padding-bottom: max(var(--s-6), env(safe-area-inset-bottom));
+    border-radius: var(--r-4) var(--r-4) 0 0;
+  }
+
+  .score-inspector dl {
+    grid-template-columns: 1fr;
+  }
+
+  /* The expanded board preview has five facts; the last fills the row. */
+  .model-metadata > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+}
