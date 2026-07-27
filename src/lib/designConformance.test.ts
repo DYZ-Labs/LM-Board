@@ -35,7 +35,6 @@ describe("CSS foundation conformance", () => {
       "--z-command",
       "--z-popover",
       "--z-tooltip",
-      "--z-inspector",
       "--z-toast",
       "--z-palette",
       "--z-skip-link",

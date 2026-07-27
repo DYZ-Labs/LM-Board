@@ -152,29 +152,17 @@ function routeSpecs(model: ModelCandidate): RouteSpec[] {
     {
       path: "/compare",
       contentTypes: ["text/html"],
-      bodyIncludes: ["<h1>Compare</h1>", "citation"],
+      bodyIncludes: ["Compare AI models", "Choose up to"],
     },
     {
       path: "/value",
       contentTypes: ["text/html"],
-      bodyIncludes: ["Price versus performance", "efficient frontier"],
+      bodyIncludes: ["Find the best model for your budget", "Left is cheaper"],
     },
     {
       path: `/model/${model.id}`,
       contentTypes: ["text/html"],
       bodyIncludes: [model.name, "Scores and sources"],
-    },
-    {
-      path: "/feed.xml",
-      // Vercel serves the static export as application/xml even though the
-      // route response is authored as application/atom+xml. Both are valid
-      // media types for an Atom XML document.
-      contentTypes: ["application/atom+xml", "application/xml"],
-      bodyIncludes: [
-        '<feed xmlns="http://www.w3.org/2005/Atom">',
-        "LM Board — model data feed",
-        "<entry>",
-      ],
     },
   ];
 }

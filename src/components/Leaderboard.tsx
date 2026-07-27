@@ -21,6 +21,7 @@ import {
   type LeaderboardClientPayload,
 } from "@/lib/leaderboardPayload";
 import { matchesModelQuery } from "@/lib/search";
+import { LM_INDEX_LABEL } from "@/lib/index";
 import {
   DEFAULT_SORT,
   nextDirectionFor,
@@ -205,7 +206,9 @@ export function Leaderboard({
       case "model":
         return "model name";
       case "index":
-        return `${scopeLabel} index`;
+        return category === "overall"
+          ? LM_INDEX_LABEL
+          : `${scopeLabel} index`;
       case "price":
         return "input price";
       case "benchmark": {

@@ -89,7 +89,7 @@
 }
 
 /* ===========================================================================
-   <=640 — the board is a card list
+   <=1023 — the board is a card list; page chrome compacts only below 641
    =========================================================================== */
 @media (max-width: 640px) {
   /* -- Page rhythm --------------------------------------------------------
@@ -98,11 +98,6 @@
      scrolling before a number. */
   :root {
     --section-gap: var(--s-8);
-  }
-
-  .provenance-ribbon,
-  .change-strip {
-    margin-top: var(--s-7);
   }
 
   /* -- Command bar --------------------------------------------------------
@@ -149,6 +144,28 @@
     --popover-origin-inline: right;
   }
 
+  /* Five tabs need 369px at 320. Scrollbars are suppressed, so without an
+     affordance "Agentic" is simply gone — and it is a real tab stop, so a
+     keyboard user reaches a control they cannot see. */
+  .tablist {
+    padding: var(--s-3) 0;
+    scroll-snap-type: x proximity;
+    mask-image: linear-gradient(
+      90deg,
+      currentcolor calc(100% - var(--s-7)),
+      transparent
+    );
+  }
+
+  .tab {
+    scroll-snap-align: center;
+  }
+}
+
+/* A full eight-benchmark row needs more horizontal room than a tablet can
+   provide without either colliding values or a nested scroll area. Reuse the
+   information-preserving card projection until the complete table fits. */
+@media (max-width: 1023px) {
   .mobile-sort-controls {
     display: flex;
     gap: var(--s-3);
@@ -190,23 +207,6 @@
 
   .mobile-sort-direction {
     flex: 0 0 auto;
-  }
-
-  /* Five tabs need 369px at 320. Scrollbars are suppressed, so without an
-     affordance "Agentic" is simply gone — and it is a real tab stop, so a
-     keyboard user reaches a control they cannot see. */
-  .tablist {
-    padding: var(--s-3) 0;
-    scroll-snap-type: x proximity;
-    mask-image: linear-gradient(
-      90deg,
-      currentcolor calc(100% - var(--s-7)),
-      transparent
-    );
-  }
-
-  .tab {
-    scroll-snap-align: center;
   }
 
   /* -- The row is a grid --------------------------------------------------
@@ -416,13 +416,6 @@
     font-size: var(--t-17);
   }
 
-  /* An estimate is a methodological fact, and at 8px on 2px of padding it was
-     an illegible smudge beside the board's primary sort key. */
-  .index-value-line .badge {
-    padding: 0 var(--s-2);
-    font-size: var(--t-10);
-  }
-
   [data-view="profile"] .price-cell {
     grid-area: meta;
     font-size: var(--t-11);
@@ -491,21 +484,6 @@
 
   .detail-panel {
     padding: var(--s-7) var(--s-6);
-  }
-
-  .score-inspector {
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: auto;
-    max-height: min(78dvh, 640px);
-    overflow-y: auto;
-    padding-bottom: max(var(--s-6), env(safe-area-inset-bottom));
-    border-radius: var(--r-4) var(--r-4) 0 0;
-  }
-
-  .score-inspector dl {
-    grid-template-columns: 1fr;
   }
 
   /* The expanded board preview has five facts; the last fills the row. */

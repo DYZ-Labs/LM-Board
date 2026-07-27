@@ -18,7 +18,6 @@ import type {
 import { expandComparePayload } from "@/lib/compare";
 import { formatDate, formatPrice, formatScore } from "@/lib/format";
 import { scoreTarget, type MatchRange } from "@/lib/search";
-import { trackEvent } from "@/lib/track";
 import { MAX_COMPARE, compareFromUrl } from "@/lib/urlState";
 
 type CompareGridProps = {
@@ -31,10 +30,9 @@ type CompareGridProps = {
  * up a different height than the thing it is standing in for.
  */
 const FIXED_ROW_LABELS = [
-  "Overall Index",
-  "Provider",
+  "LM Index",
   "Released",
-  "Price in / out",
+  "Price per 1M tokens",
   "Weights",
 ] as const;
 
@@ -53,35 +51,6 @@ function highlight(label: string, ranges: MatchRange[]) {
   }
   if (cursor < label.length) parts.push(label.slice(cursor));
   return parts;
-}
-
-/**
- * The provenance sentence above the grid, counted off the grid itself.
- *
- * Before a selection arrives there is nothing to count, so the claim is stated
- * as the guarantee it is; once the columns are up it becomes an assertion about
- * the very cells underneath it, which anyone can check by clicking them.
- */
-function citationClaim(linked: number, total: number) {
-  if (total === 0) {
-    return "Every benchmark score links to the measurement it came from";
-  }
-
-  const scale =
-    linked === total
-      ? total === 1
-        ? "The one"
-        : `All ${total}`
-      : `${linked} of ${total}`;
-  // Singular is unreachable from the current dataset — the thinnest model
-  // carries six scores — but the sentence is generated, not written, so it has
-  // to survive a thinner one arriving.
-  const [noun, verb, subject] =
-    total === 1
-      ? ["score", "links", "it came"]
-      : ["scores", "link", "they came"];
-
-  return `${scale} benchmark ${noun} below ${verb} to the measurement ${subject} from`;
 }
 
 /**
@@ -204,30 +173,6 @@ export function CompareGrid({ payload }: CompareGridProps) {
       .slice(0, 6);
   }, [ids, query, rows]);
 
-  /**
-   * The intro used to promise that "every number keeps its citation", which the
-   * grid falsifies on sight: the Index is derived rather than measured, and the
-   * specification rows are a provider's own listing with no retrieval date.
-   * Counting what is actually on screen — rather than writing a number down —
-   * means a score that ever arrived without a source would rewrite the sentence
-   * instead of turning it into a lie.
-   */
-  const citations = useMemo(() => {
-    let total = 0;
-    let linked = 0;
-
-    for (const row of selected) {
-      for (const benchmark of benchmarks) {
-        const score = row.scoresByBenchmark[benchmark.id];
-        if (!score) continue;
-        total += 1;
-        if (score.sourceUrl) linked += 1;
-      }
-    }
-
-    return { total, linked };
-  }, [benchmarks, selected]);
-
   const leaders = useMemo(() => {
     const best: Record<string, number> = {};
 
@@ -246,6 +191,10 @@ export function CompareGrid({ payload }: CompareGridProps) {
 
     return best;
   }, [benchmarks, selected]);
+  const quickAdds = useMemo(
+    () => rows.filter((row) => !ids.includes(row.id)).slice(0, 3),
+    [ids, rows],
+  );
 
   function add(id: string) {
     const nextIds =
@@ -267,130 +216,153 @@ export function CompareGrid({ payload }: CompareGridProps) {
   }
 
   return (
-    <section className="longform" id="compare" aria-label="Compare models">
-      <div className="longform-intro">
-        <h1>Compare</h1>
+    <section
+      className="longform compare-page"
+      id="compare"
+      aria-label="Compare models"
+    >
+      <div className="longform-intro compare-intro">
+        <p className="section-kicker">Model comparison</p>
+        <h1>Compare AI models</h1>
         <p>
-          Put up to {MAX_COMPARE} models side by side. The resulting URL is
-          shareable.
-        </p>
-        <p>
-          <span className="provenance-claim">
-            {citationClaim(citations.linked, citations.total)}
-          </span>
-          . The Index is derived from those scores; provider, release date,
-          price and weights come from the model&apos;s own page and carry no
-          retrieval date.
+          Compare up to {MAX_COMPARE} models across LM Index, scores, price, and
+          weights.
         </p>
       </div>
 
-      <div className="row compare-controls">
-        <label className={`field search-field${query ? " has-value" : ""}`}>
-          <span className="sr-only">Add a model to the comparison</span>
-          <SearchIcon />
-          <input
-            ref={searchInputRef}
-            type="search"
-            role="combobox"
-            value={query}
-            aria-expanded={candidates.length > 0}
-            aria-autocomplete="list"
-            aria-controls="compare-model-options"
-            aria-describedby={
-              selected.length >= MAX_COMPARE
-                ? "compare-model-limit"
-                : undefined
-            }
-            aria-activedescendant={
-              candidates[activeCandidate]
-                ? `compare-option-${candidates[activeCandidate].row.id}`
-                : undefined
-            }
-            placeholder={
-              selected.length >= MAX_COMPARE
-                ? `Remove one to add another (max ${MAX_COMPARE})`
-                : "Add a model…"
-            }
-            readOnly={selected.length >= MAX_COMPARE}
-            onChange={(event) => {
-              setQuery(event.target.value);
-              setActiveCandidate(0);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "ArrowDown" && candidates.length > 0) {
-                event.preventDefault();
-                setActiveCandidate(
-                  (current) => (current + 1) % candidates.length,
-                );
-              } else if (event.key === "ArrowUp" && candidates.length > 0) {
-                event.preventDefault();
-                setActiveCandidate(
-                  (current) =>
-                    (current - 1 + candidates.length) % candidates.length,
-                );
-              } else if (event.key === "Home" && candidates.length > 0) {
-                event.preventDefault();
-                setActiveCandidate(0);
-              } else if (event.key === "End" && candidates.length > 0) {
-                event.preventDefault();
-                setActiveCandidate(candidates.length - 1);
-              } else if (event.key === "Enter") {
-                const candidate = candidates[activeCandidate];
-                if (candidate) {
-                  event.preventDefault();
-                  add(candidate.row.id);
-                }
-              } else if (event.key === "Escape" && query) {
-                event.preventDefault();
-                setQuery("");
-                setActiveCandidate(0);
+      <div className="compare-picker">
+        <div className="compare-picker-head">
+          <div>
+            <h2>Choose models</h2>
+            <p>Search by model name or provider.</p>
+          </div>
+          <span className="compare-count">
+            {selected.length} / {MAX_COMPARE} selected
+          </span>
+        </div>
+        <div className="row compare-controls">
+          <label className={`field search-field${query ? " has-value" : ""}`}>
+            <span className="sr-only">Add a model to the comparison</span>
+            <SearchIcon />
+            <input
+              ref={searchInputRef}
+              type="search"
+              role="combobox"
+              value={query}
+              aria-expanded={candidates.length > 0}
+              aria-autocomplete="list"
+              aria-controls="compare-model-options"
+              aria-describedby={
+                selected.length >= MAX_COMPARE
+                  ? "compare-model-limit"
+                  : undefined
               }
-            }}
-          />
-        </label>
-        {selected.length > 0 ? (
-          <CopyLinkButton
-            surface="comparison"
-            label="Copy comparison"
-            confirmation="Comparison link copied"
-          />
+              aria-activedescendant={
+                candidates[activeCandidate]
+                  ? `compare-option-${candidates[activeCandidate].row.id}`
+                  : undefined
+              }
+              placeholder={
+                selected.length >= MAX_COMPARE
+                  ? `Remove one to add another (max ${MAX_COMPARE})`
+                  : "Compare models"
+              }
+              readOnly={selected.length >= MAX_COMPARE}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setActiveCandidate(0);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "ArrowDown" && candidates.length > 0) {
+                  event.preventDefault();
+                  setActiveCandidate(
+                    (current) => (current + 1) % candidates.length,
+                  );
+                } else if (event.key === "ArrowUp" && candidates.length > 0) {
+                  event.preventDefault();
+                  setActiveCandidate(
+                    (current) =>
+                      (current - 1 + candidates.length) % candidates.length,
+                  );
+                } else if (event.key === "Home" && candidates.length > 0) {
+                  event.preventDefault();
+                  setActiveCandidate(0);
+                } else if (event.key === "End" && candidates.length > 0) {
+                  event.preventDefault();
+                  setActiveCandidate(candidates.length - 1);
+                } else if (event.key === "Enter") {
+                  const candidate = candidates[activeCandidate];
+                  if (candidate) {
+                    event.preventDefault();
+                    add(candidate.row.id);
+                  }
+                } else if (event.key === "Escape" && query) {
+                  event.preventDefault();
+                  setQuery("");
+                  setActiveCandidate(0);
+                }
+              }}
+            />
+          </label>
+          {selected.length > 0 ? (
+            <CopyLinkButton
+              surface="comparison"
+              label="Copy share link"
+              confirmation="Comparison link copied"
+            />
+          ) : null}
+        </div>
+        {selected.length >= MAX_COMPARE ? (
+          <p className="sr-only" id="compare-model-limit">
+            Maximum of {MAX_COMPARE} models selected. Remove a model before
+            adding another.
+          </p>
+        ) : null}
+
+        {candidates.length > 0 ? (
+          <ul
+            className="compare-options"
+            id="compare-model-options"
+            role="listbox"
+            aria-label="Models to add"
+          >
+            {candidates.map(({ row, ranges }, index) => (
+              <li
+                key={row.id}
+                id={`compare-option-${row.id}`}
+                role="option"
+                aria-selected={index === activeCandidate}
+                onPointerEnter={() => setActiveCandidate(index)}
+                onPointerDown={(event) => event.preventDefault()}
+                onClick={() => add(row.id)}
+              >
+                <span>+ {highlight(row.name, ranges)}</span>
+                <span className="text-tertiary">{row.lab}</span>
+              </li>
+            ))}
+          </ul>
+        ) : query.trim() && selected.length < MAX_COMPARE ? (
+          <p className="compare-no-results" role="status">
+            No models match “{query.trim()}”. Try a model name or provider.
+          </p>
+        ) : selected.length === 0 ? (
+          <div className="compare-quick">
+            <span>Start with a top-ranked model</span>
+            <div>
+              {quickAdds.map((row, index) => (
+                <button
+                  type="button"
+                  className={index === 0 ? "btn btn-primary" : "btn"}
+                  key={row.id}
+                  onClick={() => add(row.id)}
+                >
+                  + {row.name}
+                </button>
+              ))}
+            </div>
+          </div>
         ) : null}
       </div>
-      {selected.length >= MAX_COMPARE ? (
-        <p className="sr-only" id="compare-model-limit">
-          Maximum of {MAX_COMPARE} models selected. Remove a model before
-          adding another.
-        </p>
-      ) : null}
-
-      {candidates.length > 0 ? (
-        <ul
-          className="row compare-options"
-          id="compare-model-options"
-          role="listbox"
-          aria-label="Models to add"
-        >
-          {candidates.map(({ row, ranges }, index) => (
-            <li
-              key={row.id}
-              id={`compare-option-${row.id}`}
-              className="btn"
-              role="option"
-              aria-selected={index === activeCandidate}
-              onPointerEnter={() => setActiveCandidate(index)}
-              onPointerDown={(event) => event.preventDefault()}
-              onClick={() => add(row.id)}
-            >
-              + {highlight(row.name, ranges)}
-              <span className="text-tertiary">{row.lab}</span>
-            </li>
-          ))}
-        </ul>
-      ) : query.trim() && selected.length < MAX_COMPARE ? (
-        <p className="compare-empty" role="status">
-          No models match “{query.trim()}”. Try a model name or provider.
-        </p>
-      ) : null}
 
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {ready
@@ -400,21 +372,13 @@ export function CompareGrid({ payload }: CompareGridProps) {
           : ""}
       </p>
 
-      {selected.length === 0 && ready ? (
-        <p className="compare-empty">
-          No models selected yet. Search above, or open a model record and choose
-          Compare.
-        </p>
-      ) : selected.length === 0 ? (
+      {selected.length === 0 && ready ? null : selected.length === 0 ? (
         /* Static export cannot inspect the URL. It emits both stable initial
-           states, with CSS choosing between them from the pre-paint marker:
-           clean /compare paints the same empty message hydration keeps, while
-           ?models= links reserve the real grid's shape until parsing commits. */
+          states, with CSS choosing between them from the pre-paint marker:
+           clean /compare paints no secondary surface, while ?models= links
+           reserve the real grid's shape until parsing commits. */
         <div className="compare-initial">
-          <p className="compare-empty compare-initial-empty">
-            No models selected yet. Search above, or open a model record and
-            choose Compare.
-          </p>
+          <div className="compare-initial-empty" aria-hidden="true" />
           <div
             className="board-shell compare-initial-skeleton"
             aria-busy="true"
@@ -457,42 +421,47 @@ export function CompareGrid({ payload }: CompareGridProps) {
           </div>
         </div>
       ) : (
-        <div className="board-shell">
-          <div className="board-scroll">
-            <table className="compare-grid">
-              <caption className="sr-only">
-                Side-by-side comparison of {selected.length} models
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">
-                    <span className="sr-only">Attribute</span>
-                  </th>
-                  {selected.map((row) => (
-                    <th scope="col" key={row.id}>
-                      <Link href={`/model/${row.id}`}>{row.name}</Link>
-                      <button
-                        type="button"
-                        className="btn-icon"
-                        aria-label={`Remove ${row.name} from the comparison`}
-                        ref={(node) => {
-                          if (node) {
-                            removeButtonRefs.current.set(row.id, node);
-                          } else {
-                            removeButtonRefs.current.delete(row.id);
-                          }
-                        }}
-                        onClick={() => remove(row.id)}
-                      >
-                        <CloseIcon />
-                      </button>
+        <>
+          <p className="compare-scroll-cue">Swipe to see more models →</p>
+          <div className="board-shell compare-results">
+            <div className="board-scroll">
+              <table className="compare-grid">
+                <caption className="sr-only">
+                  Side-by-side comparison of {selected.length} models
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <span className="sr-only">Attribute</span>
                     </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
+                    {selected.map((row) => (
+                      <th scope="col" key={row.id}>
+                        <span className="compare-model-heading">
+                          <Link href={`/model/${row.id}`}>{row.name}</Link>
+                          <span>{row.lab}</span>
+                        </span>
+                        <button
+                          type="button"
+                          className="btn-icon"
+                          aria-label={`Remove ${row.name} from the comparison`}
+                          ref={(node) => {
+                            if (node) {
+                              removeButtonRefs.current.set(row.id, node);
+                            } else {
+                              removeButtonRefs.current.delete(row.id);
+                            }
+                          }}
+                          onClick={() => remove(row.id)}
+                        >
+                          <CloseIcon />
+                        </button>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
                 <tr>
-                  <th scope="row">Overall Index</th>
+                  <th scope="row">LM Index</th>
                   {selected.map((row) => {
                     const index = row.overallIndex;
                     return (
@@ -518,27 +487,27 @@ export function CompareGrid({ payload }: CompareGridProps) {
                   })}
                 </tr>
                 <tr>
-                  <th scope="row">Provider</th>
-                  {selected.map((row) => (
-                    <td key={row.id}>{row.lab}</td>
-                  ))}
-                </tr>
-                <tr>
                   <th scope="row">Released</th>
                   {selected.map((row) => (
                     <td key={row.id}>{formatDate(row.releaseDate)}</td>
                   ))}
                 </tr>
                 <tr>
-                  <th scope="row">Price in / out</th>
+                  <th scope="row">Price per 1M tokens</th>
                   {selected.map((row) => (
                     <td
                       key={row.id}
                       aria-label={row.pricing ? undefined : "Not listed"}
                     >
-                      {row.pricing
-                        ? `$${formatPrice(row.pricing.input)} / $${formatPrice(row.pricing.output)}`
-                        : "—"}
+                      {row.pricing ? (
+                        <>
+                          <span>In ${formatPrice(row.pricing.input)}</span>
+                          <span className="compare-price-separator"> · </span>
+                          <span>Out ${formatPrice(row.pricing.output)}</span>
+                        </>
+                      ) : (
+                        "—"
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -550,8 +519,13 @@ export function CompareGrid({ payload }: CompareGridProps) {
                     </td>
                   ))}
                 </tr>
-                {benchmarks.map((benchmark) => (
-                  <tr key={benchmark.id}>
+                {benchmarks.map((benchmark, index) => (
+                  <tr
+                    key={benchmark.id}
+                    className={
+                      index === 0 ? "compare-benchmarks-start" : undefined
+                    }
+                  >
                     <th scope="row">{benchmark.name}</th>
                     {selected.map((row) => {
                       const score = row.scoresByBenchmark[benchmark.id];
@@ -565,37 +539,21 @@ export function CompareGrid({ payload }: CompareGridProps) {
                           }`}
                           aria-label={score ? undefined : "Not measured"}
                         >
-                          {score ? (
-                            <a
-                              className="score-source"
-                              href={score.sourceUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              data-source={benchmark.id}
-                              aria-label={`Source for ${row.name} on ${benchmark.name}: ${formatScore(score.value)}, retrieved ${formatDate(score.retrieved)}`}
-                              onClick={() =>
-                                trackEvent("source_click", {
-                                  surface: "comparison",
-                                  benchmark: benchmark.id,
-                                })
-                              }
-                            >
-                              <span className="score-number">
-                                {formatScore(score.value)}
-                              </span>
-                            </a>
-                          ) : (
-                            "—"
-                          )}
+                          {score ? formatScore(score.value) : "—"}
                         </td>
                       );
                     })}
                   </tr>
                 ))}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+          <p className="compare-note">
+            Best score in each row is highlighted. Open a model name for its
+            complete evidence record.
+          </p>
+        </>
       )}
     </section>
   );

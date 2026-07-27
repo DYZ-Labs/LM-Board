@@ -49,6 +49,33 @@ describe("ScatterPlot", () => {
     );
   });
 
+  it("gives the Value view plain guidance and a direct comparison action", () => {
+    const data = loadLeaderboardData();
+    const { container, getByRole, getByText } = render(
+      <ScatterPlot
+        payload={toPlotPayload(data.rows, "overall")}
+        category="overall"
+        variant="value"
+      />,
+    );
+    const selectedName = getByRole("heading", { level: 3 }).textContent!;
+
+    expect(
+      container.querySelector('[data-surface="value"]'),
+    ).not.toBeNull();
+    expect(getByText("↑ Higher LM Index")).toBeTruthy();
+    expect(getByText("← Lower input price")).toBeTruthy();
+    expect(
+      getByRole("link", { name: "Compare this model" }),
+    ).toHaveAttribute(
+      "href",
+      `/compare?models=${data.rows.find((row) => row.model.name === selectedName)!.model.id}`,
+    );
+    expect(
+      getByRole("link", { name: "View model details" }),
+    ).toHaveAttribute("href", expect.stringMatching(/^\/model\//));
+  });
+
   it("labels the whole frontier, not a slice of it", () => {
     const { container } = render(
       <ScatterPlot rows={rows} category="overall" />,

@@ -7,20 +7,24 @@ import {
 } from "@/lib/leaderboardPayload";
 
 describe("production leaderboard payload", () => {
-  it("compresses repeated Artificial Analysis URL structure losslessly", () => {
+  it("keeps record-only evidence out while preserving visible score data", () => {
     const data = loadLeaderboardData();
     const payload = toLeaderboardClientPayload(data);
     const expanded = expandLeaderboardClientPayload(payload);
+    const serialized = JSON.stringify(payload);
 
-    expect(
-      payload.sourceRefs.some((reference) => reference.startsWith("@")),
-    ).toBe(true);
+    expect(payload).not.toHaveProperty("sourceRefs");
+    expect(payload).not.toHaveProperty("retrievedDates");
+    expect(payload).not.toHaveProperty("settings");
+    expect(serialized).not.toContain("artificialanalysis.ai/models/");
     expect(
       expanded.rows.map((row) =>
         Object.fromEntries(
           Object.entries(row.scoresByBenchmark).map(([id, score]) => [
             id,
-            score?.source.url ?? null,
+            score
+              ? [score.value, score.selfReported]
+              : null,
           ]),
         ),
       ),
@@ -29,7 +33,9 @@ describe("production leaderboard payload", () => {
         Object.fromEntries(
           Object.entries(row.scoresByBenchmark).map(([id, score]) => [
             id,
-            score?.source.url ?? null,
+            score
+              ? [score.value, score.selfReported]
+              : null,
           ]),
         ),
       ),

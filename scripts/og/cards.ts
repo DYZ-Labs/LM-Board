@@ -676,12 +676,12 @@ export function valueCard(data: LeaderboardData): Card {
 
   const specX = RAILS.gutterRight - RAILS.specWidth;
   const spec: [string, string][] = [
-    ["Efficient frontier", String(frontier.size)],
+    ["Best-value options", String(frontier.size)],
     [
       "Listed input / 1M",
       `$${formatPrice(minimumPrice)}–$${formatPrice(maximumPrice)}`,
     ],
-    ["Top Overall Index", formatScore(maximumIndex)],
+    ["Top LM Index", formatScore(maximumIndex)],
   ];
   spec.forEach(([key, value], index) => {
     const top = RAILS.specTop + index * RAILS.specRow;
@@ -790,7 +790,7 @@ export function valueCard(data: LeaderboardData): Card {
       {
         faceKey: "mono400",
         size: 18,
-        text: "Higher Overall Index",
+        text: "Higher LM Index",
         color: C.signal300,
         gapBefore: 10,
       },
@@ -804,7 +804,7 @@ export function valueCard(data: LeaderboardData): Card {
       {
         faceKey: "mono400",
         size: 18,
-        text: `${frontier.size} efficient`,
+        text: `${frontier.size} best value`,
         color: C.fgTertiary,
         gapBefore: 10,
       },
@@ -818,7 +818,7 @@ export function valueCard(data: LeaderboardData): Card {
       {
         faceKey: "archivo400",
         size: 19,
-        text: "Provider-listed price + computed Index",
+        text: "Provider-listed price + LM Index",
         color: C.fgTertiary,
       },
     ],
@@ -828,7 +828,7 @@ export function valueCard(data: LeaderboardData): Card {
   return {
     nodes: builder.nodes,
     ink: builder.ink,
-    alt: `LM Board value view — ${points.length} models plotted by provider-listed input-token price and Overall Index; ${frontier.size} models sit on the efficient frontier.`,
+    alt: `LM Board value view — ${points.length} models plotted by provider-listed input-token price and LM Index; ${frontier.size} models sit on the best-value line.`,
   };
 }
 

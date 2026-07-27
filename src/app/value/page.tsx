@@ -17,14 +17,14 @@ export function generateMetadata(): Metadata {
   const data = loadLeaderboardData();
 
   return pageMetadata({
-    title: "Price versus performance — LM Board",
+    title: "Find the best model for your budget — LM Board",
     description: truncateDescription(
-      `Compare listed input-token price with the Overall Index for ${data.rows.length} frontier models, including the efficient frontier and model-level evidence.`,
+      `Compare LM Index with listed input-token price for ${data.rows.length} frontier models and find the strongest options for your budget.`,
     ),
     path: "/value",
     image: "/og/value.png",
     imageAlt:
-      "LM Board value view — provider-listed input-token price versus Overall Index, with the efficient frontier highlighted.",
+      "LM Board value view — LM Index versus listed input-token price, with the best-value line highlighted.",
   });
 }
 
@@ -48,15 +48,19 @@ export default function ValuePage() {
         <main className="site-shell">
           <section className="longform value-page" id="value">
             <div className="longform-intro">
-              <p className="section-kicker">Value view</p>
-              <h1>Price versus performance</h1>
+              <p className="section-kicker">Model value</p>
+              <h1>Find the best model for your budget</h1>
               <p>
-                Listed input-token price against the Overall Index. Higher Index
-                and lower price are better; the efficient frontier marks models
-                for which no cheaper model has an equal or higher Index.
+                Up is smarter. Left is cheaper. The blue line shows models no
+                cheaper option can match.
               </p>
             </div>
-            <ScatterPlot payload={payload} category="overall" syncPointToUrl />
+            <ScatterPlot
+              payload={payload}
+              category="overall"
+              syncPointToUrl
+              variant="value"
+            />
           </section>
         </main>
         <SiteFooter current="value" repositoryUrl={repositoryUrl} />

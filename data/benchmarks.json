@@ -1,11 +1,27 @@
 [
   {
-    "id": "gpqa-diamond",
-    "name": "GPQA Diamond",
-    "category": "reasoning",
-    "description": "Graduate-level biology, physics, and chemistry reasoning on the 198-question Diamond subset.",
+    "id": "terminal-bench-v2-1",
+    "name": "Terminal-Bench v2.1",
+    "category": "coding",
+    "description": "Verified terminal-agent tasks spanning software engineering, system administration, data processing, training, and security.",
     "unit": "percent",
-    "sourceUrl": "https://arxiv.org/abs/2311.12022"
+    "sourceUrl": "https://www.tbench.ai/leaderboard/terminal-bench/2.1"
+  },
+  {
+    "id": "tau3-banking",
+    "name": "τ³-Banking",
+    "category": "agentic",
+    "description": "Knowledge-intensive banking support workflows requiring policy retrieval and multi-step tool-mediated state changes.",
+    "unit": "percent",
+    "sourceUrl": "https://arxiv.org/abs/2603.04370"
+  },
+  {
+    "id": "aa-lcr",
+    "name": "AA-LCR",
+    "category": "reasoning",
+    "description": "Long-context reasoning over multiple documents with roughly 100,000 input tokens per question.",
+    "unit": "percent",
+    "sourceUrl": "https://artificialanalysis.ai/evaluations/artificial-analysis-long-context-reasoning"
   },
   {
     "id": "hle",
@@ -16,12 +32,20 @@
     "sourceUrl": "https://agi.safe.ai/"
   },
   {
-    "id": "aa-lcr",
-    "name": "AA-LCR",
+    "id": "gpqa-diamond",
+    "name": "GPQA Diamond",
     "category": "reasoning",
-    "description": "Long-context reasoning over multiple documents with roughly 100,000 input tokens per question.",
+    "description": "Graduate-level biology, physics, and chemistry reasoning on the 198-question Diamond subset.",
     "unit": "percent",
-    "sourceUrl": "https://artificialanalysis.ai/evaluations/artificial-analysis-long-context-reasoning"
+    "sourceUrl": "https://arxiv.org/abs/2311.12022"
+  },
+  {
+    "id": "scicode",
+    "name": "SciCode",
+    "category": "coding",
+    "description": "Scientist-curated Python coding problems drawn from realistic research workflows across 16 subfields.",
+    "unit": "percent",
+    "sourceUrl": "https://scicode-bench.github.io/"
   },
   {
     "id": "ifbench",
@@ -38,29 +62,5 @@
     "description": "Quantitative research-level physics challenges with numerical, symbolic, and executable-function answers.",
     "unit": "percent",
     "sourceUrl": "https://critpt.com/"
-  },
-  {
-    "id": "terminal-bench-v2-1",
-    "name": "Terminal-Bench v2.1",
-    "category": "coding",
-    "description": "Verified terminal-agent tasks spanning software engineering, system administration, data processing, training, and security.",
-    "unit": "percent",
-    "sourceUrl": "https://www.tbench.ai/leaderboard/terminal-bench/2.1"
-  },
-  {
-    "id": "scicode",
-    "name": "SciCode",
-    "category": "coding",
-    "description": "Scientist-curated Python coding problems drawn from realistic research workflows across 16 subfields.",
-    "unit": "percent",
-    "sourceUrl": "https://scicode-bench.github.io/"
-  },
-  {
-    "id": "tau3-banking",
-    "name": "τ³-Banking",
-    "category": "agentic",
-    "description": "Knowledge-intensive banking support workflows requiring policy retrieval and multi-step tool-mediated state changes.",
-    "unit": "percent",
-    "sourceUrl": "https://arxiv.org/abs/2603.04370"
   }
 ]

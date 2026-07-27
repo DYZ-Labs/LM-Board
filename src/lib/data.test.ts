@@ -332,12 +332,9 @@ describe("leaderboard client payload", () => {
     expect(clientData).not.toHaveProperty("scoreCount");
     expect(clientData.benchmarks).toEqual(serverData.benchmarks);
     expect(clientData.labs).toEqual(serverData.labs);
-    // Non-AA sources stay complete on the wire; the expansion below proves
-    // that both complete references and the production `@slug` shorthand
-    // resolve through the same path.
-    expect(payload.sourceRefs).toContain(
-      "https://example.com/scores/model-two/reasoning-benchmark",
-    );
+    expect(payload).not.toHaveProperty("sourceRefs");
+    expect(payload).not.toHaveProperty("retrievedDates");
+    expect(payload).not.toHaveProperty("settings");
     expect(row.scopes).toEqual(serverData.rows[0].scopes);
     expect(row.rampByBenchmark).toEqual(
       serverData.rows[0].rampByBenchmark,
@@ -345,9 +342,10 @@ describe("leaderboard client payload", () => {
     expect(score).toBeDefined();
     expect(score).toEqual({
       value: serverScore!.value,
-      source: serverScore!.source,
       selfReported: serverScore!.selfReported,
     });
+    expect(score).not.toHaveProperty("source");
+    expect(score).not.toHaveProperty("settings");
     expect(score).not.toHaveProperty("modelId");
     expect(score).not.toHaveProperty("benchmarkId");
     expect(score).not.toHaveProperty("reasoningEffort");

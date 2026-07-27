@@ -87,10 +87,6 @@ export function SiteFooter({
         >
           Compare
         </Link>
-        <a href="/feed.xml">
-          Model data feed
-          <span className="sr-only"> (Atom)</span>
-        </a>
         {repositoryUrl ? (
           <a
             className="link-external"
