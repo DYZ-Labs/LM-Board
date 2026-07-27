@@ -86,19 +86,14 @@
   white-space: nowrap;
 }
 
-/* The mark, drawn rather than shipped: three ascending bars, which is what the
-   product is. A 9px blue square beside a letterspaced grotesque is a bullet,
-   not a lockup, and it was the one saturated element on the page with nothing
-   to say. */
+/* The supplied monogram stays decorative here because the adjacent wordmark
+   already carries the accessible brand name. */
 .wordmark::before {
   content: "";
-  width: 0.82em;
-  height: 0.82em;
+  width: 1.25em;
+  height: 1.25em;
   flex: 0 0 auto;
-  background:
-    linear-gradient(var(--signal-500) 0 0) 0 100% / 0.18em 0.35em no-repeat,
-    linear-gradient(var(--signal-500) 0 0) 0.32em 100% / 0.18em 0.59em no-repeat,
-    linear-gradient(var(--signal-500) 0 0) 0.64em 100% / 0.18em 0.82em no-repeat;
+  background: url("/icon-64.png") center / cover no-repeat;
 }
 
 /* -- Masthead navigation --------------------------------------------------

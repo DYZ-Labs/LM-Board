@@ -16,6 +16,10 @@
  * anywhere in this file: the card it replaces said "17 models" over a dataset
  * of 62 for months, because one of them was a literal.
  */
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import type { Benchmark } from "../../src/lib/schema";
 import type { LeaderboardData, LeaderboardRow } from "../../src/lib/data";
 import { benchmarksForScope, type RankScope } from "../../src/lib/index";
@@ -36,8 +40,14 @@ import {
 
 export type Style = Record<string, string | number>;
 export type Node = {
-  type: "div";
-  props: { style: Style; children?: Node[] | string };
+  type: "div" | "img";
+  props: {
+    style: Style;
+    children?: Node[] | string;
+    src?: string;
+    width?: number;
+    height?: number;
+  };
 };
 
 export type InkBox = {
@@ -52,6 +62,11 @@ export type Card = { nodes: Node[]; ink: InkBox[]; alt: string };
 
 export const CARD = { width: 1200, height: 630 };
 
+const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const brandIcon =
+  "data:image/png;base64," +
+  readFileSync(join(root, "public", "icon-64.png")).toString("base64");
+
 export const RAILS = {
   gutterLeft: 64,
   gutterRight: 1136,
@@ -59,7 +74,7 @@ export const RAILS = {
   bodyBottom: 542,
 
   markCentre: 54,
-  wordmarkRail: 90,
+  wordmarkRail: 114,
 
   kickerCap: 143,
   nameCap: 188,
@@ -352,10 +367,21 @@ function masthead(builder: Builder) {
   }, "masthead wordmark");
 
   builder.add(
-    box(RAILS.gutterLeft, RAILS.markCentre - 6, 12, 12, {
-      borderRadius: "999px",
-      backgroundColor: C.signal500,
-    }),
+    {
+      type: "img",
+      props: {
+        src: brandIcon,
+        width: 36,
+        height: 36,
+        style: {
+          position: "absolute",
+          left: `${RAILS.gutterLeft}px`,
+          top: `${RAILS.markCentre - 18}px`,
+          width: "36px",
+          height: "36px",
+        },
+      },
+    },
   );
   builder.text("mono400", 20, "checklmboard.xyz", {
     letterSpacing: 0.01 * 20,
