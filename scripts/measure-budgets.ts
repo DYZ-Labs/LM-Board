@@ -56,24 +56,44 @@ function cssFilesOnDisk() {
   }
 }
 
+function linkedStaticFiles(
+  html: string,
+  attribute: "href" | "src",
+  directory: string,
+  extension: string,
+) {
+  const attributes = html.matchAll(
+    new RegExp(`\\b${attribute}=(["'])(.*?)\\1`, "g"),
+  );
+  const prefix = `/_next/static/${directory}`;
+  const paths = [...attributes].flatMap((match) => {
+    try {
+      const pathname = new URL(match[2], "https://lmboard.invalid").pathname;
+      if (!pathname.startsWith(prefix) || !pathname.endsWith(extension)) {
+        return [];
+      }
+
+      return [
+        join(
+          OUT,
+          "_next/static",
+          decodeURIComponent(pathname.slice("/_next/static/".length)),
+        ),
+      ];
+    } catch {
+      return [];
+    }
+  });
+
+  return [...new Set(paths)];
+}
+
 function linkedCssFiles(html: string) {
-  return [
-    ...new Set(
-      [...html.matchAll(/href="\/_next\/static\/css\/([^"]+\.css)"/g)].map(
-        (match) => match[1],
-      ),
-    ),
-  ].map((name) => join(OUT, "_next/static/css", name));
+  return linkedStaticFiles(html, "href", "css/", ".css");
 }
 
 function linkedJsFiles(html: string) {
-  return [
-    ...new Set(
-      [...html.matchAll(/src="\/_next\/static\/([^"]+\.js)"/g)].map(
-        (match) => match[1],
-      ),
-    ),
-  ].map((name) => join(OUT, "_next/static", name));
+  return linkedStaticFiles(html, "src", "", ".js");
 }
 
 function fontFiles() {
@@ -143,11 +163,9 @@ const preloads = (html.match(/as="font"/g) ?? []).length;
 // What the browser actually fetches on first paint. next/font emits one file
 // per unicode-range block, but only the preloaded ones are on the critical
 // path — the rest are fetched only if the page contains those glyphs.
-const preloadedFonts = [
-  ...html.matchAll(/href="\/_next\/static\/media\/([^"]+\.woff2)"/g),
-].map((match) => match[1]);
-const preloadedFontBytes = [...new Set(preloadedFonts)].reduce(
-  (total, name) => total + statSync(join(OUT, "_next/static/media", name)).size,
+const preloadedFonts = linkedStaticFiles(html, "href", "media/", ".woff2");
+const preloadedFontBytes = preloadedFonts.reduce(
+  (total, path) => total + statSync(path).size,
   0,
 );
 
@@ -301,6 +319,10 @@ const sentinels: { label: string; ok: boolean }[] = [
   {
     label: "measures homepage Flight payload",
     ok: homepageFlightBytes > 0,
+  },
+  {
+    label: "finds linked stylesheets and scripts",
+    ok: homepageCss.length > 0 && homepageJs.length > 0,
   },
   {
     label: "covers non-default board state before hydration",
