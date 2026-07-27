@@ -17,13 +17,6 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#0b0d10",
     icons: [
       {
-        src: "/icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
-      },
-      // Android's installer ignores SVG, so an SVG-only manifest installed with
-      // a generated letter tile rather than the mark.
-      {
         src: "/icon-192.png",
         sizes: "192x192",
         type: "image/png",
