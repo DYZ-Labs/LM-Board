@@ -130,24 +130,6 @@
   color: var(--fg-primary);
 }
 
-/* Three mutually reinforcing cues: ink, weight and a 2px marker. Current route
-   must remain apparent without hover and without relying on hue alone. */
-.site-nav a[aria-current="page"] {
-  font-weight: var(--w-strong);
-  color: var(--fg-primary);
-}
-
-.site-nav a[aria-current="page"]::after {
-  position: absolute;
-  right: 0;
-  bottom: calc(var(--s-5) * -1);
-  left: 0;
-  height: 2px;
-  border-radius: var(--r-full);
-  background: var(--signal-500);
-  content: "";
-}
-
 /* Pulled by half an icon button's own padding so the glyph — not its 32px hit
    box — lands on the rail's right edge, level with the end of the hairline
    under it. */
@@ -568,14 +550,6 @@
 
 .site-footer nav a:hover {
   color: var(--fg-primary);
-}
-
-.site-footer nav a[aria-current] {
-  font-weight: var(--w-strong);
-  color: var(--fg-primary);
-  text-decoration: underline;
-  text-decoration-color: var(--signal-500);
-  text-underline-offset: var(--s-2);
 }
 
 /* Uppercase is for container labels of three words or fewer, and caps below

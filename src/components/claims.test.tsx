@@ -176,10 +176,10 @@ describe("the site footer", () => {
 
   it("marks an exact route as a page and a model record as a leaderboard location", () => {
     const { rerender } = render(
-      <SiteFooter current="value" repositoryUrl={null} />,
+      <SiteFooter current="methodology" repositoryUrl={null} />,
     );
 
-    expect(screen.getByRole("link", { name: "Value" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Methodology" })).toHaveAttribute(
       "aria-current",
       "page",
     );
@@ -188,7 +188,7 @@ describe("the site footer", () => {
     expect(
       screen.getByRole("link", { name: "Leaderboard" }),
     ).toHaveAttribute("aria-current", "location");
-    expect(screen.getByRole("link", { name: "Value" })).not.toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Methodology" })).not.toHaveAttribute(
       "aria-current",
     );
   });

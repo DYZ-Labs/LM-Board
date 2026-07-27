@@ -45,7 +45,7 @@ const compactBenchmarkLabels: Record<string, string> = {
   "aa-lcr": "AA-LCR",
   ifbench: "IFBench",
   critpt: "CritPt",
-  "terminal-bench-v2-1": "T-Bench 2.1",
+  "terminal-bench-v2-1": "T-Bench",
   scicode: "SciCode",
   "tau3-banking": "τ³-Banking",
 };

@@ -6,7 +6,7 @@ This repository implements the MVP described in [PLAN.md](./PLAN.md): a Next.js 
 
 The leaderboard computes a transparent coverage-gated Index for Overall and each benchmark category, with canonical ranks precomputed per scope. It supports sorting every column, switches benchmark columns and scoped ranking by category, combines provider/search/open-weight filters, and exposes an inline source panel for every model and score. Category, sort, direction, projection, density, and expanded-model state are reflected in the URL so a specific view can be shared directly.
 
-The board renders in three explicit projections — `table` (every benchmark column), `profile` (compact, with a per-model score spark), and `plot` (price against Index) — at three row densities. The server always renders the full table, CSS turns that same markup into ranked cards on phones, and viewport size never changes the selected projection or URL after hydration. Every model has a citable record at `/model/<id>`, `/compare` puts up to four models side by side, and `/value` provides a shareable price-versus-performance view.
+The board renders in three explicit projections — `table` (every benchmark column), `profile` (compact, with a per-model score spark), and `plot` (price against Index) — at three row densities. The server always renders the full table, CSS turns that same markup into ranked cards on phones, and viewport size never changes the selected projection or URL after hydration. Every model has a citable record at `/model/<id>`, and `/compare` puts up to four models side by side.
 
 The visual system is documented in [REDESIGN_PLAN.md](./REDESIGN_PLAN.md) and implemented as cascade layers in `src/styles/`.
 
@@ -95,8 +95,8 @@ GitHub disables scheduled workflows after 60 days without repository activity; a
 
 - **Rollback:** If the site is down or a deploy is bad, open the LM Board project in the Vercel dashboard, go to **Deployments**, select the previous known-good deployment, and choose **Promote**. If a data commit caused the problem, `git revert <commit>` on a new branch, open and merge the resulting pull request, and let Vercel deploy it.
 - **Monitoring and alerts:** `.github/workflows/monitor-production.yml` checks
-  `/`, `/compare`, `/value`, and a deterministic model record every 15 minutes.
-  It verifies status, content type, content sentinels, redirect origin,
+  `/`, `/compare`, and a deterministic model record every 15 minutes. It
+  verifies status, content type, content sentinels, redirect origin,
   response size, and security headers with bounded requests. Failures open or
   update one `bug` issue assigned to `@thedanielyuan`; a healthy run closes the
   incident. Run the same probe manually with

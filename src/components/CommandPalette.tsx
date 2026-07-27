@@ -80,18 +80,6 @@ export function buildPaletteEntries(
       },
     })),
     {
-      id: "view-value",
-      kind: "go" as const,
-      detail: "Performance for the price",
-      href: "/value",
-      rank: null,
-      target: {
-        name: "Find the best model for your budget",
-        lab: "",
-        id: "value",
-      },
-    },
-    {
       id: "view-compare",
       kind: "go" as const,
       detail: "Head to head",

@@ -5,7 +5,6 @@ import { issuesUrl } from "@/lib/site";
 
 export type FooterCurrent =
   | "leaderboard"
-  | "value"
   | "compare"
   | "methodology"
   | "model"
@@ -65,13 +64,6 @@ export function SiteFooter({
           }
         >
           Leaderboard
-        </Link>
-        <Link
-          href="/value"
-          prefetch={false}
-          aria-current={current === "value" ? "page" : undefined}
-        >
-          Value
         </Link>
         <Link
           href="/methodology"
