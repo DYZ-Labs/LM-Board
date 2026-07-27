@@ -95,8 +95,8 @@ GitHub disables scheduled workflows after 60 days without repository activity; a
 
 - **Rollback:** If the site is down or a deploy is bad, open the LM Board project in the Vercel dashboard, go to **Deployments**, select the previous known-good deployment, and choose **Promote**. If a data commit caused the problem, `git revert <commit>` on a new branch, open and merge the resulting pull request, and let Vercel deploy it.
 - **Monitoring and alerts:** `.github/workflows/monitor-production.yml` checks
-  `/`, `/compare`, `/value`, a deterministic model record, and `/feed.xml` every 15
-  minutes. It verifies status, content type, content sentinels, redirect origin,
+  `/`, `/compare`, `/value`, and a deterministic model record every 15 minutes.
+  It verifies status, content type, content sentinels, redirect origin,
   response size, and security headers with bounded requests. Failures open or
   update one `bug` issue assigned to `@thedanielyuan`; a healthy run closes the
   incident. Run the same probe manually with

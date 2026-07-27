@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { GET as feed } from "@/app/feed.xml/route";
 import { GET as llms } from "@/app/llms.txt/route";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
@@ -100,68 +99,7 @@ describe("llms.txt artifact", () => {
       expect(text).toContain(`${siteUrl}/model/${row.model.id}`);
     }
     expect(text).toContain(
-      `- [Model data feed (Atom)](${siteUrl}/feed.xml)`,
+      `- [Find the best model for your budget](${siteUrl}/value)`,
     );
-    expect(text).toContain(
-      `- [Price versus performance and the efficient frontier](${siteUrl}/value)`,
-    );
-  });
-});
-
-describe("Atom artifact", () => {
-  it("is explicitly a current per-model snapshot, not a change log", async () => {
-    const response = feed();
-    const xml = await response.text();
-
-    expect(response.headers.get("content-type")).toBe(
-      "application/atom+xml; charset=utf-8",
-    );
-    expect(xml).toContain("<title>LM Board — model data feed</title>");
-    expect(xml).toContain(
-      "<subtitle>One current entry per model, ordered by its newest score retrieval date; scoreless models use release date.</subtitle>",
-    );
-    expect(xml).toContain(`<id>${siteUrl}/feed.xml</id>`);
-    expect(xml).toContain(
-      "<rights>LM Board dataset arrangement: CC BY 4.0. Source measurements retain their own terms.</rights>",
-    );
-    expect(xml).not.toContain("score changes");
-    expect(xml).not.toContain("what moved");
-    expect((xml.match(/<entry>/g) ?? [])).toHaveLength(data.rows.length);
-  });
-
-  it("attributes feed authorship to LM Board and carries per-record dates", async () => {
-    const xml = await feed().text();
-    const entries = xml.match(/<entry>[\s\S]*?<\/entry>/g) ?? [];
-    const expectedOrder = [...data.rows]
-      .sort(
-        (left, right) =>
-          modelRecordFreshness(right).lastModified.localeCompare(
-            modelRecordFreshness(left).lastModified,
-          ) || left.model.name.localeCompare(right.model.name, "en"),
-      )
-      .map((row) => row.model.id);
-
-    expect((xml.match(/<author>/g) ?? [])).toHaveLength(1);
-    expect(xml).toContain("<name>LM Board</name>");
-    expect(
-      entries.map(
-        (entry) =>
-          entry.match(/<id>[^<]+\/model\/([^<]+)<\/id>/)?.[1],
-      ),
-    ).toEqual(expectedOrder);
-
-    for (const row of data.rows) {
-      const entry = entries.find((candidate) =>
-        candidate.includes(
-          `<id>${siteUrl}/model/${row.model.id}</id>`,
-        ),
-      );
-
-      expect(entry).toBeDefined();
-      expect(entry).toContain(
-        `<updated>${modelRecordFreshness(row).lastModified}T00:00:00Z</updated>`,
-      );
-      expect(entry).not.toContain("<author>");
-    }
   });
 });

@@ -55,7 +55,7 @@ describe("command palette destinations", () => {
         expect.objectContaining({
           id: "view-value",
           href: "/value",
-          detail: "Price versus performance",
+          detail: "Performance for the price",
         }),
       ]),
     );

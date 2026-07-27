@@ -615,7 +615,9 @@ describe("table semantics", () => {
     await user.keyboard("{ArrowRight}{ArrowRight}{F2}");
 
     const indexHeader = screen
-      .getByRole("button", { name: /^Sort by Overall index/ })
+      .getByRole("button", {
+        name: /^Sort by LM Index/,
+      })
       .closest("th")!;
     const actions = within(indexHeader).getAllByRole("button");
     expect(document.activeElement).toBe(actions[0]);
@@ -665,32 +667,77 @@ describe("table semantics", () => {
     expect(container.querySelector(`#${detailsId}`)).not.toBeInTheDocument();
   });
 
-  it("announces a score inspector opened from the grid and restores the grid", async () => {
+  it("keeps benchmark score cells plain and non-interactive", async () => {
     const user = userEvent.setup();
-    render(board());
+    const { container } = render(board());
     const grid = screen.getByRole("grid");
+    const firstScore = container.querySelector<HTMLElement>(
+      ".model-row .score-cell:not(.missing-value)",
+    )!;
+
+    expect(firstScore).toBeInTheDocument();
+    expect(firstScore.querySelector("a, button")).toBeNull();
 
     grid.focus();
     await user.keyboard(
       "{ArrowRight}{ArrowRight}{ArrowRight}{ArrowDown}{Enter}",
     );
 
-    const inspector = await screen.findByRole("dialog", {
-      name: /GPQA Diamond/,
-    });
-    await waitFor(() => expect(document.activeElement).toBe(inspector));
-
-    await user.keyboard("{Escape}");
-    await waitFor(() => {
-      expect(
-        screen.queryByRole("dialog", { name: /GPQA Diamond/ }),
-      ).not.toBeInTheDocument();
-      expect(document.activeElement).toBe(grid);
-    });
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(grid);
   });
 });
 
 describe("projections", () => {
+  it("shows only the Index benchmarks in their editorial priority order", () => {
+    go("/?view=table");
+    const { container } = render(board());
+
+    expect(data.benchmarks.map((benchmark) => benchmark.id)).toEqual([
+      "terminal-bench-v2-1",
+      "tau3-banking",
+      "aa-lcr",
+      "hle",
+      "gpqa-diamond",
+      "scicode",
+      "ifbench",
+      "critpt",
+    ]);
+
+    const benchmarkHeaders = [
+      ...container.querySelectorAll<HTMLTableCellElement>(
+        "thead .benchmark-column",
+      ),
+    ];
+    expect(
+      benchmarkHeaders.map((header) =>
+        header.querySelector("button")?.getAttribute("aria-label"),
+      ),
+    ).toEqual(
+      data.benchmarks.map((benchmark) =>
+        expect.stringMatching(`^Sort by ${benchmark.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`),
+      ),
+    );
+  });
+
+  it("shows the short Index name and expands it on hover", () => {
+    render(board());
+
+    const indexSort = screen.getByRole("button", {
+      name: /^Sort by LM Index/,
+    });
+    expect(indexSort).toHaveTextContent("LM Index");
+    expect(indexSort.querySelector("[title]")).toHaveAttribute(
+      "title",
+      "LM Board Intelligence Index",
+    );
+    expect(
+      screen.getByRole("button", {
+        name: "About LM Board Intelligence Index",
+      }),
+    ).toBeInTheDocument();
+  });
+
   it("renders every benchmark column in the table projection", () => {
     go("/?view=table");
     render(board());
@@ -763,21 +810,21 @@ describe("projections", () => {
     );
   });
 
-  it("keeps the board's own hint present in both projections", () => {
+  it("keeps the board's grid hint present in both projections", () => {
     // The server renders `table` and narrow viewports flip to `profile` on
     // mount, so an element in one and not the other shifts the page after
     // hydration.
     go("/?view=table");
     const table = render(board());
     expect(
-      table.container.querySelector("#board-scroll-instructions"),
+      table.container.querySelector("#board-grid-instructions"),
     ).toBeInTheDocument();
     table.unmount();
 
     go("/?view=profile");
     const profile = render(board());
     expect(
-      profile.container.querySelector("#board-scroll-instructions"),
+      profile.container.querySelector("#board-grid-instructions"),
     ).toBeInTheDocument();
   });
 
@@ -822,7 +869,7 @@ describe("projections", () => {
     expect(featured).toHaveLength(data.rows.length);
     expect(featured[0]).toHaveTextContent(codingBenchmark.name);
     expect(
-      featured.some((cell) => cell.querySelector("a.score-source")),
+      featured.every((cell) => cell.querySelector("a, button") === null),
     ).toBe(true);
 
     await user.click(screen.getByRole("button", { name: "Sort ascending" }));
@@ -991,15 +1038,19 @@ describe("row density", () => {
 });
 
 describe("provenance", () => {
-  it("puts a source link on every cell that has a score", () => {
+  it("keeps source links out of leaderboard score cells", () => {
     go("/?view=table");
     const { container } = render(board());
 
-    const sourceLinks = [
-      ...container.querySelectorAll<HTMLAnchorElement>("a.score-source"),
+    const measuredCells = [
+      ...container.querySelectorAll<HTMLElement>(
+        ".score-cell:not(.missing-value)",
+      ),
     ];
-    expect(sourceLinks.length).toBeGreaterThan(0);
-    expect(sourceLinks[0]).toHaveAttribute("href", expect.stringMatching(/^https?:/));
+    expect(measuredCells.length).toBeGreaterThan(0);
+    expect(
+      measuredCells.every((cell) => cell.querySelector("a, button") === null),
+    ).toBe(true);
   });
 
   it("explains an unranked model instead of showing a bare string", () => {

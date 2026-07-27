@@ -45,11 +45,7 @@ describe("pageMetadata", () => {
     const { openGraph, twitter } = cardFields(metadata);
 
     expect(metadata.alternates?.canonical).toBe("/compare");
-    // Next replaces `alternates` wholesale on merge, exactly as it does
-    // `openGraph`, so feed autodiscovery has to ride on every routed page.
-    expect(metadata.alternates?.types?.["application/atom+xml"]).toEqual([
-      { url: "/feed.xml", title: "LM Board — model data feed" },
-    ]);
+    expect(metadata.alternates?.types).toBeUndefined();
     expect(openGraph.url).toBe("/compare");
     expect(openGraph.siteName).toBe("LM Board");
     expect(openGraph.images?.[0]?.url).toMatch(/^\/og\/compare\.png\?v=/);

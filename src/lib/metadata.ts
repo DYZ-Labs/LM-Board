@@ -62,16 +62,8 @@ export function pageMetadata(input: PageMetadataInput): Metadata {
     // brand suffix to a title that already carries one.
     title: { absolute: title },
     description,
-    // `alternates` is replaced wholesale by the merge too, so the feed's
-    // autodiscovery link has to be restated here or every routed page loses the
-    // one the layout declares.
     alternates: {
       canonical: path,
-      types: {
-        "application/atom+xml": [
-          { url: "/feed.xml", title: "LM Board — model data feed" },
-        ],
-      },
     },
     openGraph: {
       type,

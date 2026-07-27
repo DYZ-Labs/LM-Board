@@ -13,14 +13,6 @@ import type {
 } from "@/lib/compare";
 import { packCompareData } from "@/lib/compare";
 
-const { trackEventMock } = vi.hoisted(() => ({
-  trackEventMock: vi.fn(),
-}));
-
-vi.mock("@/lib/track", () => ({
-  trackEvent: trackEventMock,
-}));
-
 const benchmarks: CompareBenchmark[] = [
   { id: "reasoning-test", name: "Reasoning Test" },
   { id: "coding-test", name: "Coding Test" },
@@ -101,7 +93,6 @@ function comparison() {
 beforeEach(() => {
   go("/compare");
   delete document.documentElement.dataset.comparePending;
-  trackEventMock.mockClear();
 });
 
 describe("initial comparison paint", () => {
@@ -126,7 +117,7 @@ describe("initial comparison paint", () => {
     render(comparison());
 
     expect(
-      await screen.findByText(/No models selected yet\./),
+      await screen.findByText("0 / 4 selected"),
     ).toBeInTheDocument();
     await waitFor(() => {
       expect(document.querySelector(".compare-grid.is-skeleton")).toBeNull();
@@ -148,31 +139,14 @@ describe("initial comparison paint", () => {
 });
 
 describe("populated comparison", () => {
-  it("makes every curated benchmark score a safe, labelled source link", async () => {
+  it("shows benchmark values as plain, non-interactive numbers", async () => {
     go("/compare?models=alpha,beta");
-    const user = userEvent.setup();
-    render(comparison());
+    const { container } = render(comparison());
 
-    const links = await screen.findAllByRole("link", { name: /^Source for / });
-
-    expect(links).toHaveLength(3);
-    for (const link of links) {
-      expect(link).toHaveAttribute("href", expect.stringMatching(/^https:\/\//));
-      expect(link).toHaveAttribute("target", "_blank");
-      expect(link).toHaveAttribute("rel", "noopener noreferrer");
-      expect(link.tabIndex).toBe(0);
-    }
-
-    expect(links[0]).toHaveAccessibleName(
-      "Source for Alpha on Reasoning Test: 92.5, retrieved Jul 20, 2026",
-    );
-
-    links[0].focus();
-    await user.keyboard("{Enter}");
-    expect(trackEventMock).toHaveBeenCalledWith("source_click", {
-      surface: "comparison",
-      benchmark: "reasoning-test",
-    });
+    await screen.findByRole("link", { name: "Alpha" });
+    expect(container.querySelectorAll(".score-cell a")).toHaveLength(0);
+    expect(container.querySelector(".score-cell")).toHaveTextContent("92.5");
+    expect(screen.getByText(/Best score in each row/)).toBeInTheDocument();
   });
 
   it("restores focus after column removal and politely announces the count", async () => {

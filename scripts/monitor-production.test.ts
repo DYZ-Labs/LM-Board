@@ -34,26 +34,16 @@ function responseFor(url: URL, headers = securityHeaders): Response {
       contentType: "text/html; charset=utf-8",
     },
     "/compare": {
-      body: "<html><h1>Compare</h1><p>Every number keeps its citation.</p></html>",
+      body: "<html><h1>Compare AI models</h1><p>Choose up to four models.</p></html>",
       contentType: "text/html; charset=utf-8",
     },
     "/value": {
-      body: "<html><h1>Price versus performance</h1><p>efficient frontier</p></html>",
+      body: "<html><h1>Find the best model for your budget</h1><p>Left is cheaper.</p></html>",
       contentType: "text/html; charset=utf-8",
     },
     "/model/stable-model": {
       body: "<html><h1>Stable Model</h1><h2>Scores and sources</h2></html>",
       contentType: "text/html; charset=utf-8",
-    },
-    "/feed.xml": {
-      body: [
-        '<feed xmlns="http://www.w3.org/2005/Atom">',
-        "<title>LM Board — model data feed</title>",
-        "<entry></entry>",
-        "</feed>",
-      ].join(""),
-      // Vercel's static file layer uses this generic XML media type.
-      contentType: "application/xml; charset=utf-8",
     },
   };
   const fixture = bodies[url.pathname];
@@ -104,7 +94,6 @@ describe("runProductionMonitor", () => {
       "/compare",
       "/value",
       "/model/stable-model",
-      "/feed.xml",
     ]);
     expect(report).toMatchObject({
       baseUrl: "https://example.test",
@@ -112,7 +101,7 @@ describe("runProductionMonitor", () => {
       modelId: "stable-model",
       ok: true,
     });
-    expect(report.checks).toHaveLength(5);
+    expect(report.checks).toHaveLength(4);
     expect(report.checks.every((check) => check.ok)).toBe(true);
   });
 

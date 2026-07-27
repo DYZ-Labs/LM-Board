@@ -82,11 +82,11 @@ export function buildPaletteEntries(
     {
       id: "view-value",
       kind: "go" as const,
-      detail: "Price versus performance",
+      detail: "Performance for the price",
       href: "/value",
       rank: null,
       target: {
-        name: "Value and efficient frontier",
+        name: "Find the best model for your budget",
         lab: "",
         id: "value",
       },

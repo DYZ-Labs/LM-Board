@@ -159,163 +159,218 @@
   margin-right: calc(var(--s-4) * -1);
 }
 
-/* -- Hero readout ---------------------------------------------------------
-   A compact title and the board's answer. The evidence contract immediately
-   below it is part of the same bounded unit, never an independently placed grid
-   child that can swap order with the leaderboard. */
+/* -- Hero telemetry deck --------------------------------------------------
+   The home page's answer, field context and evidence contract share one
+   instrument chassis. Its visual language is the product's: calibration
+   hierarchy, a single signal hue, tabular data and real field geometry. */
 .hero-evidence {
+  overflow: hidden;
   display: grid;
-  gap: var(--s-6);
+  border: 1px solid var(--line);
+  border-radius: var(--r-4);
+  background: var(--bg-raised);
+  box-shadow: var(--e-2);
 }
 
 .readout {
   display: grid;
-  gap: var(--s-5);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-6) var(--s-8);
+  padding: var(--s-7) var(--s-8);
+}
+
+.readout-heading {
+  display: grid;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.readout-kicker {
+  color: var(--signal-300);
+}
+
+:is(
+  .readout-kicker,
+  .readout-eyebrow,
+  .readout-score-label,
+  .readout-field-position
+) {
+  font-size: var(--t-10);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--ls-10);
+  text-transform: uppercase;
 }
 
 .readout-title {
-  max-width: 32ch;
-  font-size: var(--t-27);
+  max-width: 42ch;
+  font-size: clamp(36px, 2vw + 12px, 48px);
   font-weight: var(--w-medium);
-  letter-spacing: var(--ls-27);
-  line-height: var(--lh-27);
-  text-wrap: balance;
+  letter-spacing: var(--ls-h1);
+  line-height: var(--lh-h1);
+  text-wrap: pretty;
+}
+
+.readout > .freshness {
+  align-self: start;
+  justify-self: end;
 }
 
 .readout-leader {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas:
-    "eyebrow freshness"
-    "score identity"
-    "more more";
-  gap: var(--s-3) var(--s-7);
-  align-items: end;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8);
+  min-width: 0;
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--line-subtle);
 }
 
 .readout-empty {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--s-3) var(--s-7);
-  align-items: center;
+  grid-column: 1 / -1;
+  gap: var(--s-4);
+  padding: var(--s-8) 0 var(--s-4);
+  border-top: 1px solid var(--line);
 }
 
 .readout-empty .readout-lab {
-  grid-column: 1 / -1;
+  max-width: var(--measure);
 }
 
 .readout-eyebrow {
-  grid-area: eyebrow;
-  font-size: var(--t-12);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-12);
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
   color: var(--fg-tertiary);
 }
 
-.readout-leader > .freshness {
-  grid-area: freshness;
-  justify-self: end;
+.readout-score,
+.readout-field {
+  display: grid;
+  align-content: center;
+  min-width: 0;
+  padding: var(--s-5) 0;
 }
 
-.readout-score {
-  display: grid;
-  grid-area: score;
-  gap: var(--s-2);
-  align-self: end;
+.readout-field {
+  position: relative;
+  gap: var(--s-3);
+}
+
+.readout-field-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--t-10);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--ls-10);
+  text-transform: uppercase;
+  color: var(--fg-tertiary);
+}
+
+.readout-field-label span {
+  color: var(--fg-secondary);
+}
+
+.readout-field svg {
+  display: block;
+  width: 100%;
+  border-radius: var(--r-1);
+  cursor: crosshair;
+}
+
+.readout-field-active {
+  stroke: var(--signal-300);
+  stroke-width: 2.8;
+}
+
+.readout-field-tooltip {
+  position: absolute;
+  z-index: var(--z-content);
+  top: 50%;
+  max-width: min(360px, 94%);
+  padding: var(--s-2) var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  background: var(--bg-overlay);
+  box-shadow: var(--e-2);
+  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
+  font-size: var(--t-10);
+  line-height: var(--lh-12);
+  color: var(--fg-primary);
+  pointer-events: none;
+  translate: -50% -50%;
+  white-space: normal;
+}
+
+.readout-field-tooltip.is-start {
+  left: 0;
+  translate: 0 -50%;
+}
+
+.readout-field-tooltip.is-end {
+  right: 0;
+  left: auto;
+  translate: 0 -50%;
 }
 
 .readout-identity {
-  grid-area: identity;
+  display: grid;
+  align-content: center;
   min-width: 0;
-  padding-bottom: var(--s-2);
+  padding: var(--s-5) 0;
 }
 
 .readout-name {
-  font-size: var(--t-h1);
+  margin-top: var(--s-3);
+  font-size: clamp(30px, 2vw + 10px, 40px);
   font-weight: var(--w-medium);
-  font-variation-settings: "wdth" var(--wd-normal);
-  letter-spacing: var(--ls-h1);
-  line-height: var(--lh-h1);
+  letter-spacing: var(--ls-27);
+  line-height: var(--lh-27);
   color: var(--fg-primary);
   text-wrap: balance;
 }
 
-.readout-name a {
-  text-decoration: none;
-}
-
-.readout-name a:hover {
-  color: var(--signal-500);
+.readout-score-label {
+  color: var(--signal-300);
 }
 
 .readout-value {
-  margin-left: -0.04em;
-  font-size: var(--t-readout);
-  font-variant-numeric: lining-nums;
-  font-variation-settings: "wdth" var(--wd-normal);
+  margin: var(--s-3) 0 0 -0.04em;
+  font-size: clamp(48px, 3vw + 14px, 66px);
   font-weight: var(--w-display);
   letter-spacing: var(--ls-readout);
   line-height: var(--lh-readout);
   color: var(--fg-primary);
 }
 
-.readout-unit {
-  font-size: var(--t-12);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-10);
-  text-transform: uppercase;
-  color: var(--fg-tertiary);
-  white-space: nowrap;
+.readout-field-position {
+  margin-top: var(--s-3);
 }
 
 .readout-lab {
-  margin-top: var(--s-3);
-  max-width: 72ch;
+  margin-top: var(--s-2);
+  max-width: 62ch;
   font-size: var(--t-13);
   line-height: var(--lh-13);
   color: var(--fg-secondary);
   text-wrap: pretty;
 }
 
-.readout-more {
-  grid-area: more;
-  align-self: end;
-  justify-self: start;
-  font-size: var(--t-13);
-  font-weight: var(--w-medium);
-  color: var(--fg-primary);
-  white-space: nowrap;
-  text-decoration-line: underline;
-  text-decoration-color: var(--line-interactive);
-  transition: var(--tr-tint);
-}
-
-.readout-more:hover {
-  text-decoration-color: var(--signal-500);
-}
-
-@media (min-width: 760px) {
-  .readout-leader {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-areas:
-      "eyebrow eyebrow freshness"
-      "score identity more";
-    column-gap: var(--s-8);
-  }
-
-  .readout-more {
-    justify-self: end;
-  }
+.readout-actions {
+  display: flex;
+  gap: var(--s-6);
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: var(--s-5);
 }
 
 /* -- Evidence line --------------------------------------------------------
-   Counts and ownership remain visible in the closed state. The longer contract
-   is disclosed in place, so trust is available without spending half a
-   viewport before the first row. */
+   The chassis' lower rail answers two trust questions at a glance: what is in
+   the ledger, and how fresh is it. The full contract still discloses in place. */
 .hero-evidence-line {
   display: grid;
-  border-top: 1px solid var(--line-subtle);
-  border-bottom: 1px solid var(--line-subtle);
+  border-top: 1px solid var(--line);
 }
 
 .provenance-ribbon {
@@ -330,8 +385,8 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--s-2) var(--s-5);
   align-content: center;
-  min-height: 44px;
-  padding: var(--s-3) 0;
+  min-height: var(--s-10);
+  padding: var(--s-3) var(--s-6);
   list-style: none;
   cursor: pointer;
 }
@@ -343,18 +398,13 @@
 .provenance-ribbon summary::after {
   grid-area: 1 / 2 / span 2;
   align-self: center;
-  width: 6px;
-  height: 6px;
-  margin-right: var(--s-2);
-  border-right: 1.5px solid currentcolor;
-  border-bottom: 1.5px solid currentcolor;
-  content: "";
-  transform: rotate(45deg);
-  transition: transform var(--dur-snap) var(--ease-snap);
+  content: "+";
+  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
+  font-size: var(--t-17);
 }
 
 .provenance-ribbon[open] summary::after {
-  transform: rotate(225deg);
+  content: "−";
 }
 
 .provenance-ribbon summary:hover,
@@ -366,6 +416,10 @@
 .provenance-claim {
   font-weight: var(--w-strong);
   color: var(--fg-primary);
+}
+
+.provenance-counts {
+  white-space: nowrap;
 }
 
 .provenance-ribbon .sep {
@@ -386,7 +440,7 @@
   display: grid;
   gap: var(--s-4);
   max-width: var(--measure);
-  padding: var(--s-5) var(--s-8) var(--s-6) 0;
+  padding: var(--s-5) var(--s-7) var(--s-6);
   border-top: 1px solid var(--line-subtle);
   color: var(--fg-secondary);
   text-wrap: pretty;
@@ -397,22 +451,29 @@
   gap: var(--s-5);
   align-items: center;
   justify-content: space-between;
-  min-height: 44px;
-  padding: var(--s-3) 0;
+  min-height: var(--s-10);
+  padding: var(--s-3) var(--s-6);
   border-top: 1px solid var(--line-subtle);
   font-size: var(--t-12);
   line-height: var(--lh-12);
   color: var(--fg-secondary);
 }
 
-.change-strip a {
-  flex: 0 0 auto;
-  font-weight: var(--w-strong);
+@media (min-width: 760px) {
+  .readout-leader {
+    grid-template-columns:
+      minmax(260px, 1fr) minmax(150px, 0.3fr)
+      minmax(260px, 0.7fr);
+  }
+
+  .readout-identity {
+    padding-right: var(--s-5);
+  }
 }
 
 @media (min-width: 1000px) {
   .hero-evidence-line {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.46fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.55fr);
   }
 
   .provenance-ribbon summary {
@@ -425,7 +486,6 @@
   }
 
   .change-strip {
-    padding-left: var(--s-7);
     border-top: 0;
     border-left: 1px solid var(--line-subtle);
   }
@@ -441,12 +501,11 @@
   gap: var(--s-3);
   align-items: center;
   padding: var(--s-2) var(--s-4);
-  border: 1px solid var(--line-subtle);
-  border-radius: var(--r-1);
-  background: transparent;
-  font-size: var(--t-12);
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  font-size: var(--t-11);
   font-weight: var(--w-medium);
-  letter-spacing: var(--ls-12);
+  letter-spacing: var(--ls-11);
   text-transform: none;
   color: var(--fg-secondary);
   white-space: nowrap;
@@ -583,21 +642,57 @@
     padding-top: var(--s-7);
   }
 
-  .readout-leader {
-    column-gap: var(--s-5);
-  }
-
-  .readout-title {
-    font-size: var(--t-21);
-    letter-spacing: var(--ls-21);
+  .readout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+    padding: var(--s-6);
   }
 
   .readout-name {
-    font-size: clamp(28px, 8vw, 34px);
+    font-size: clamp(28px, 8vw, 36px);
+  }
+
+  .readout > .freshness {
+    justify-self: start;
+  }
+
+  .readout-identity {
+    grid-column: 1 / -1;
+    padding: var(--s-6) 0;
+  }
+
+  .readout-leader {
+    grid-template-columns: minmax(108px, 0.38fr) minmax(0, 0.62fr);
+    gap: var(--s-6);
+  }
+
+  .readout-score,
+  .readout-field {
+    padding: var(--s-5) 0;
+  }
+
+  .readout-field-label {
+    font-size: 8px;
+  }
+
+  .readout-actions {
+    gap: var(--s-4);
+  }
+
+  .provenance-ribbon summary,
+  .change-strip {
+    padding-right: var(--s-6);
+    padding-left: var(--s-6);
   }
 
   .provenance-detail {
-    padding-right: 0;
+    padding-right: var(--s-6);
+    padding-left: var(--s-6);
+  }
+
+  .change-strip {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

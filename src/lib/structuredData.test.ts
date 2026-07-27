@@ -317,9 +317,9 @@ describe("page graphs", () => {
 
     expect(page.mainEntity).toEqual({ "@id": `${siteUrl}/#dataset` });
     expect(String(page.description)).toContain(
-      "Each measured benchmark score links to its source.",
+      "pricing, release dates, and weight availability",
     );
-    expect(String(page.description)).not.toContain("every number");
+    expect(String(page.description)).not.toContain("links to its source");
     expectClosedGraph(graph);
   });
 

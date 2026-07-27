@@ -59,10 +59,7 @@ export function ProvenanceRibbon({
           <strong>{benchmarkCount}</strong> benchmarks
         </span>
         <span className="provenance-summary">
-          {vendorScoreCount === 0
-            ? `Artificial Analysis publishes all ${formatCount(scoreCount)}`
-            : `Artificial Analysis publishes ${formatCount(artificialAnalysisScoreCount)}; vendors publish ${formatCount(vendorScoreCount)}`}{" "}
-          · LM Board computes the Index and ranks
+          Source-linked scores · LM Board computes the Index
         </span>
       </summary>
       <div className="provenance-detail">

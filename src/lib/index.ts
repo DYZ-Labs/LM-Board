@@ -4,6 +4,8 @@ import type { Benchmark, Score } from "@/lib/schema";
 export { RANK_SCOPES, type RankScope } from "@/lib/categories";
 
 export const MIN_INDEX_COVERAGE = 0.6;
+export const LM_INDEX_LABEL = "LM Index";
+export const LM_INDEX_EXPANDED_LABEL = "LM Board Intelligence Index";
 
 export type IndexResult = {
   value: number | null;

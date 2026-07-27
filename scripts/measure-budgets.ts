@@ -157,7 +157,7 @@ const compareSkeleton =
 const compareSkeletonRows = (
   compareSkeleton.match(/<th scope="row">/g) ?? []
 ).length;
-const expectedCompareRows = 5 + data.benchmarks.length;
+const expectedCompareRows = 4 + data.benchmarks.length;
 const preloads = (html.match(/as="font"/g) ?? []).length;
 
 // What the browser actually fetches on first paint. next/font emits one file
@@ -308,8 +308,8 @@ const sentinels: { label: string; ok: boolean }[] = [
   { label: "renders the score count", ok: /cited scores/.test(html) },
   { label: "renders the board", ok: /class="board"/.test(html) },
   {
-    label: "renders score provenance links",
-    ok: (html.match(/class="score-source"/g) ?? []).length === data.scoreCount,
+    label: "keeps leaderboard scores non-interactive",
+    ok: !html.includes('class="score-source"'),
   },
   { label: "renders the readout", ok: /class="readout/.test(html) },
   {
