@@ -211,6 +211,10 @@
   outline-offset: 2px;
 }
 
+.search-field:focus-within {
+  outline: 0;
+}
+
 /* An inert field must not answer to the pointer. Without this the compare
    search still lit its border on hover after hitting the four-model cap, so the
    only signal that it had stopped accepting input was the placeholder text. */
