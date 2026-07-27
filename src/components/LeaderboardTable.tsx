@@ -185,6 +185,9 @@ export function LeaderboardTable({
   const [inspectedScore, setInspectedScore] =
     useState<ScoreInspection | null>(null);
   const [activeCellId, setActiveCellId] = useState<string | undefined>();
+  const activeCellIdRef = useRef<string | undefined>(undefined);
+  const activeCellRef = useRef<HTMLElement | null>(null);
+  const gridMatrixRef = useRef<HTMLElement[][]>([]);
   const [detailPhases, setDetailPhases] = useState<
     Record<string, DetailPhase>
   >({});
@@ -377,10 +380,10 @@ export function LeaderboardTable({
   const activateGridCell = useCallback((cell: HTMLElement | undefined) => {
     if (!cell) return;
 
-    tableRef.current
-      ?.querySelectorAll<HTMLElement>(".is-grid-active")
-      .forEach((entry) => entry.classList.remove("is-grid-active"));
+    activeCellRef.current?.classList.remove("is-grid-active");
     cell.classList.add("is-grid-active");
+    activeCellRef.current = cell;
+    activeCellIdRef.current = cell.id;
     setActiveCellId(cell.id);
     cell.scrollIntoView({ block: "nearest", inline: "nearest" });
   }, []);
@@ -388,6 +391,7 @@ export function LeaderboardTable({
   useEffect(() => {
     const table = tableRef.current;
     const matrix = gridCells();
+    gridMatrixRef.current = matrix;
     const everyCell = table
       ? [
           ...table.querySelectorAll<HTMLElement>(
@@ -418,12 +422,16 @@ export function LeaderboardTable({
       });
     });
 
-    const existing = activeCellId
-      ? matrix.flat().find((cell) => cell.id === activeCellId)
+    const existing = activeCellIdRef.current
+      ? matrix
+          .flat()
+          .find((cell) => cell.id === activeCellIdRef.current)
       : null;
     activateGridCell(existing ?? matrix[0]?.[0]);
 
     return () => {
+      gridMatrixRef.current = [];
+      activeCellRef.current = null;
       everyCell.forEach((cell) => {
         cell.removeAttribute("id");
         cell.classList.remove("is-grid-active");
@@ -439,7 +447,6 @@ export function LeaderboardTable({
     };
   }, [
     activateGridCell,
-    activeCellId,
     gridCells,
     rows,
     view,
@@ -466,12 +473,13 @@ export function LeaderboardTable({
       return;
     }
 
-    const matrix = gridCells();
+    // The matrix changes only when rows, projection, visible columns or the
+    // responsive header state changes. Reusing the matrix built by the effect
+    // avoids hundreds of getComputedStyle calls on every arrow key.
+    const matrix = gridMatrixRef.current;
     if (matrix.length === 0) return;
 
-    const active = activeCellId
-      ? matrix.flat().find((cell) => cell.id === activeCellId)
-      : matrix[0]?.[0];
+    const active = activeCellRef.current ?? matrix[0]?.[0];
     const rowIndex = matrix.findIndex((row) => row.includes(active!));
     const columnIndex =
       rowIndex >= 0 ? matrix[rowIndex]!.indexOf(active!) : 0;
