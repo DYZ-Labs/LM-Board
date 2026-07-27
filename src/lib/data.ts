@@ -86,11 +86,13 @@ export type LeaderboardData = {
   selfReportedCount: number;
 };
 
-/** Client-side shape after the normalized payload has been expanded. */
-export type LeaderboardClientScore = Omit<
-  Score,
-  "modelId" | "benchmarkId" | "reasoningEffort"
->;
+/**
+ * The board only renders a score's value and publisher qualification.
+ * Sources, retrieval dates, and evaluation settings live on the model record
+ * pages; sending them for all 456 homepage cells would duplicate evidence the
+ * non-interactive table cannot expose.
+ */
+export type LeaderboardClientScore = Pick<Score, "value" | "selfReported">;
 
 export type LeaderboardClientRow = Omit<
   LeaderboardRow,
