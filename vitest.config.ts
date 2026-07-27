@@ -30,6 +30,11 @@ export default defineConfig({
           environment: "jsdom",
           include: ["src/components/**/*.test.tsx"],
           setupFiles: ["./vitest.setup.ts"],
+          // These integration tests intentionally render the complete 62 × 8
+          // production board. Vercel's shared 4-core builder can take just
+          // over Vitest's 5s default even when every bounded wait and assertion
+          // succeeds, so leave realistic headroom without weakening any wait.
+          testTimeout: 15_000,
         },
       },
     ],

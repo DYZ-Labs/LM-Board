@@ -4,6 +4,7 @@ import {
   buildBenchmarkDistributions,
   calculateLmBoardIndex,
   estimateMissingScores,
+  percentileOf,
 } from "./index";
 import type { Benchmark, Score } from "./schema";
 
@@ -32,6 +33,14 @@ const score = (
 });
 
 const noEstimates = new Map<string, number>();
+
+describe("percentileOf", () => {
+  it("uses the midpoint occupied by tied values", () => {
+    expect(percentileOf([10, 20, 20, 20, 30], 20)).toBe(0.5);
+    expect(percentileOf([10, 20, 30], 5)).toBe(0);
+    expect(percentileOf([10, 20, 30], 40)).toBe(1);
+  });
+});
 
 describe("calculateLmBoardIndex", () => {
   it("averages percent benchmarks only", () => {

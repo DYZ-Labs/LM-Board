@@ -19,7 +19,7 @@
 
 .skip-link {
   position: fixed;
-  z-index: 1000;
+  z-index: var(--z-skip-link);
   top: var(--s-5);
   left: var(--s-5);
   padding: var(--s-4) var(--s-6);
@@ -30,18 +30,14 @@
   font-size: var(--t-13);
   font-weight: var(--w-strong);
   color: var(--fg-primary);
-  transform: translateY(-180%);
-  transition: transform var(--dur-snap) var(--ease-out-quart);
-  transition: transform var(--dur-snap) var(--ease-snap);
+  /* Far enough that --e-4's 40px blur does not bleed a grey smear across the
+     top-left of the page in the light theme. */
+  transform: translateY(-300%);
+  transition: var(--tr-press);
 }
 
 .skip-link:focus {
   transform: translateY(0);
-}
-
-.stack {
-  display: grid;
-  gap: var(--s-5);
 }
 
 .row {
@@ -59,6 +55,34 @@
   color: var(--fg-secondary);
 }
 
+/* -- Forced colours -------------------------------------------------------
+   The last layer, because the rules being corrected live in `projections`.
+   box-shadow is not painted in forced-colors, so the ring had to become an
+   outline (base.css) before this could do anything; and the command bar's
+   translucent glass loses its backdrop-filter here, so without an opaque
+   ground the second table row shows straight through it. */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  .command-bar {
+    background: Canvas;
+    backdrop-filter: none;
+  }
+
+  .board:focus-visible .is-grid-active,
+  .board:focus-within .is-grid-active {
+    outline: 2px solid Highlight;
+    outline-offset: -3px;
+  }
+
+  .score-cell.is-best::before {
+    border-color: Highlight;
+  }
+}
+
 /* -- Touch targets --------------------------------------------------------
    Every interactive control gets a 44x44 CSS-px activation area on coarse
    pointers through an invisible halo. The control keeps its rendered size and
@@ -66,6 +90,39 @@
    design: the previous implementation covered three controls and missed the
    five most-used ones (audit item A5). */
 @media (pointer: coarse) {
+  :root {
+    --row-h: 48px;
+    --header-h: 48px;
+  }
+
+  /* These take the height rather than a halo. A halo wider than its control
+     steals its neighbour's taps, and a full-width one (`.field`, `.check`)
+     reaches past a visible border people aim at. The segmented track takes the
+     height so its buttons do not have to: measured with elementFromPoint, a
+     44px halo on a 26px segment overlapped its left neighbour's visible box by
+     7px and won the hit test as the later sibling, so the right 8% of "Lg"
+     activated "Md". */
+  .field,
+  .check,
+  .disclosure summary,
+  .segmented {
+    min-height: 44px;
+  }
+
+  .segmented {
+    align-items: center;
+  }
+
+  .model-trigger {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
+
+  .mobile-evidence-link {
+    min-height: 44px;
+  }
+
   .btn,
   .btn-icon,
   .tab,
@@ -74,7 +131,6 @@
   .tooltip-trigger,
   .check,
   .segmented button,
-  .spark-bar,
   .field-clear,
   .palette-item,
   .disclosure summary,
@@ -90,11 +146,11 @@
   .tooltip-trigger::after,
   .check::after,
   .segmented button::after,
-  .spark-bar::after,
   .field-clear::after,
   .palette-item::after,
   .disclosure summary::after,
-  .insufficient-label::after {
+  .insufficient-label::after,
+  .score-source::after {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -102,6 +158,13 @@
     height: max(100%, 44px);
     content: "";
     transform: translate(-50%, -50%);
+  }
+
+  /* The segment's own box is now 40px tall inside a 44px track, so the halo
+     only has to reach sideways — and only as far as the gap, or it overlaps
+     the segment beside it and wins the hit test as the later sibling. */
+  .segmented button::after {
+    width: max(100%, 30px);
   }
 
   /* The disclosure chevron is a real ::after with borders, so it needs the
@@ -127,12 +190,22 @@
     transform: rotate(225deg);
   }
 
-  /* Spark bars sit 4px apart; a 44px halo on each would overlap its
-     neighbours and steal their taps. They get a taller strip instead, and the
-     full numeric table is one control away. */
-  .spark-bar::after {
-    width: 100%;
-    height: 44px;
+  /* The score numeral is the citation link, and its target is the whole cell:
+     44x44 would overlap the adjacent rows at every density, and the numeral
+     itself is only ~30x18. A full cell is 108x36 at the default density, and
+     the density control can raise it to 46. `.score-cell` is the positioned
+     ancestor, so `inset: 0` resolves against it rather than the link. */
+  .score-source::after {
+    position: absolute;
+    inset: 0;
+    width: auto;
+    height: auto;
+    content: "";
+    transform: none;
+  }
+
+  .model-trigger::after {
+    display: none;
   }
 }
 

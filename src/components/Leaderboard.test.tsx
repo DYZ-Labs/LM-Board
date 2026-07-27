@@ -1,16 +1,28 @@
-import { render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { Leaderboard } from "@/components/Leaderboard";
+import {
+  Leaderboard,
+  transitionBoardProjection,
+} from "@/components/Leaderboard";
 import { loadLeaderboardData } from "@/lib/data";
 import { coverageThreshold } from "@/lib/index";
+import { toLeaderboardClientPayload } from "@/lib/leaderboardPayload";
 import { modelFragment } from "@/lib/urlState";
 
 // Real curated data rather than a fixture: these tests assert on *behaviour*
 // (what ends up in the URL, which rows expand), never on specific scores, so a
 // data refresh cannot break them. Expectations are derived from the loaded data.
 const data = loadLeaderboardData();
+const payload = toLeaderboardClientPayload(data);
 const { minimumCoverageCount, percentBenchmarkCount } = coverageThreshold(
   data.benchmarks,
 );
@@ -18,7 +30,7 @@ const { minimumCoverageCount, percentBenchmarkCount } = coverageThreshold(
 function board() {
   return (
     <Leaderboard
-      data={data}
+      payload={payload}
       minimumCoverageCount={minimumCoverageCount}
       percentBenchmarkCount={percentBenchmarkCount}
     />
@@ -113,6 +125,30 @@ describe("URL → state hydration", () => {
       screen.queryByRole("button", { name: /^Hide details for/ }),
     ).not.toBeInTheDocument();
   });
+
+  it("restores popstate without writing the URL back", () => {
+    const replaceState = vi.spyOn(window.history, "replaceState");
+    render(board());
+    replaceState.mockClear();
+
+    act(() => {
+      window.history.replaceState(
+        {},
+        "",
+        "/?tab=math&utm_source=history",
+      );
+      replaceState.mockClear();
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+
+    expect(screen.getByRole("tab", { name: "Math" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(currentUrl().searchParams.get("utm_source")).toBe("history");
+    expect(replaceState).not.toHaveBeenCalled();
+    replaceState.mockRestore();
+  });
 });
 
 describe("state → URL writeback", () => {
@@ -172,10 +208,11 @@ describe("state → URL writeback", () => {
     const trigger = screen.getAllByRole("button", {
       name: /^Show details for/,
     })[0];
-    const modelName = trigger
-      .getAttribute("aria-label")!
-      .replace(/^Show details for /, "")
-      .replace(/ \(.*\)$/, "");
+    const modelId = trigger
+      .getAttribute("aria-controls")!
+      .replace(/^details-/, "");
+    const modelName = data.rows.find((row) => row.model.id === modelId)!.model
+      .name;
 
     await user.click(trigger);
     expect(currentUrl().hash).toBe(`#${modelFragment(modelName)}`);
@@ -255,6 +292,283 @@ describe("filtering", () => {
       screen.getByText("No models match these filters."),
     ).toBeInTheDocument();
   });
+
+  it.each([
+    ["gpt5", "GPT-5"],
+    ["gpt 5", "GPT-5"],
+    ["anthropic opus", "Claude Opus 5"],
+    ["clade", "Claude Opus 5"],
+  ])("uses the shared fuzzy matcher for %j", async (query, expected) => {
+    const user = userEvent.setup();
+    render(board());
+
+    await user.type(screen.getByRole("searchbox"), query);
+
+    expect(screen.getByText(expected, { exact: true })).toBeInTheDocument();
+  });
+});
+
+// The Copy view button copies window.location.href verbatim, so anything a
+// filter does that the URL does not record is silently dropped from the link —
+// the recipient of a shared board would see a different board than the sharer.
+describe("filters survive a round trip through the URL", () => {
+  it("records the search query and keeps an empty one out", async () => {
+    const user = userEvent.setup();
+    render(board());
+
+    expect(currentUrl().searchParams.has("q")).toBe(false);
+
+    await user.type(screen.getByRole("searchbox"), "opus");
+    expect(currentUrl().searchParams.get("q")).toBe("opus");
+
+    await user.click(screen.getByRole("button", { name: "Clear search" }));
+    expect(currentUrl().searchParams.has("q")).toBe(false);
+  });
+
+  it("restores the search query from ?q", () => {
+    go("/?q=opus");
+    render(board());
+
+    expect(screen.getByRole("searchbox")).toHaveValue("opus");
+  });
+
+  it("records the open-weights filter and restores it", async () => {
+    const user = userEvent.setup();
+    render(board());
+
+    await user.click(screen.getByRole("checkbox", { name: "Open weights" }));
+    expect(currentUrl().searchParams.get("open")).toBe("1");
+  });
+
+  it("restores the open-weights filter from ?open", () => {
+    go("/?open=1");
+    render(board());
+
+    expect(screen.getByRole("checkbox", { name: "Open weights" })).toBeChecked();
+  });
+
+  it("records selected providers and restores them", () => {
+    const lab = data.labs[0];
+    go(`/?labs=${encodeURIComponent(lab)}`);
+    render(board());
+
+    // The count pip beside the Filters summary reflects the restored selection.
+    expect(screen.getByText("Filters").textContent).toContain("1");
+    // …and the chip names it, so a shared link says what it is narrowed to.
+    expect(
+      screen.getByRole("button", { name: `Remove filter ${lab}` }),
+    ).toBeInTheDocument();
+  });
+
+  it("distinguishes the default all-provider state from explicit none", async () => {
+    const user = userEvent.setup();
+    go("/?labs=none");
+    render(board());
+
+    expect(
+      screen.getByText("No models match these filters."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Remove filter No providers" }),
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByText("Filters"));
+    for (const lab of data.labs) {
+      expect(screen.getByRole("checkbox", { name: lab })).not.toBeChecked();
+    }
+    expect(currentUrl().searchParams.get("labs")).toBe("none");
+  });
+
+  it("shows every provider checked when the provider filter is absent", async () => {
+    const user = userEvent.setup();
+    render(board());
+
+    await user.click(screen.getByText("Filters"));
+    for (const lab of data.labs) {
+      expect(screen.getByRole("checkbox", { name: lab })).toBeChecked();
+    }
+    expect(currentUrl().searchParams.has("labs")).toBe(false);
+  });
+
+  it("gives the filter checkboxes one tab stop and roving arrow navigation", async () => {
+    const user = userEvent.setup();
+    render(board());
+    const summary = screen.getByText("Filters");
+    await user.click(summary);
+    const options = screen.getAllByRole("checkbox");
+
+    expect(options.filter((option) => option.tabIndex === 0)).toHaveLength(1);
+    expect(options[0]).toHaveAttribute("tabindex", "0");
+
+    options[0].focus();
+    await user.keyboard("{ArrowRight}");
+    expect(document.activeElement).toBe(options[1]);
+    expect(options.filter((option) => option.tabIndex === 0)).toEqual([
+      options[1],
+    ]);
+
+    await user.keyboard("{End}");
+    expect(document.activeElement).toBe(options.at(-1));
+    await user.keyboard("{Home}");
+    expect(document.activeElement).toBe(options[0]);
+
+    await user.keyboard(" ");
+    expect(options[0]).not.toBeChecked();
+    await user.keyboard("{Escape}");
+    expect(document.activeElement).toBe(summary);
+    expect(options[0]).toBeChecked();
+  });
+
+  it("flips a desktop filter popover before it can cross the viewport edge", async () => {
+    const user = userEvent.setup();
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      writable: true,
+      value: 700,
+    });
+    render(board());
+    const summary = screen.getByText("Filters");
+    const disclosure = summary.closest("details")!;
+    vi.spyOn(summary, "getBoundingClientRect").mockReturnValue({
+      bottom: 40,
+      height: 32,
+      left: 600,
+      right: 680,
+      top: 8,
+      width: 80,
+      x: 600,
+      y: 8,
+      toJSON: () => ({}),
+    });
+
+    try {
+      await user.click(summary);
+      expect(disclosure).toHaveAttribute("data-popover-align", "end");
+    } finally {
+      Object.defineProperty(window, "innerWidth", {
+        configurable: true,
+        writable: true,
+        value: 1440,
+      });
+    }
+  });
+
+  it("keeps the filter popover inside a short landscape viewport", async () => {
+    const user = userEvent.setup();
+    Object.defineProperties(window, {
+      innerHeight: {
+        configurable: true,
+        writable: true,
+        value: 320,
+      },
+      innerWidth: {
+        configurable: true,
+        writable: true,
+        value: 640,
+      },
+    });
+    render(board());
+    const summary = screen.getByText("Filters");
+    const disclosure = summary.closest("details")!;
+    vi.spyOn(summary, "getBoundingClientRect").mockReturnValue({
+      bottom: 282,
+      height: 32,
+      left: 12,
+      right: 92,
+      top: 250,
+      width: 80,
+      x: 12,
+      y: 250,
+      toJSON: () => ({}),
+    });
+
+    try {
+      await user.click(summary);
+      expect(disclosure).toHaveAttribute("data-popover-vertical", "above");
+      expect(disclosure.style.getPropertyValue("--popover-available-block")).toBe(
+        "232px",
+      );
+    } finally {
+      Object.defineProperties(window, {
+        innerHeight: {
+          configurable: true,
+          writable: true,
+          value: 768,
+        },
+        innerWidth: {
+          configurable: true,
+          writable: true,
+          value: 1440,
+        },
+      });
+    }
+  });
+
+  it("ignores a provider that is not in the dataset", () => {
+    go("/?labs=NotARealProvider");
+    render(board());
+
+    // Rather than filtering every row away and leaving an empty board.
+    expect(
+      screen.queryByText("No models match these filters."),
+    ).not.toBeInTheDocument();
+    expect(currentUrl().searchParams.has("labs")).toBe(false);
+  });
+
+  it("groups a typing gesture into one history entry", async () => {
+    const user = userEvent.setup();
+    const pushState = vi.spyOn(window.history, "pushState");
+    render(board());
+
+    await user.type(screen.getByRole("searchbox"), "anthropic opus");
+
+    expect(pushState).toHaveBeenCalledTimes(1);
+    expect(currentUrl().searchParams.get("q")).toBe("anthropic opus");
+    pushState.mockRestore();
+  });
+
+  it("groups a provider-popover session into one history entry", async () => {
+    const user = userEvent.setup();
+    const pushState = vi.spyOn(window.history, "pushState");
+    render(board());
+
+    const summary = screen.getByText("Filters");
+    await user.click(summary);
+    await user.click(screen.getByRole("checkbox", { name: data.labs[0] }));
+    await user.click(screen.getByRole("checkbox", { name: data.labs[1] }));
+    await user.click(summary);
+
+    expect(pushState).toHaveBeenCalledTimes(1);
+    expect(currentUrl().searchParams.get("labs")).toBe(
+      data.labs.slice(2).join(","),
+    );
+    pushState.mockRestore();
+  });
+
+  it("copies the synchronously updated filtered URL", async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    const previousClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    try {
+      render(board());
+      await user.type(screen.getByRole("searchbox"), "opus");
+      await user.click(screen.getByRole("button", { name: "Copy view" }));
+
+      expect(writeText).toHaveBeenCalledWith(
+        expect.stringContaining("?q=opus"),
+      );
+    } finally {
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: previousClipboard,
+      });
+    }
+  });
 });
 
 describe("table semantics", () => {
@@ -272,10 +586,107 @@ describe("table semantics", () => {
   it("renders one row per model with a row header", () => {
     render(board());
 
-    const table = screen.getByRole("table");
+    const table = screen.getByRole("grid");
     const rowHeaders = within(table).getAllByRole("rowheader");
 
     expect(rowHeaders).toHaveLength(data.rows.length);
+  });
+
+  it("assigns every roving-grid coordinate to exactly one cell", () => {
+    const { container } = render(board());
+    const cells = [
+      ...container.querySelectorAll<HTMLElement>('[id^="board-cell-"]'),
+    ];
+    const ids = cells.map((cell) => cell.id);
+    const grid = screen.getByRole("grid");
+
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(
+      cells.filter((cell) => cell.id === grid.getAttribute("aria-activedescendant")),
+    ).toHaveLength(1);
+  });
+
+  it("keeps secondary actions in a grid cell keyboard-reachable", async () => {
+    const user = userEvent.setup();
+    render(board());
+    const grid = screen.getByRole("grid");
+
+    grid.focus();
+    await user.keyboard("{ArrowRight}{ArrowRight}{F2}");
+
+    const indexHeader = screen
+      .getByRole("button", { name: /^Sort by Overall index/ })
+      .closest("th")!;
+    const actions = within(indexHeader).getAllByRole("button");
+    expect(document.activeElement).toBe(actions[0]);
+
+    await user.tab();
+    expect(document.activeElement).toBe(actions[1]);
+
+    await user.keyboard("{Escape}");
+    expect(document.activeElement).toBe(grid);
+
+    await user.keyboard("{ArrowDown}{ArrowLeft}{F2}");
+    const firstModelCell = document.querySelector<HTMLElement>(
+      ".model-row .model-cell",
+    )!;
+    const modelActions = within(firstModelCell).getAllByRole("button")
+      .concat(within(firstModelCell).getAllByRole("link"));
+    expect(document.activeElement).toBe(modelActions[0]);
+
+    await user.tab();
+    expect(document.activeElement).toBe(modelActions[1]);
+  });
+
+  it("keeps a closing detail row mounted and inert until its transition ends", async () => {
+    const user = userEvent.setup();
+    const { container } = render(board());
+    const show = screen.getAllByRole("button", {
+      name: /^Show details for/,
+    })[0];
+    const detailsId = show.getAttribute("aria-controls")!;
+
+    await user.click(show);
+    const collapse = container.querySelector<HTMLElement>(
+      `#${detailsId} .detail-collapse`,
+    )!;
+    await waitFor(() => expect(collapse).toHaveAttribute("data-state", "open"));
+
+    await user.click(
+      screen.getByRole("button", { name: /^Hide details for/ }),
+    );
+    expect(collapse).toHaveAttribute("data-state", "closing");
+    expect(collapse).toHaveAttribute("inert");
+    expect(container.querySelector(`#${detailsId}`)).toBeInTheDocument();
+
+    fireEvent.transitionEnd(collapse, {
+      propertyName: "grid-template-rows",
+    });
+    expect(container.querySelector(`#${detailsId}`)).not.toBeInTheDocument();
+  });
+
+  it("announces a score inspector opened from the grid and restores the grid", async () => {
+    const user = userEvent.setup();
+    render(board());
+    const grid = screen.getByRole("grid");
+
+    grid.focus();
+    await user.keyboard(
+      "{ArrowRight}{ArrowRight}{ArrowRight}{ArrowDown}{Enter}",
+    );
+
+    const inspector = await screen.findByRole("dialog", {
+      name: /GPQA Diamond/,
+    });
+    await waitFor(() => expect(document.activeElement).toBe(inspector));
+
+    await user.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: /GPQA Diamond/ }),
+      ).not.toBeInTheDocument();
+      expect(document.activeElement).toBe(grid);
+    });
   });
 });
 
@@ -302,21 +713,90 @@ describe("projections", () => {
         name: new RegExp(`^Sort by ${data.benchmarks[0].name}`),
       }),
     ).not.toBeInTheDocument();
-    // The values are still reachable: the spark carries an sr-only list.
+    // The values are still reachable: the spark is a real list of them.
     expect(screen.getAllByRole("list").length).toBeGreaterThan(0);
   });
 
-  it("defaults to the profile projection on a narrow viewport", () => {
+  it("reads out every score in the profile projection", () => {
+    // The projection most viewports default to used to render an aria-hidden
+    // graphic whose values lived only in a `title`. The values are now text.
+    go("/?view=profile");
+    const { container } = render(board());
+
+    const readouts = [...container.querySelectorAll(".spark-slot .sr-only")];
+    expect(readouts.length).toBeGreaterThan(100);
+    // Benchmark and value, so the mark is never height or colour alone.
+    expect(readouts[0]!.textContent).toMatch(/^.+: (\d+\.\d|no curated score)$/);
+  });
+
+  it("routes profile provenance through the model record, not the bars", async () => {
+    // Each bar was a 5x22px link: 440 WCAG 2.5.8 failures and 456 tab stops,
+    // and the halo that would fix the size would steal the neighbouring rows'
+    // taps. The sources move to the one control the row already has.
+    go("/?view=profile");
+    const { container } = render(board());
+
+    expect(container.querySelectorAll("a.spark-bar")).toHaveLength(0);
+
+    const row = data.rows.find((candidate) =>
+      data.benchmarks.every(
+        (benchmark) => candidate.scoresByBenchmark[benchmark.id],
+      ),
+    )!;
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(`^Show details for ${row.model.name}`),
+      }),
+    );
+
+    const panel = screen.getByRole("region", {
+      name: `${row.model.name} details`,
+    });
+    expect(
+      within(panel).getByText(/complete benchmark evidence table/i),
+    ).toBeInTheDocument();
+    expect(
+      within(panel).getByRole("link", { name: "Open model page" }),
+    ).toHaveAttribute(
+      "href",
+      `/model/${row.model.id}`,
+    );
+  });
+
+  it("keeps the board's own hint present in both projections", () => {
+    // The server renders `table` and narrow viewports flip to `profile` on
+    // mount, so an element in one and not the other shifts the page after
+    // hydration.
+    go("/?view=table");
+    const table = render(board());
+    expect(
+      table.container.querySelector("#board-scroll-instructions"),
+    ).toBeInTheDocument();
+    table.unmount();
+
+    go("/?view=profile");
+    const profile = render(board());
+    expect(
+      profile.container.querySelector("#board-scroll-instructions"),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the static table projection on a narrow viewport", () => {
     Object.defineProperty(window, "innerWidth", {
       configurable: true,
       writable: true,
-      value: 720,
+      value: 390,
     });
 
     try {
       render(board());
-      expect(screen.getByRole("status").textContent).toContain("profile");
-      // A responsive default is not a user choice, so it stays out of the URL.
+      expect(screen.getByRole("status").textContent).toContain("table");
+      expect(
+        screen.getByRole("button", {
+          name: new RegExp(`^Sort by ${data.benchmarks[0].name}`),
+        }),
+      ).toBeInTheDocument();
+      // CSS adapts this one projection; hydration does not swap the DOM.
       expect(currentUrl().searchParams.has("view")).toBe(false);
     } finally {
       Object.defineProperty(window, "innerWidth", {
@@ -327,6 +807,47 @@ describe("projections", () => {
     }
   });
 
+  it("offers touch sorting while the mobile column header is clipped", async () => {
+    const user = userEvent.setup();
+    const { container } = render(board());
+    const selector = screen.getByRole("combobox", {
+      name: "Sort leaderboard by",
+    });
+
+    await user.selectOptions(selector, `benchmark:${codingBenchmark.id}`);
+    expect(currentUrl().searchParams.get("sort")).toBe(codingBenchmark.id);
+    const featured = [
+      ...container.querySelectorAll(".score-cell.is-mobile-sort-score"),
+    ];
+    expect(featured).toHaveLength(data.rows.length);
+    expect(featured[0]).toHaveTextContent(codingBenchmark.name);
+    expect(
+      featured.some((cell) => cell.querySelector("a.score-source")),
+    ).toBe(true);
+
+    await user.click(screen.getByRole("button", { name: "Sort ascending" }));
+    expect(currentUrl().searchParams.get("direction")).toBe("asc");
+    expect(
+      screen.getByRole("button", { name: "Sort descending" }),
+    ).toHaveTextContent("Sort descending ↓");
+  });
+
+  it("puts a full-size evidence route on every mobile card", () => {
+    const { container } = render(board());
+    const links = [
+      ...container.querySelectorAll<HTMLAnchorElement>(
+        ".model-row .mobile-evidence-link",
+      ),
+    ];
+
+    expect(links).toHaveLength(data.rows.length);
+    expect(links[0]).toHaveAttribute(
+      "href",
+      expect.stringMatching(/^\/model\/.+#record-scores$/),
+    );
+    expect(links[0]).toHaveTextContent(/^Evidence · \d+ scores$/);
+  });
+
   it("serialises an explicit projection switch", async () => {
     const user = userEvent.setup();
     render(board());
@@ -335,23 +856,148 @@ describe("projections", () => {
     expect(currentUrl().searchParams.get("view")).toBe("profile");
   });
 
-  it("keeps the default density out of the URL and records a change", async () => {
+  it("uses a native view transition for projection changes when motion is allowed", async () => {
     const user = userEvent.setup();
+    const startViewTransition = vi.fn((update: () => void) => {
+      update();
+      return {};
+    });
+    Object.defineProperty(document, "startViewTransition", {
+      configurable: true,
+      value: startViewTransition,
+    });
+
+    try {
+      render(board());
+      await user.click(screen.getByRole("button", { name: /score spark/i }));
+
+      expect(startViewTransition).toHaveBeenCalledTimes(1);
+      expect(currentUrl().searchParams.get("view")).toBe("profile");
+    } finally {
+      Reflect.deleteProperty(document, "startViewTransition");
+    }
+  });
+
+  it("bypasses view transitions in reduced-motion mode", () => {
+    const originalMatchMedia = window.matchMedia;
+    const startViewTransition = vi.fn();
+    const update = vi.fn();
+    Object.defineProperty(document, "startViewTransition", {
+      configurable: true,
+      value: startViewTransition,
+    });
+    window.matchMedia = ((query: string) => ({
+      matches: query === "(prefers-reduced-motion: reduce)",
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    })) as typeof window.matchMedia;
+
+    try {
+      transitionBoardProjection(update);
+
+      expect(update).toHaveBeenCalledTimes(1);
+      expect(startViewTransition).not.toHaveBeenCalled();
+    } finally {
+      window.matchMedia = originalMatchMedia;
+      Reflect.deleteProperty(document, "startViewTransition");
+    }
+  });
+
+});
+
+/* Wave 2 removed this control and asserted its absence here. The complaint
+   behind that — two adjacent segmented controls reading as one six-segment
+   control with two active items — was real, but row density is part of the
+   brief, so the control is back behind its own trigger instead of gone. */
+describe("row density", () => {
+  function densityGroup() {
+    return screen.getByRole("group", { name: /row density/i });
+  }
+
+  it("offers the control and marks the default", () => {
     render(board());
 
-    expect(currentUrl().searchParams.has("density")).toBe(false);
+    expect(
+      within(densityGroup()).getByRole("button", { name: /^Default/ }),
+    ).toHaveAttribute("aria-pressed", "true");
+  });
 
-    await user.click(screen.getByRole("button", { name: /data-dense rows/i }));
+  it("applies a switch to the board and records it in the URL", async () => {
+    const user = userEvent.setup();
+    const { container } = render(board());
+
+    await user.click(
+      within(densityGroup()).getByRole("button", { name: /^Dense/ }),
+    );
+
     expect(currentUrl().searchParams.get("density")).toBe("data");
+    // The attribute the three `[data-density]` `--row-h` blocks select on.
+    expect(container.querySelector(".leaderboard")).toHaveAttribute(
+      "data-density",
+      "data",
+    );
+  });
+
+  it("restores a density from ?density", () => {
+    go("/?density=comfortable");
+    const { container } = render(board());
+
+    expect(container.querySelector(".leaderboard")).toHaveAttribute(
+      "data-density",
+      "comfortable",
+    );
+    expect(
+      within(densityGroup()).getByRole("button", { name: /^Roomy/ }),
+    ).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("drops the parameter when the density returns to the default", async () => {
+    const user = userEvent.setup();
+    go("/?density=data");
+    render(board());
+
+    await user.click(
+      within(densityGroup()).getByRole("button", { name: /^Default/ }),
+    );
+
+    expect(currentUrl().searchParams.has("density")).toBe(false);
+  });
+
+  it("keeps deterministic control markup across viewport sizes", () => {
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      writable: true,
+      value: 390,
+    });
+    try {
+      render(board());
+
+      expect(
+        screen.getByRole("group", { name: /row density/i }),
+      ).toBeInTheDocument();
+    } finally {
+      Object.defineProperty(window, "innerWidth", {
+        configurable: true,
+        writable: true,
+        value: 1440,
+      });
+    }
   });
 });
 
 describe("provenance", () => {
   it("puts a source link on every cell that has a score", () => {
     go("/?view=table");
-    render(board());
+    const { container } = render(board());
 
-    const sourceLinks = screen.getAllByRole("link", { name: /^Source for / });
+    const sourceLinks = [
+      ...container.querySelectorAll<HTMLAnchorElement>("a.score-source"),
+    ];
     expect(sourceLinks.length).toBeGreaterThan(0);
     expect(sourceLinks[0]).toHaveAttribute("href", expect.stringMatching(/^https?:/));
   });
@@ -366,5 +1012,21 @@ describe("provenance", () => {
     if (unranked.length > 0) {
       expect(unranked[0]).toHaveTextContent("Insufficient data");
     }
+  });
+
+  it("keeps unmeasured benchmark cells in the mobile score-cell set", () => {
+    const missing = data.rows.find((row) =>
+      data.benchmarks.some(
+        (benchmark) => row.scoresByBenchmark[benchmark.id] == null,
+      ),
+    );
+    expect(missing).toBeDefined();
+
+    const { container } = render(board());
+    const row = container.querySelector(
+      `#${modelFragment(missing!.model.name)}`,
+    );
+
+    expect(row?.querySelector(".score-cell.missing-value")).toBeInTheDocument();
   });
 });

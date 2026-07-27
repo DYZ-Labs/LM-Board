@@ -21,16 +21,60 @@ const dataFont = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-data",
   display: "swap",
+  preload: false,
 });
 
 const title = "LM Board — Frontier Model Benchmark Leaderboard";
-const description = "Benchmark scores for frontier AI models.";
+// The masthead used to carry this as a tagline beside the wordmark; the
+// masthead now carries navigation instead, so the description has to be
+// specific enough to stand on its own in a search result.
+const description =
+  "Frontier language models ranked on 8 benchmarks. Measured scores link to their publisher, retrieval date, and available evaluation settings; LM Board computes the Index and runs no evaluations.";
 
-const themeInitializationScript = `
+const initializationScript = `
   try {
-    var theme = window.localStorage.getItem("lmboard-theme");
-    if (theme === "light" || theme === "dark") {
-      document.documentElement.dataset.theme = theme;
+    var storedTheme = null;
+    try {
+      storedTheme = window.localStorage.getItem("lmboard-theme");
+    } catch (storageError) {}
+    var hasStoredTheme = storedTheme === "light" || storedTheme === "dark";
+    var resolvedTheme = hasStoredTheme
+      ? storedTheme
+      : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+    document.documentElement.dataset.theme = resolvedTheme;
+    document.documentElement.dataset.themeSource = hasStoredTheme ? "explicit" : "system";
+    var themeMeta = document.querySelector("meta[data-lmboard-theme-color]");
+    if (themeMeta) {
+      themeMeta.setAttribute("content", resolvedTheme === "light" ? "#eaeef5" : "#0b0d10");
+    }
+  } catch (error) {}
+  try {
+    if (window.location.pathname === "/") {
+      var boardParams = new URLSearchParams(window.location.search);
+      var boardKeys = ["tab", "sort", "direction", "view", "density", "q", "labs", "open"];
+      var ownsBoardState = boardKeys.some(function (key) {
+        return boardParams.has(key);
+      });
+      var boardHash = window.location.hash.slice(1);
+      if (ownsBoardState || (boardHash && boardHash !== "top" && boardHash !== "leaderboard")) {
+        document.documentElement.dataset.boardPending = "true";
+        if (boardParams.has("q") || boardParams.has("labs") || boardParams.get("open") === "1") {
+          document.documentElement.dataset.boardPendingFilters = "true";
+        }
+        window.setTimeout(function () {
+          delete document.documentElement.dataset.boardPending;
+          delete document.documentElement.dataset.boardPendingFilters;
+        }, 12000);
+      }
+    }
+    if (window.location.pathname === "/compare") {
+      var compareModels = new URLSearchParams(window.location.search).get("models");
+      if (compareModels && compareModels.split(",").some(function (id) { return id.trim(); })) {
+        document.documentElement.dataset.comparePending = "true";
+        window.setTimeout(function () {
+          delete document.documentElement.dataset.comparePending;
+        }, 12000);
+      }
     }
   } catch (error) {}
 `;
@@ -58,13 +102,23 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  // No `canonical` here. A layout-level canonical is inherited by every route
+  // that does not set its own, which is how /compare, /methodology and out/404
+  // all shipped claiming to be the homepage. Routes declare their own through
+  // `pageMetadata`; this level only carries what is genuinely site-wide.
   alternates: {
-    canonical: "/",
+    types: {
+      "application/atom+xml": [
+        { url: "/feed.xml", title: "LM Board — model data feed" },
+      ],
+    },
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "64x64", type: "image/x-icon" },
+      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
       { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     shortcut: "/favicon.ico",
     apple: [
@@ -75,19 +129,22 @@ export const metadata: Metadata = {
       },
     ],
   },
+  // A neutral brand fallback for anything without its own card — 404 and the
+  // global error boundary. It carries no `url`, so nothing can inherit an
+  // address that is not its own.
   openGraph: {
     type: "website",
-    url: "/",
     siteName: "LM Board",
     locale: "en_US",
     title,
     description,
     images: [
       {
-        url: "/og-image.png",
+        url: "/og/home.png",
         width: 1200,
         height: 630,
-        alt: "LM Board — curated frontier model benchmark scores",
+        alt: "LM Board — frontier models ranked on cited benchmark scores",
+        type: "image/png",
       },
     ],
   },
@@ -95,20 +152,19 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og-image.png"],
+    images: ["/og/home.png"],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  // No `robots` here either. `index, follow` is the crawler default, so
+  // declaring it bought nothing — and it was inherited by the not-found
+  // boundary, which emitted Next's own `noindex` and then this, in that order.
+  // Two contradictory directives on the 404, with the permissive one last.
 };
 
 export const viewport: Viewport = {
   colorScheme: "dark light",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4f6f9" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0d10" },
-  ],
+  // theme-color is emitted below rather than as two OS-media variants. An
+  // explicit in-product theme can disagree with the OS; the before-paint
+  // script and ThemeToggle keep that one tag aligned with the actual ground.
 };
 
 export default function RootLayout({
@@ -123,7 +179,12 @@ export default function RootLayout({
       className={`${uiFont.variable} ${dataFont.variable}`}
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitializationScript }} />
+        <meta
+          name="theme-color"
+          content="#0b0d10"
+          data-lmboard-theme-color=""
+        />
+        <script dangerouslySetInnerHTML={{ __html: initializationScript }} />
       </head>
       <body>
         {children}

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import type { LeaderboardRow, LeaderboardScope } from "./data";
+import type {
+  LeaderboardClientRow,
+  LeaderboardRow,
+  LeaderboardScope,
+} from "./data";
 import type { Model, Score } from "./schema";
 import {
   defaultDirectionFor,
@@ -25,6 +29,7 @@ const scope = (index: number | null, rank: number | null): LeaderboardScope => (
   coverageTotal: 1,
   coverageRatio: index === null ? 0 : 1,
   estimatedCount: 0,
+  rankedFieldSize: index === null ? 0 : 1,
 });
 
 const row = ({
@@ -67,16 +72,10 @@ const row = ({
       math: rowScope,
       agentic: rowScope,
     },
-    index,
-    coverageCount: rowScope.coverageCount,
-    coverageTotal: rowScope.coverageTotal,
-    coverageRatio: rowScope.coverageRatio,
-    estimatedCount: rowScope.estimatedCount,
-    rank,
   };
 };
 
-const ids = (rows: readonly LeaderboardRow[]) =>
+const ids = (rows: readonly LeaderboardClientRow[]) =>
   rows.map((leaderboardRow) => leaderboardRow.model.id);
 
 describe("sortLeaderboardRows", () => {

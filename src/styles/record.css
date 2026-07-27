@@ -1,0 +1,401 @@
+/* ===========================================================================
+   Record — the per-model record page and its field strips, the compare grid,
+   and the skeleton primitive the compare surface renders while it reads the
+   URL. The price/Index figure lives in plot.css and loads only with the plot.
+   =========================================================================== */
+@layer projections {
+
+
+/* -- Model record page ---------------------------------------------------- */
+/* No outer padding: the shell's rhythm already spaces this off the masthead,
+   and the first section's own gap spaces what follows. Owning both ends here
+   is what made the peer gaps down this page 104 / 65 / 49px. */
+.record-header {
+  display: grid;
+  gap: var(--s-5);
+}
+
+/* The record's actions belong at the far edge of the header, not stacked under
+   its own name: as a left-hand stack they left 60% of the hero empty and put a
+   400px void between the model and its first number. */
+@media (min-width: 760px) {
+  .record-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--s-9);
+  }
+
+  .record-header > :not(.row) {
+    grid-column: 1;
+  }
+
+  .record-header > .row {
+    grid-area: 2 / 2 / span 2 / auto;
+    align-self: end;
+    justify-content: flex-end;
+  }
+}
+
+.record-title {
+  display: flex;
+  gap: var(--s-5);
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.record-title h1 {
+  font-size: var(--t-h1);
+  font-weight: var(--w-display);
+  letter-spacing: var(--ls-h1);
+  line-height: var(--lh-h1);
+}
+
+.record-scopes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-3);
+  background: var(--line-subtle);
+}
+
+.record-scopes-primary {
+  grid-template-columns: 1fr;
+}
+
+.record-scopes-primary .record-scope {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.45fr) minmax(220px, 1fr);
+  gap: var(--s-3) var(--s-8);
+  align-items: end;
+  padding: var(--s-6) var(--s-7);
+}
+
+.record-scopes-primary .record-scope dt {
+  grid-column: 1;
+}
+
+.record-scopes-primary .record-scope > dd:not(.record-field) {
+  grid-column: 1;
+}
+
+.record-scopes-primary .record-scope .record-field {
+  grid-area: 1 / 2 / span 3 / 3;
+  align-self: center;
+  margin-top: 0;
+}
+
+.record-disclosure {
+  border-top: 1px solid var(--line-subtle);
+}
+
+.record-disclosure > summary {
+  display: flex;
+  gap: var(--s-5);
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  cursor: pointer;
+  font-size: var(--t-15);
+  font-weight: var(--w-strong);
+  color: var(--fg-primary);
+}
+
+.record-disclosure > summary::marker {
+  color: var(--signal-500);
+}
+
+.record-summary-values {
+  font-size: var(--t-12);
+  font-weight: var(--w-regular);
+  color: var(--fg-tertiary);
+}
+
+.record-category-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+  justify-content: flex-end;
+}
+
+.record-summary-metric {
+  display: inline-flex;
+  gap: var(--s-2);
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.record-summary-metric .num {
+  color: var(--fg-secondary);
+}
+
+.record-disclosure[open] > summary {
+  margin-bottom: var(--s-5);
+}
+
+.record-facts-note,
+.record-section-intro {
+  margin: calc(var(--s-3) * -1) 0 var(--s-5);
+  font-size: var(--t-12);
+  color: var(--fg-tertiary);
+}
+
+.record-scope {
+  padding: var(--s-6);
+  background: var(--bg-raised);
+}
+
+.record-scope dt {
+  font-size: var(--t-10);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--ls-10);
+  text-transform: uppercase;
+  color: var(--fg-tertiary);
+}
+
+.record-scope dd {
+  display: flex;
+  gap: var(--s-3);
+  align-items: baseline;
+  margin-top: var(--s-3);
+  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
+  font-size: var(--t-27);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--w-medium);
+  color: var(--fg-primary);
+}
+
+.record-scope .rank-note {
+  font-family: var(--font-ui, system-ui), system-ui, sans-serif;
+  font-size: var(--t-11);
+  font-weight: var(--w-medium);
+  color: var(--fg-tertiary);
+}
+
+.record-scope .rank-coverage {
+  display: block;
+  margin-top: var(--s-3);
+  font-size: var(--t-11);
+}
+
+.record-scope .record-field {
+  display: block;
+  margin-top: var(--s-5);
+}
+
+.field-strip {
+  display: block;
+  width: 100%;
+  height: var(--s-7);
+}
+
+/* --line-interactive, not --fg-disabled: the field is a graphical object the
+   mark is read against, and --fg-disabled measures 2.25:1 dark / 2.59:1 light
+   where 1.4.11 asks for 3. This clears it at 3.65 / 3.86. */
+.field-baseline {
+  stroke: var(--line-interactive);
+}
+
+.field-quartiles {
+  fill: var(--bg-selected, var(--bg-active));
+  stroke: var(--line-selected, var(--line-interactive));
+  stroke-width: 0.75;
+}
+
+.field-median {
+  stroke: var(--fg-secondary);
+  stroke-width: 1.5;
+}
+
+/* The ring is the surface, drawn under the mark so it stays legible where the
+   field is dense. */
+.field-self-ring {
+  stroke: var(--bg-raised);
+  stroke-width: 7;
+}
+
+.field-self {
+  stroke: var(--signal-500);
+  stroke-width: 3;
+}
+
+.field-ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--s-2);
+  font-size: var(--t-10);
+}
+
+.record-section {
+  margin-top: var(--section-gap);
+}
+
+.record-section > h2 {
+  margin-bottom: var(--s-6);
+  font-size: var(--t-21);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--ls-21);
+}
+
+.record-score-region {
+  overflow-x: auto;
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-3);
+}
+
+.record-score-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.record-score-table th,
+.record-score-table td {
+  padding: var(--s-4) var(--s-5);
+  border-bottom: 1px solid var(--line-subtle);
+  text-align: left;
+  vertical-align: top;
+}
+
+.record-score-table thead th {
+  font-size: var(--t-11);
+  font-weight: var(--w-strong);
+  color: var(--fg-tertiary);
+}
+
+.record-score-table tbody th {
+  width: 20%;
+  font-size: var(--t-13);
+  font-weight: var(--w-strong);
+  color: var(--fg-primary);
+}
+
+.record-score-table tbody th .badge {
+  display: flex;
+  width: max-content;
+  margin-top: var(--s-2);
+}
+
+.record-score-table td {
+  font-size: var(--t-12);
+  line-height: var(--lh-12);
+  color: var(--fg-secondary);
+}
+
+.record-score-table .record-score-value {
+  width: 11%;
+  font-size: var(--t-15);
+  font-weight: var(--w-strong);
+  text-align: right;
+  color: var(--fg-primary);
+}
+
+.record-source {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.record-source time {
+  font-size: var(--t-11);
+  color: var(--fg-tertiary);
+}
+
+/* -- Compare -------------------------------------------------------------- */
+.compare-controls,
+.compare-options {
+  margin-bottom: var(--s-7);
+}
+
+.compare-options {
+  padding: 0;
+  list-style: none;
+}
+
+.compare-grid {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.compare-grid th,
+.compare-grid td {
+  padding: var(--s-5) var(--s-5);
+  border-bottom: 1px solid var(--line-subtle);
+  text-align: right;
+  vertical-align: middle;
+}
+
+.compare-grid thead th {
+  font-size: var(--t-13);
+  font-weight: var(--w-strong);
+  color: var(--fg-primary);
+}
+
+/* `.btn-icon` is display:grid, which made the remove control a block box that
+   dropped onto its own line below the model name and centred itself. Inline-grid
+   keeps it beside the name without making the cell a flex container, which would
+   take the <th> out of table layout and break the fixed column widths. */
+.compare-grid thead .btn-icon {
+  display: inline-grid;
+  margin-left: var(--s-3);
+  vertical-align: middle;
+}
+
+.compare-grid tbody th {
+  font-size: var(--t-11);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-11);
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+
+.compare-grid td {
+  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
+  font-size: var(--t-13);
+  font-variant-numeric: tabular-nums;
+}
+
+.compare-grid td.is-leader {
+  font-weight: var(--w-bold);
+  color: var(--fg-primary);
+}
+
+.compare-empty {
+  padding: var(--s-11) var(--s-6);
+  text-align: center;
+  color: var(--fg-tertiary);
+}
+
+.compare-initial-skeleton {
+  display: none;
+}
+
+html[data-compare-pending="true"] .compare-initial-empty {
+  display: none;
+}
+
+html[data-compare-pending="true"] .compare-initial-skeleton {
+  display: block;
+}
+
+/* -- Skeleton -------------------------------------------------------------
+   The system's loading primitive: a placeholder shaped like the content, not a
+   spinner. Deliberately static — it stands in for one frame while the query
+   string is read, and a pulse over that span reads as a flicker rather than as
+   progress. `aria-busy` on the container is what carries the state to assistive
+   technology. */
+.skeleton-bar {
+  display: block;
+  width: 100%;
+  max-width: 68px;
+  height: 0.75em;
+  margin-left: auto;
+  border-radius: var(--r-1);
+  background: var(--line-subtle);
+}
+
+.compare-grid.is-skeleton thead .skeleton-bar {
+  max-width: 104px;
+}
+
+}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import type { LeaderboardRow } from "@/lib/data";
+import type { LeaderboardClientRow } from "@/lib/data";
 import type { RankScope } from "@/lib/index";
 
 export type SortDirection = "asc" | "desc";
@@ -74,7 +74,7 @@ function compareNullableNumbers(
 }
 
 export function sortLeaderboardRows(
-  rows: readonly LeaderboardRow[],
+  rows: readonly LeaderboardClientRow[],
   sort: SortState,
   scope: RankScope = "overall",
 ) {

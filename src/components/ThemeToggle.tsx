@@ -7,6 +7,19 @@ import { MoonIcon, SunIcon } from "@/components/Icon";
 type Theme = "light" | "dark";
 
 const STORAGE_KEY = "lmboard-theme";
+const THEME_META_SELECTOR = "meta[data-lmboard-theme-color]";
+const THEME_COLORS: Record<Theme, string> = {
+  light: "#eaeef5",
+  dark: "#0b0d10",
+};
+
+function applyTheme(theme: Theme, source: "explicit" | "system") {
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.dataset.themeSource = source;
+  document
+    .querySelector<HTMLMetaElement>(THEME_META_SELECTOR)
+    ?.setAttribute("content", THEME_COLORS[theme]);
+}
 
 function resolvedTheme(): Theme {
   const explicitTheme = document.documentElement.dataset.theme;
@@ -27,12 +40,22 @@ export function ThemeToggle() {
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
     const syncSystemTheme = () => {
-      if (!document.documentElement.dataset.theme) {
-        setTheme(mediaQuery.matches ? "light" : "dark");
+      if (document.documentElement.dataset.themeSource !== "explicit") {
+        const nextTheme = mediaQuery.matches ? "light" : "dark";
+        applyTheme(nextTheme, "system");
+        setTheme(nextTheme);
       }
     };
 
-    setTheme(resolvedTheme());
+    const currentTheme = resolvedTheme();
+    const source =
+      document.documentElement.dataset.themeSource === "system"
+        ? "system"
+        : document.documentElement.dataset.theme
+          ? "explicit"
+          : "system";
+    applyTheme(currentTheme, source);
+    setTheme(currentTheme);
     mediaQuery.addEventListener("change", syncSystemTheme);
     return () => mediaQuery.removeEventListener("change", syncSystemTheme);
   }, []);
@@ -41,7 +64,7 @@ export function ThemeToggle() {
     const currentTheme = theme ?? resolvedTheme();
     const nextTheme = currentTheme === "dark" ? "light" : "dark";
 
-    document.documentElement.dataset.theme = nextTheme;
+    applyTheme(nextTheme, "explicit");
     try {
       window.localStorage.setItem(STORAGE_KEY, nextTheme);
     } catch {

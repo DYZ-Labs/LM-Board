@@ -43,15 +43,15 @@ const criticalStyles = `
   }
   .kicker {
     font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
-    text-transform: uppercase; color: #79838f; margin: 0 0 16px;
+    text-transform: uppercase; color: #828d9a; margin: 0 0 16px;
   }
   h1 { margin: 0 0 16px; font-size: 40px; line-height: 1.05; letter-spacing: -0.03em; font-weight: 300; }
-  p { margin: 0 0 28px; color: #a3adbb; }
+  p { margin: 0 0 28px; color: #a7b1bf; }
   @media (prefers-color-scheme: light) { p { color: #454f5b; } .kicker { color: #616c7a; } }
   .actions { display: flex; flex-wrap: wrap; gap: 12px; }
   button {
     min-height: 32px; padding: 6px 12px; border-radius: 5px;
-    border: 1px solid #616b78; background: transparent; color: inherit;
+    border: 1px solid #68727f; background: transparent; color: inherit;
     font: inherit; font-size: 12px; font-weight: 500; cursor: pointer;
   }
   button:first-child { border-color: #4da3ff; }

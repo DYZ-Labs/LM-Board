@@ -5,9 +5,8 @@ name: Discover upstream models
 #
 # Required repo secrets:
 #   AA_API_KEY     — free Artificial Analysis API key
-#   DISCOVERY_PAT  — fine-grained PAT (this repo; Contents RW + Pull requests RW).
-#                    The default GITHUB_TOKEN cannot be used: PRs it creates
-#                    do not trigger the CI workflow.
+# Required repo setting:
+#   Actions > General > "Allow GitHub Actions to create and approve pull requests"
 # Required labels: aa-discovery, bug, needs-curation, do-not-merge
 
 on:
@@ -15,29 +14,29 @@ on:
     - cron: "17 6 * * 1"
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: aa-discovery
 
 jobs:
-  discover:
+  guard:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 2
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      skip: ${{ steps.guard.outputs.skip }}
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.DISCOVERY_PAT }}
-
       - name: Skip if a discovery PR is already open
         id: guard
         env:
-          GH_TOKEN: ${{ secrets.DISCOVERY_PAT }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          open=$(gh pr list --label aa-discovery --state open --json number --jq 'length')
+          open=$(gh pr list --repo "$GITHUB_REPOSITORY" --label aa-discovery \
+            --state open --json number --jq 'length')
           if [ "$open" != "0" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
             echo "::notice::A discovery PR is already open; new upstream arrivals accumulate until it merges."
@@ -45,53 +44,179 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
+  discover:
+    needs: guard
+    if: ${{ needs.guard.outputs.skip != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      new_count: ${{ steps.discover.outputs.new_count }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
       - name: Set up Node.js
-        if: steps.guard.outputs.skip != 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
-        if: steps.guard.outputs.skip != 'true'
         run: npm ci
 
       - name: Discover new upstream models
-        if: steps.guard.outputs.skip != 'true'
         id: discover
         env:
           AA_API_KEY: ${{ secrets.AA_API_KEY }}
         run: npx tsx scripts/discover-models.ts --write --report "$RUNNER_TEMP/pr-body.md"
 
       - name: Validate scaffolded data
-        if: steps.guard.outputs.skip != 'true' && steps.discover.outputs.new_count != '0'
+        if: steps.discover.outputs.new_count != '0'
         env:
           VALIDATE_ALLOW_UPSTREAM_PLACEHOLDERS: "1"
         run: |
           npm run validate:data
           npm test
 
-      - name: Open curation PR
-        if: steps.guard.outputs.skip != 'true' && steps.discover.outputs.new_count != '0'
-        env:
-          GH_TOKEN: ${{ secrets.DISCOVERY_PAT }}
-          PR_TITLE: ${{ steps.discover.outputs.pr_title }}
+      - name: Stage inert publishing artifact
+        if: steps.discover.outputs.new_count != '0'
         run: |
+          /bin/mkdir -p "$RUNNER_TEMP/discovery-artifact"
+          /usr/bin/install -m 0644 data/models.json \
+            "$RUNNER_TEMP/discovery-artifact/models.json"
+          /usr/bin/install -m 0644 data/upstream-seen.json \
+            "$RUNNER_TEMP/discovery-artifact/upstream-seen.json"
+          /usr/bin/install -m 0644 "$RUNNER_TEMP/pr-body.md" \
+            "$RUNNER_TEMP/discovery-artifact/pr-body.md"
+
+      - name: Upload publishing artifact
+        if: steps.discover.outputs.new_count != '0'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: discovery-data
+          path: ${{ runner.temp }}/discovery-artifact/
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: discover
+    if: ${{ needs.discover.result == 'success' && needs.discover.outputs.new_count != '0' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Check out trusted base
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Download discovery artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: discovery-data
+          path: ${{ runner.temp }}/discovery-artifact
+
+      - name: Validate append-only data artifact
+        env:
+          ARTIFACT_DIR: ${{ runner.temp }}/discovery-artifact
+        run: |
+          test "$(find "$ARTIFACT_DIR" -type f | wc -l)" -eq 3
+          for name in models.json upstream-seen.json pr-body.md; do
+            test -f "$ARTIFACT_DIR/$name"
+            test ! -L "$ARTIFACT_DIR/$name"
+            test "$(wc -c < "$ARTIFACT_DIR/$name")" -le 1048576
+          done
+
+          jq -e -s '
+            .[0] as $old | .[1] as $new |
+            (($old | type) == "array") and
+            (($new | type) == "array") and
+            ($new[0:($old | length)] == $old) and
+            (((($new | length) - ($old | length)) >= 0) and
+             ((($new | length) - ($old | length)) <= 25))
+          ' data/models.json "$ARTIFACT_DIR/models.json" > /dev/null
+
+          jq -e -s '
+            .[0] as $old | .[1] as $new |
+            (($old | type) == "object") and
+            (($new | type) == "object") and
+            (($old.entries | type) == "array") and
+            (($new.entries | type) == "array") and
+            (($new | del(.entries)) == ($old | del(.entries))) and
+            ($new.entries[0:($old.entries | length)] == $old.entries) and
+            (((($new.entries | length) - ($old.entries | length)) >= 1) and
+             ((($new.entries | length) - ($old.entries | length)) <= 25))
+          ' data/upstream-seen.json "$ARTIFACT_DIR/upstream-seen.json" > /dev/null
+
+      - name: Open curation PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_DIR: ${{ runner.temp }}/discovery-artifact
+        run: |
+          models_added=$(jq -s '(.[1] | length) - (.[0] | length)' \
+            data/models.json "$ARTIFACT_DIR/models.json")
+          ids_added=$(jq -s \
+            '(.[1].entries | length) - (.[0].entries | length)' \
+            data/upstream-seen.json "$ARTIFACT_DIR/upstream-seen.json")
+          today=$(date -u +%F)
+          if [ "$models_added" -gt 0 ]; then
+            suffix="models"
+            if [ "$models_added" -eq 1 ]; then suffix="model"; fi
+            pr_title="data: scaffold $models_added upstream $suffix — needs curation ($today)"
+          else
+            suffix="models"
+            if [ "$ids_added" -eq 1 ]; then suffix="model"; fi
+            pr_title="data: record $ids_added new upstream $suffix — none scaffolded ($today)"
+          fi
+
+          /usr/bin/install -m 0644 "$ARTIFACT_DIR/models.json" data/models.json
+          /usr/bin/install -m 0644 "$ARTIFACT_DIR/upstream-seen.json" \
+            data/upstream-seen.json
+          git diff --quiet -- data/models.json data/upstream-seen.json && {
+            echo "::error::Discovery artifact contained no data changes."
+            exit 1
+          }
+
+          gh auth setup-git
           branch="bot/aa-discovery-$(date -u +%Y%m%d)-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           git checkout -b "$branch"
           git add data/models.json data/upstream-seen.json
           git -c user.name="aa-discovery-bot" \
               -c user.email="aa-discovery-bot@users.noreply.github.com" \
-              commit -m "$PR_TITLE"
+              commit -m "$pr_title"
           git push -u origin "$branch"
-          gh pr create --draft --title "$PR_TITLE" --body-file "$RUNNER_TEMP/pr-body.md" \
+          gh pr create --draft --title "$pr_title" \
+              --body-file "$ARTIFACT_DIR/pr-body.md" \
               --label aa-discovery --label needs-curation \
-            || gh pr create --title "[do-not-merge] $PR_TITLE" --body-file "$RUNNER_TEMP/pr-body.md" \
+            || gh pr create --title "[do-not-merge] $pr_title" \
+              --body-file "$ARTIFACT_DIR/pr-body.md" \
               --label aa-discovery --label do-not-merge
+          # Pull requests created by GITHUB_TOKEN do not emit another workflow
+          # run. workflow_dispatch is the documented exception, so request CI
+          # explicitly for the exact discovery commit.
+          gh workflow run ci.yml --ref "$branch"
 
   notify-failure:
-    needs: discover
-    if: ${{ always() && needs.discover.result == 'failure' }}
+    needs: [guard, discover, publish]
+    if: >-
+      ${{
+        always() &&
+        (
+          needs.guard.result == 'failure' ||
+          needs.discover.result == 'failure' ||
+          needs.publish.result == 'failure'
+        )
+      }}
     runs-on: ubuntu-latest
     permissions:
       issues: write

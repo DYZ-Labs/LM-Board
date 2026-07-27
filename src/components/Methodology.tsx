@@ -1,4 +1,10 @@
-import { Badge } from "@/components/Badge";
+import { ExternalIcon } from "@/components/Icon";
+import {
+  BENCHMARK_CATEGORIES,
+  rankScopeLabel,
+} from "@/lib/categories";
+import { loadLeaderboardData } from "@/lib/data";
+import { formatCount } from "@/lib/format";
 import type { Benchmark } from "@/lib/schema";
 
 type MethodologyProps = {
@@ -8,24 +14,15 @@ type MethodologyProps = {
   issuesUrl: string | null;
 };
 
-const CATEGORY_ORDER = [
-  "reasoning",
-  "coding",
-  "math",
-  "agentic",
-] as const satisfies readonly Benchmark["category"][];
-
-const CATEGORY_LABELS: Record<Benchmark["category"], string> = {
-  reasoning: "Reasoning",
-  coding: "Coding",
-  math: "Math",
-  agentic: "Agentic",
-};
-
 // Illustrative four-benchmark tab: coverage bar is ceil(4 × 0.6) = 3.
 // Model B sits at the midpoint of the three benchmarks it was measured on, so
 // its Bench 2 gap is estimated at the midpoint of Bench 2: (90.0 + 96.0) / 2.
 const EXAMPLE_BENCHMARKS = ["Bench 1", "Bench 2", "Bench 3", "Bench 4"];
+
+function joinNames(names: string[]) {
+  if (names.length < 2) return names.join("");
+  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
 
 const EXAMPLE_ROWS: {
   rank: string | null;
@@ -69,13 +66,30 @@ export function Methodology({
   minimumCoverageCount,
   issuesUrl,
 }: MethodologyProps) {
-  const benchmarkGroups = CATEGORY_ORDER.map((category) => ({
+  const benchmarkGroups = BENCHMARK_CATEGORIES.map((category) => ({
     category,
-    label: CATEGORY_LABELS[category],
+    label: rankScopeLabel(category),
     benchmarks: benchmarks.filter(
       (benchmark) => benchmark.category === category,
     ),
   })).filter((group) => group.benchmarks.length > 0);
+  // Read back out of the dataset rather than written down: the page's job is
+  // to be checkable, and a hand-typed count is the one thing on it a reader
+  // cannot check against the board.
+  const { rows, scoreCount, selfReportedCount } = loadLeaderboardData();
+  const scoresWithSettings = rows.reduce(
+    (total, row) =>
+      total +
+      Object.values(row.scoresByBenchmark).filter((score) => score?.settings)
+        .length,
+    0,
+  );
+  const unpricedCount = rows.filter((row) => !row.model.pricing).length;
+  const singleBenchmarkTabs = joinNames(
+    benchmarkGroups
+      .filter((group) => group.benchmarks.length === 1)
+      .map((group) => group.label),
+  );
 
   return (
     <section
@@ -86,10 +100,14 @@ export function Methodology({
       <div className="longform-intro">
         <h1>Methodology</h1>
         <p>
-          LM Board runs no evaluations of its own. It collects scores that labs
-          and independent evaluators have already published, puts them side by
-          side, and averages them into one Index per model. Every number on the
-          board links back to where it came from.
+          LM Board runs no evaluations. It records benchmark scores published
+          by their named source &mdash; today, all{" "}
+          {formatCount(scoreCount)} measured scores are published by Artificial
+          Analysis &mdash; then computes one equal-weight Index per category.
+          Every measured score keeps a source link, retrieval date, and any
+          available evaluation settings. Missing benchmark results are
+          estimated only inside the Index and are disclosed as estimates;
+          models below 60% measured coverage are not ranked.
         </p>
       </div>
 
@@ -100,27 +118,68 @@ export function Methodology({
           </header>
           <div className="method-body">
             <p>
-              Every score is copied from a published result and stores two
-              things alongside the number: a link to its source and the date it
-              was retrieved. Open any model row on the leaderboard to see both,
-              plus the evaluation settings when the source reports them.
+              All {formatCount(scoreCount)} scores on the board carry a source
+              link and the date they were retrieved
+              {scoresWithSettings === scoreCount
+                ? ", and every one records the settings it was run under"
+                : `, and ${formatCount(scoresWithSettings)} of them record the settings they were run under`}
+              . The link and the date are required by the data schema, so a
+              result that arrives without both is rejected at build time rather
+              than published unsourced. Open any model record from the
+              leaderboard to read them.
             </p>
             <p>
-              Independent measurements are preferred over a lab&apos;s own
-              reporting; every score on the board today is measured
-              independently by{" "}
-              <a
-                href="https://artificialanalysis.ai/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Artificial Analysis
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-              . When a score does come from the model&apos;s maker, it stays
-              on the board but carries the{" "}
-              <Badge tone="warn">Vendor</Badge> mark you see
-              next to scores in the table.
+              Third-party measurements are preferred over a lab&apos;s own
+              reporting.{" "}
+              {selfReportedCount === 0 ? (
+                <>
+                  Today none of the {formatCount(scoreCount)} scores on the
+                  board are self-reported &mdash; every one is an{" "}
+                  <a
+                    className="link-external"
+                    href="https://artificialanalysis.ai/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Artificial Analysis <ExternalIcon className="ext" />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>{" "}
+                  measurement. A score that did come from the model&apos;s maker
+                  would stay on the board and carry a{" "}
+                  <span className="vendor-term">Vendor</span> mark next to the
+                  number.
+                </>
+              ) : (
+                <>
+                  {formatCount(selfReportedCount)} of the{" "}
+                  {formatCount(scoreCount)} scores on the board came from the
+                  model&apos;s maker and carry a{" "}
+                  <span className="vendor-term">Vendor</span> mark next to the
+                  number; the rest are{" "}
+                  <a
+                    className="link-external"
+                    href="https://artificialanalysis.ai/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Artificial Analysis <ExternalIcon className="ext" />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>{" "}
+                  measurements.
+                </>
+              )}
+            </p>
+            {/* The provenance guarantee is about scores, and saying so is only
+                honest if the page also says what the other numerals are. */}
+            <p>
+              Price, context window and release date are not benchmark results
+              and are not sourced the same way: they come from the
+              provider&apos;s own public listing, linked as{" "}
+              <em>Official page</em> on every model record, and carry no
+              separate retrieval date.
+              {unpricedCount > 0
+                ? ` ${formatCount(unpricedCount)} of the ${formatCount(rows.length)} models on the board publish no price at all, and show a dash rather than a zero.`
+                : null}
             </p>
           </div>
         </article>
@@ -152,7 +211,15 @@ export function Methodology({
               estimated.
             </p>
             <figure className="method-example">
-              <div className="method-example-scroll">
+              {/* A scroll container needs to be reachable without a pointer;
+                  the <caption> already names the content, so the region label
+                  stays short. */}
+              <div
+                className="method-example-scroll"
+                role="region"
+                tabIndex={0}
+                aria-label="Worked example of the Index calculation"
+              >
                 <table>
                   <caption className="sr-only">
                     Example of how the Index and ranks behave with missing
@@ -179,8 +246,11 @@ export function Methodology({
                       <tr key={row.model}>
                         <td className="example-rank">
                           {row.rank ?? (
-                            <span className="missing-value" aria-label="Unranked">
-                              &mdash;
+                            /* aria-label on a plain <span> is prohibited by
+                               ARIA 1.2 — role=generic supports no name. */
+                            <span className="missing-value">
+                              <span aria-hidden="true">&mdash;</span>
+                              <span className="sr-only">Unranked</span>
                             </span>
                           )}
                         </td>
@@ -232,7 +302,11 @@ export function Methodology({
             </figure>
             <p>
               Each tab &mdash; Overall, Reasoning, Coding, Math, and Agentic
-              &mdash; applies the same average to its own set of benchmarks.
+              &mdash; applies the same average to its own set of benchmarks, and
+              the tabs are not the same size.
+              {singleBenchmarkTabs
+                ? ` Where a category has a single benchmark — ${singleBenchmarkTabs} today — the Index is that benchmark's score, and the word "average" is doing no work.`
+                : null}
             </p>
           </div>
         </article>
@@ -280,23 +354,34 @@ export function Methodology({
               on a different scale would still be displayed, but would stay out
               of the Index.
             </p>
+            <p>
+              They do not share a difficulty, though, so a bar drawn as a
+              fraction of 100 would compare benchmarks rather than models. The
+              bar under each score instead shows where that score falls within
+              the range the benchmark has actually produced across every model
+              on the board.
+            </p>
             <div className="method-benchlist">
               {benchmarkGroups.map((group) => (
                 <div className="method-benchgroup" key={group.category}>
                   <h3>{group.label}</h3>
                   <ul>
                     {group.benchmarks.map((benchmark) => (
-                      <li key={benchmark.id}>
+                      <li
+                        id={`benchmark-${benchmark.id}`}
+                        key={benchmark.id}
+                      >
                         <span className="bench-name">{benchmark.name}</span>
                         <span className="bench-desc">
                           {benchmark.description}
                         </span>
                         <a
+                          className="link-external"
                           href={benchmark.sourceUrl}
                           target="_blank"
                           rel="noreferrer"
                         >
-                          Source<span aria-hidden="true"> &#8599;</span>
+                          Source <ExternalIcon className="ext" />
                           <span className="sr-only">
                             {" "}
                             (opens in a new tab)
@@ -317,11 +402,12 @@ export function Methodology({
           </header>
           <div className="method-body">
             <p>
-              Published scores are measured under different conditions &mdash;
-              different tools, prompting setups, and reasoning budgets &mdash;
-              so a small gap between two models is noise, not signal. When a
-              model row shows a reasoning-effort label, that setting applies to
-              every score in the row.
+              Published scores can use different tools, prompting setups, and
+              reasoning budgets. The board does not publish confidence
+              intervals, so small gaps should not be treated as proof of a
+              meaningful capability difference. When a model row shows a
+              reasoning-effort label, that setting applies to every score in
+              the row.
             </p>
           </div>
         </article>
@@ -333,9 +419,13 @@ export function Methodology({
           linked sources remain authoritative.
         </p>
         {issuesUrl ? (
-          <a href={issuesUrl} target="_blank" rel="noreferrer">
-            Suggest a correction on GitHub
-            <span aria-hidden="true"> &#8599;</span>
+          <a
+            className="link-external"
+            href={issuesUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Suggest a correction on GitHub <ExternalIcon className="ext" />
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         ) : (

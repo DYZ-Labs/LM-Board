@@ -1,6 +1,7 @@
 /* ===========================================================================
-   Motion — interaction classes, orchestration, scroll-linked behaviour, and a
-   designed reduced-motion mode. Spec: REDESIGN_PLAN.md §4.3.
+   Motion — keyframes, orchestration, view transitions, and a designed reduced-
+   motion mode. Spec: REDESIGN_PLAN.md §4.3. Per-control transitions live with
+   their component; the easing tokens are in tokens.css.
 
    Binding rules:
      1. Only transform, opacity and filter are ever animated.
@@ -11,39 +12,6 @@
    =========================================================================== */
 @layer motion {
 
-
-/* -- Interaction classes --------------------------------------------------
-   Applied as a transition shorthand. The cubic-bezier declaration comes
-   first so browsers without linear() support fall back to it: an unparsable
-   linear() invalidates only the later declaration. */
-.mo-instant {
-  transition:
-    color var(--dur-instant) var(--ease-out-quart),
-    background-color var(--dur-instant) var(--ease-out-quart),
-    border-color var(--dur-instant) var(--ease-out-quart),
-    opacity var(--dur-instant) var(--ease-out-quart),
-    text-decoration-color var(--dur-instant) var(--ease-out-quart),
-    text-decoration-thickness var(--dur-instant) var(--ease-out-quart);
-}
-
-.mo-state {
-  transition: transform var(--dur-snap) var(--ease-out-quart);
-  transition: transform var(--dur-snap) var(--ease-snap);
-}
-
-.mo-reveal {
-  transition:
-    transform var(--dur-glide) var(--ease-out-expo),
-    opacity var(--dur-glide) var(--ease-out-expo);
-  transition:
-    transform var(--dur-glide) var(--ease-glide),
-    opacity var(--dur-glide) var(--ease-glide);
-}
-
-.mo-transform {
-  transition: transform var(--dur-settle) var(--ease-out-expo);
-  transition: transform var(--dur-settle) var(--ease-settle);
-}
 
 /* -- Keyframes ------------------------------------------------------------ */
 @keyframes enter-up {
@@ -103,48 +71,12 @@
   }
 }
 
-/* -- Orchestration --------------------------------------------------------
-   Children enter on an index-derived delay. The cap matters: a 62-row table
-   would otherwise take 1.7s to finish appearing. --i is set inline from the
-   map index; rows past the cap appear with no delay. */
-.stagger > * {
-  animation: enter-up var(--dur-glide) var(--ease-glide) backwards;
-  animation-delay: calc(min(var(--i, 0), var(--stagger-cap)) * var(--stagger-step));
-}
-
-/* -- Scroll-linked --------------------------------------------------------
-   Pure CSS, pure enhancement. Browsers without scroll-driven animations get
-   the resting state and lose nothing functional. */
-@supports (animation-timeline: scroll()) {
-  .scroll-rail {
-    transform-origin: 0 0;
-    animation: scroll-progress linear;
-    animation-timeline: scroll(root block);
-  }
-
-  @keyframes scroll-progress {
-    from {
-      transform: scaleY(0);
-    }
-
-    to {
-      transform: scaleY(1);
-    }
-  }
-
-  .readout-parallax {
-    animation: readout-recede linear both;
-    animation-timeline: scroll(root block);
-    animation-range: 0 320px;
-  }
-
-  @keyframes readout-recede {
-    to {
-      opacity: 0.25;
-      transform: translateY(-24px) scale(0.94);
-    }
-  }
-}
+/* The row entry animation used to live here. React reorders keyed rows by
+   removing and re-inserting the nodes, and Chrome restarts a CSS animation on
+   a moved element, so every sort, tab switch and filter change replayed it:
+   measured 648ms to settle, with the first 25 rows at opacity 0 for the first
+   ~190ms. A dense table that fades on a header click is indistinguishable from
+   a table that failed to load. */
 
 /* -- View transitions between projections --------------------------------- */
 @supports (view-transition-name: none) {
@@ -155,44 +87,37 @@
 }
 
 /* -- Reduced motion -------------------------------------------------------
-   A designed mode, not a blanket disable. Transform, parallax, stagger and
-   ambient loops are removed; colour and opacity feedback survives at 90-120ms
-   because removing it makes state changes harder to follow, not easier. */
+   A designed mode, not a blanket disable. Ambient loops stop; colour and
+   opacity feedback survives at 90-120ms because removing it makes state
+   changes harder to follow, not easier. */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --dur-snap: 90ms;
-    --dur-glide: 120ms;
-    --dur-settle: 120ms;
+    --dur-snap: 0ms;
+    --dur-glide: 0ms;
+    --dur-settle: 0ms;
     --dur-bounce: 0ms;
     --dur-ambient: 0ms;
     --ease-snap: linear;
     --ease-glide: linear;
     --ease-settle: linear;
     --ease-bounce: linear;
-    --stagger-step: 0ms;
+    --tr-press: none;
   }
 
   html {
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-timeline: none !important;
-  }
-
-  .stagger > * {
+  /* `--dur-instant` deliberately stays live: colour and opacity still confirm
+     hover, focus and state. Every transform-bearing spring is zero-duration,
+     and the shared transform transition is removed rather than shortened. */
+  ::view-transition-group(board),
+  .btn.is-error,
+  .popover,
+  .tooltip-panel,
+  .toast,
+  .palette {
     animation: none;
-  }
-
-  .mo-state,
-  .mo-transform {
-    transition-property: opacity;
-  }
-
-  .mo-reveal {
-    transition-property: opacity;
   }
 }
 

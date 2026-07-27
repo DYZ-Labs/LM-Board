@@ -2,7 +2,9 @@ import Link from "next/link";
 
 import { Badge } from "@/components/Badge";
 import { CopyLinkButton } from "@/components/CopyLinkButton";
+import { FieldStrip } from "@/components/FieldStrip";
 import { ExternalIcon } from "@/components/Icon";
+import { RANK_SCOPES, rankScopeLabel } from "@/lib/categories";
 import type { LeaderboardRow } from "@/lib/data";
 import {
   formatCount,
@@ -10,16 +12,7 @@ import {
   formatPrice,
   formatScore,
 } from "@/lib/format";
-import { RANK_SCOPES, type RankScope } from "@/lib/index";
 import type { Benchmark } from "@/lib/schema";
-
-const SCOPE_LABELS: Record<RankScope, string> = {
-  overall: "Overall",
-  reasoning: "Reasoning",
-  coding: "Coding",
-  math: "Math",
-  agentic: "Agentic",
-};
 
 type ModelRecordProps = {
   row: LeaderboardRow;
@@ -33,6 +26,15 @@ type ModelRecordProps = {
  */
 export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
   const { model } = row;
+  const categoryScopes = RANK_SCOPES.filter(
+    (scope) => scope !== "overall",
+  );
+  const categorySummary = categoryScopes
+    .map((scope) => {
+      const index = row.scopes[scope].index;
+      return `${rankScopeLabel(scope)} ${index === null ? "not ranked" : formatScore(index)}`;
+    })
+    .join(", ");
 
   return (
     <article className="longform" id="record">
@@ -50,38 +52,52 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
         <p className="text-secondary">
           {model.lab} · released {formatDate(model.releaseDate)}
         </p>
-        <div className="row">
-          <CopyLinkButton
-            label="Copy link"
-            confirmation={`Link to ${model.name} copied`}
-          />
-          <Link className="btn" href={`/compare?models=${model.id}`}>
+        <nav className="row record-actions" aria-label="Model actions">
+          <Link
+            className="btn"
+            href={`/compare?models=${model.id}`}
+            prefetch={false}
+          >
             Compare
           </Link>
+          {model.pricing ? (
+            <Link
+              className="btn"
+              href={`/value?point=${model.id}`}
+              prefetch={false}
+            >
+              View on price plot
+            </Link>
+          ) : null}
           <a
             className="btn link-external"
             href={model.url}
             target="_blank"
             rel="noreferrer"
           >
-            Official page <ExternalIcon className="ext" />
+            Provider page <ExternalIcon className="ext" />
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
-          <Link className="btn" href="/#leaderboard">
-            Back to the board
+          <CopyLinkButton
+            surface="record"
+            label="Copy link"
+            confirmation={`Link to ${model.name} copied`}
+          />
+          <Link className="btn" href="/#leaderboard" prefetch={false}>
+            Leaderboard
           </Link>
-        </div>
+        </nav>
       </header>
 
       <section className="record-section" aria-labelledby="record-standing">
-        <h2 id="record-standing">Standing</h2>
-        <dl className="record-scopes">
-          {RANK_SCOPES.map((scope) => {
+        <h2 id="record-standing">Overall standing</h2>
+        <dl className="record-scopes record-scopes-primary">
+          {(["overall"] as const).map((scope) => {
             const entry = row.scopes[scope];
 
             return (
               <div className="record-scope" key={scope}>
-                <dt>{SCOPE_LABELS[scope]}</dt>
+                <dt>{rankScopeLabel(scope)}</dt>
                 {/* A <dl> group may only contain <dt> and <dd>; the coverage
                     note is a second <dd> rather than a <p>. */}
                 <dd>
@@ -90,12 +106,20 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
                   ) : (
                     <>
                       {formatScore(entry.index)}
+                      {/* A rank with no denominator is not a fact anyone can
+                          quote: rank 3 of 58 and rank 3 of 4 are different
+                          claims. */}
                       <span className="rank-note">
-                        {entry.rank === null ? "unranked" : `rank ${entry.rank}`}
+                        {entry.rank === null
+                          ? "unranked"
+                          : `rank ${entry.rank} of ${entry.rankedFieldSize}`}
                       </span>
                     </>
                   )}
                 </dd>
+                {entry.rank === null ? null : (
+                  <FieldStrip scope={scope} modelId={model.id} />
+                )}
                 <dd className="rank-note rank-coverage">
                   {entry.coverageCount} of {entry.coverageTotal} measured
                   {entry.estimatedCount > 0
@@ -108,9 +132,82 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
         </dl>
       </section>
 
-      <section className="record-section" aria-labelledby="record-facts">
-        <h2 id="record-facts">Specification</h2>
-        <dl className="model-metadata">
+      <details className="record-disclosure record-section">
+        <summary>
+          <span>Category standings</span>
+          <span
+            className="record-summary-values record-category-summary"
+            role="list"
+            aria-label={`Category standings: ${categorySummary}`}
+          >
+            {categoryScopes.map((scope) => (
+              <span
+                className="record-summary-metric"
+                role="listitem"
+                key={scope}
+              >
+                <span>{rankScopeLabel(scope)}</span>
+                {" "}
+                <span className="num">
+                  {row.scopes[scope].index === null
+                    ? "—"
+                    : formatScore(row.scopes[scope].index!)}
+                </span>
+              </span>
+            ))}
+          </span>
+        </summary>
+        <dl className="record-scopes record-scopes-secondary">
+          {categoryScopes.map((scope) => {
+            const entry = row.scopes[scope];
+
+            return (
+              <div className="record-scope" key={scope}>
+                <dt>{rankScopeLabel(scope)}</dt>
+                <dd>
+                  {entry.index === null ? (
+                    <span className="rank-note">Insufficient data</span>
+                  ) : (
+                    <>
+                      {formatScore(entry.index)}
+                      <span className="rank-note">
+                        {entry.rank === null
+                          ? "unranked"
+                          : `rank ${entry.rank} of ${entry.rankedFieldSize}`}
+                      </span>
+                    </>
+                  )}
+                </dd>
+                {entry.rank === null ? null : (
+                  <FieldStrip scope={scope} modelId={model.id} />
+                )}
+                <dd className="rank-note rank-coverage">
+                  {entry.coverageCount} of {entry.coverageTotal} measured
+                  {entry.estimatedCount > 0
+                    ? ` · ${entry.estimatedCount} estimated`
+                    : ""}
+                </dd>
+              </div>
+            );
+          })}
+        </dl>
+      </details>
+
+      <details className="record-disclosure record-section">
+        <summary>
+          <span>Model facts</span>
+          <span className="record-summary-values">
+            {model.openWeights ? "Open weights" : "Closed weights"} ·{" "}
+            {model.pricing
+              ? `$${formatPrice(model.pricing.input)} / $${formatPrice(model.pricing.output)} per 1M`
+              : "Price not listed"}
+          </span>
+        </summary>
+        <p className="record-facts-note">
+          Copied from the linked provider page; no separate retrieval date is
+          stored.
+        </p>
+        <dl className="model-metadata" id="record-facts">
           <div>
             <dt>Provider</dt>
             <dd>{model.lab}</dd>
@@ -154,58 +251,86 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
             <dd>{row.reasoningEffort ?? "Not listed"}</dd>
           </div>
         </dl>
-      </section>
+      </details>
 
       <section className="record-section" aria-labelledby="record-scores">
-        <h2 id="record-scores">Scores and provenance</h2>
-        <div className="detail-score-grid">
-          {benchmarks.map((benchmark) => {
-            const score = row.scoresByBenchmark[benchmark.id];
+        <h2 id="record-scores">Scores and sources</h2>
+        <p className="record-section-intro">
+          Measured scores retain their source and retrieval date. Missing scores
+          are not treated as zero.
+        </p>
+        <div className="record-score-region">
+          <table className="record-score-table">
+            <caption className="sr-only">
+              Benchmark scores, evaluation settings, sources, and retrieval
+              dates for {model.name}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Benchmark</th>
+                <th scope="col">Category</th>
+                <th scope="col">Score</th>
+                <th scope="col">Evaluation settings</th>
+                <th scope="col">Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {benchmarks.map((benchmark) => {
+                const score = row.scoresByBenchmark[benchmark.id];
 
-            return (
-              <article className="detail-score" key={benchmark.id}>
-                <div className="detail-score-heading">
-                  <h3>{benchmark.name}</h3>
-                  <strong className="num">
-                    {score ? formatScore(score.value) : "—"}
-                  </strong>
-                </div>
-                {score ? (
-                  <>
-                    {score.selfReported ? (
-                      <Badge tone="warn">Self-reported measurement</Badge>
-                    ) : null}
-                    <p>
-                      <strong>Settings:</strong>{" "}
-                      {score.settings ?? "Not specified."}
-                    </p>
-                    <p className="source-line">
-                      <a
-                        className="link-external"
-                        href={score.source.url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        View score source <ExternalIcon className="ext" />
-                        <span className="sr-only"> (opens in a new tab)</span>
-                      </a>
-                      <span>
-                        Retrieved{" "}
-                        <time dateTime={score.source.retrieved}>
-                          {formatDate(score.source.retrieved)}
-                        </time>
-                      </span>
-                    </p>
-                  </>
-                ) : (
-                  <p className="missing-value">
-                    No curated score is currently available. A missing result is
-                    never recorded as a zero.
-                  </p>
-                )}
-              </article>
-            );
-          })}
+                return (
+                  <tr
+                    key={benchmark.id}
+                    id={`benchmark-${benchmark.id}`}
+                    data-measured={score ? "true" : "false"}
+                  >
+                    <th scope="row">
+                      <span>{benchmark.name}</span>
+                      {score?.selfReported ? (
+                        <Badge tone="warn">Vendor-reported</Badge>
+                      ) : null}
+                    </th>
+                    <td>{rankScopeLabel(benchmark.category)}</td>
+                    <td
+                      className="num record-score-value"
+                      aria-label={score ? undefined : "Not measured"}
+                    >
+                      {score ? formatScore(score.value) : "—"}
+                    </td>
+                    <td>
+                      {score
+                        ? score.settings ?? "Not specified"
+                        : "Not measured in this dataset"}
+                    </td>
+                    <td>
+                      {score ? (
+                        <span className="record-source">
+                          <a
+                            className="link-external"
+                            href={score.source.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            data-source={benchmark.id}
+                          >
+                            Open source <ExternalIcon className="ext" />
+                            <span className="sr-only">
+                              {" "}
+                              (opens in a new tab)
+                            </span>
+                          </a>
+                          <time dateTime={score.source.retrieved}>
+                            Retrieved {formatDate(score.source.retrieved)}
+                          </time>
+                        </span>
+                      ) : (
+                        <span className="missing-value">No source</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </section>
     </article>

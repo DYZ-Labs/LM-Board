@@ -1,16 +1,9 @@
+import type { RankScope } from "@/lib/categories";
 import type { Benchmark, Score } from "@/lib/schema";
 
+export { RANK_SCOPES, type RankScope } from "@/lib/categories";
+
 export const MIN_INDEX_COVERAGE = 0.6;
-
-export type RankScope = "overall" | Benchmark["category"];
-
-export const RANK_SCOPES = [
-  "overall",
-  "reasoning",
-  "coding",
-  "math",
-  "agentic",
-] as const satisfies readonly RankScope[];
 
 export type IndexResult = {
   value: number | null;
@@ -78,14 +71,25 @@ export function buildBenchmarkDistributions(
  * exactly level with.
  */
 export function percentileOf(sorted: readonly number[], value: number): number {
-  let below = 0;
-  let equal = 0;
+  let low = 0;
+  let high = sorted.length;
 
-  for (const observed of sorted) {
-    if (observed < value) below += 1;
-    else if (observed === value) equal += 1;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (sorted[middle] < value) low = middle + 1;
+    else high = middle;
   }
 
+  const below = low;
+  high = sorted.length;
+
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (sorted[middle] <= value) low = middle + 1;
+    else high = middle;
+  }
+
+  const equal = low - below;
   return (below + equal / 2) / sorted.length;
 }
 

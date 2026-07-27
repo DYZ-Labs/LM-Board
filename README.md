@@ -6,7 +6,7 @@ This repository implements the MVP described in [PLAN.md](./PLAN.md): a Next.js 
 
 The leaderboard computes a transparent coverage-gated Index for Overall and each benchmark category, with canonical ranks precomputed per scope. It supports sorting every column, switches benchmark columns and scoped ranking by category, combines provider/search/open-weight filters, and exposes an inline source panel for every model and score. Category, sort, direction, projection, density, and expanded-model state are reflected in the URL so a specific view can be shared directly.
 
-The board renders in three projections — `table` (every benchmark column), `profile` (compact, with a per-model score spark) and `plot` (price against Index) — at three row densities. The server always renders the full table so every number is in the static HTML; viewports narrower than 1440px hydrate into `profile`, which fits without sideways scrolling down to 390px. Every model also has its own citable record at `/model/<id>`, and `/compare` puts up to four models side by side.
+The board renders in three explicit projections — `table` (every benchmark column), `profile` (compact, with a per-model score spark), and `plot` (price against Index) — at three row densities. The server always renders the full table, CSS turns that same markup into ranked cards on phones, and viewport size never changes the selected projection or URL after hydration. Every model has a citable record at `/model/<id>`, `/compare` puts up to four models side by side, and `/value` provides a shareable price-versus-performance view.
 
 The visual system is documented in [REDESIGN_PLAN.md](./REDESIGN_PLAN.md) and implemented as cascade layers in `src/styles/`.
 
@@ -37,18 +37,27 @@ NEXT_PUBLIC_GITHUB_REPOSITORY_URL=https://github.com/owner/lmboard
 ## Validation and builds
 
 ```bash
-npm run validate:data
-npm run typecheck
-npm test
-npm run build
-npm run measure          # transfer-size budgets + content smoke check; --check exits non-zero
+npm run check
 ```
+
+`npm run check` is the exact CI and deployment gate: lint, type checking, tests,
+data validation, the static production build, transfer/payload budgets, and
+content smoke checks. The individual `lint`, `typecheck`, `test`,
+`validate:data`, `build`, and `measure` scripts remain available for focused
+work. Production builds intentionally require `NEXT_PUBLIC_SITE_URL` (or a
+Vercel deployment URL) so a public export can never emit localhost canonicals.
+
+The byte gate measures static HTML, Flight, directly linked CSS/JS, fonts, DOM
+size, and request count. Deferred interaction chunks are intentionally loaded
+on demand, so release review also runs Lighthouse against `out/` and exercises
+the command palette, plot, filters, compare, and a model record in a real
+browser.
 
 `npm test` runs two Vitest projects: `lib` (index math, sort comparators, URL parsing, data assembly, palette contrast, discovery core — Node environment) and `ui` (component behaviour and an axe-core accessibility pass — jsdom). The contrast suite parses `src/styles/tokens.css` directly, so editing a colour token is checked against WCAG rather than against a stale copy of the palette.
 
 `npm run build` validates all records and cross-file references before Next.js creates a static export in `out/`. Validation fails on malformed records, duplicate IDs, dangling score references, duplicate model/benchmark score pairs, or percent values outside `0–100`.
 
-The export includes complete social/search metadata, a generated Open Graph image, favicon, web manifest, robots rules, and sitemap. `vercel.json` configures Vercel to use `.next/` as its deployment output directory.
+The export includes complete social/search metadata, generated site and per-model Open Graph cards, favicon, web manifest, robots rules, sitemap, Atom model-data feed, and `llms.txt`. `vercel.json` configures Vercel to use `.next/` as its deployment output directory.
 
 ## Data layout
 
@@ -68,17 +77,38 @@ One-time setup:
 
 1. Create a free Artificial Analysis API key and add it to `.env.local` as `AA_API_KEY`.
 2. Seed the ledger: `npm run discover:models -- --seed --write`, review the report, and commit `data/upstream-seen.json`.
-3. Add repository secrets `AA_API_KEY` and `DISCOVERY_PAT` — a fine-grained personal access token scoped to this repository with Contents and Pull requests read/write. The default workflow token cannot be used because pull requests it creates would not trigger CI. Note the PAT expiry and rotate it before it lapses.
-4. Create the labels `aa-discovery`, `needs-curation`, and `do-not-merge`.
+3. Add the repository secret `AA_API_KEY`. Publishing uses the workflow-scoped
+   `GITHUB_TOKEN`. Install, discovery, and validation run in a read-only job;
+   only bounded, append-only data files cross into a fresh publishing runner.
+   The write token is exposed only to that runner's final branch/PR step, which
+   explicitly dispatches CI for the discovery commit.
+4. In **Settings → Actions → General → Workflow permissions**, enable
+   **Allow GitHub Actions to create and approve pull requests**. Organization
+   policy must also permit the workflow's requested Actions, Contents, and Pull
+   requests write permissions.
+5. Create the labels `aa-discovery`, `bug`, `needs-curation`, and
+   `do-not-merge`.
 
 GitHub disables scheduled workflows after 60 days without repository activity; a manual dispatch re-enables the schedule.
 
 ## Operations
 
 - **Rollback:** If the site is down or a deploy is bad, open the LM Board project in the Vercel dashboard, go to **Deployments**, select the previous known-good deployment, and choose **Promote**. If a data commit caused the problem, `git revert <commit>` on a new branch, open and merge the resulting pull request, and let Vercel deploy it.
-- **Monitoring and alerts:** No monitor dashboard or alert destination is verifiable from this repository. Treat production as unmonitored; the superseded readiness audit's reference to an external 15-minute check is not actionable.
-- **Discovery credential:** `DISCOVERY_PAT` is stored as a GitHub Actions repository secret. Its expiry date is unknown as of 2026-07-25; treat it as requiring immediate verification or rotation in the token owner's GitHub fine-grained-token settings, then record the confirmed date here.
-- **Access:** Daniel Yuan (GitHub `@thedanielyuan`) is the only documented operator with access to the Vercel project and the `DYZ-Labs` GitHub organization. No backup operator is documented.
+- **Monitoring and alerts:** `.github/workflows/monitor-production.yml` checks
+  `/`, `/compare`, `/value`, a deterministic model record, and `/feed.xml` every 15
+  minutes. It verifies status, content type, content sentinels, redirect origin,
+  response size, and security headers with bounded requests. Failures open or
+  update one `bug` issue assigned to `@thedanielyuan`; a healthy run closes the
+  incident. Run the same probe manually with
+  `npm run monitor:production -- --base-url https://www.checklmboard.xyz`.
+- **Discovery credential:** Discovery needs only `AA_API_KEY`; repository writes
+  use the short-lived workflow token on a separate publishing runner, and
+  checkout never persists credentials.
+- **Access:** Daniel Yuan (GitHub `@thedanielyuan`) is the primary documented
+  operator. Repository and Vercel owners must keep at least one second operator
+  able to merge, inspect deployments, and promote a rollback; access ownership
+  must be verified in those services because it cannot be proven from this
+  repository.
 
 ## Contributing
 

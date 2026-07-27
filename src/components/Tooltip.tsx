@@ -54,6 +54,7 @@ export function Tooltip({
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const intentTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bridgedRef = useRef(false);
 
   useEffect(() => setMounted(true), []);
 
@@ -85,6 +86,12 @@ export function Tooltip({
     }
   }
 
+  function focusableStops(): HTMLElement[] {
+    return Array.from(
+      panelRef.current?.querySelectorAll<HTMLElement>("a[href], button") ?? [],
+    );
+  }
+
   function openNow() {
     cancelIntent();
     place();
@@ -98,6 +105,7 @@ export function Tooltip({
 
   function closeNow() {
     cancelIntent();
+    bridgedRef.current = false;
     setOpen(false);
   }
 
@@ -144,6 +152,13 @@ export function Tooltip({
     };
   }, [open, place]);
 
+  /**
+   * The panel is portalled to the end of <body> so the board's clipped scroll
+   * container cannot cut it in half, which puts it after every other control
+   * in tab order: measured, one Tab from the trigger landed on the next sort
+   * button and closed the panel. Nine of ten panels carry the source link that
+   * is this product's whole claim, so Tab is bridged across the portal by hand.
+   */
   const panel = (
     <div
       id={panelId}
@@ -153,6 +168,21 @@ export function Tooltip({
       style={{ top: position.top, left: position.left }}
       onMouseEnter={cancelIntent}
       onMouseLeave={closeNow}
+      onKeyDown={(event) => {
+        if (event.key !== "Tab") return;
+
+        const stops = focusableStops();
+        const atEdge = event.shiftKey
+          ? event.target === stops[0]
+          : event.target === stops[stops.length - 1];
+        if (!atEdge) return;
+
+        event.preventDefault();
+        // Marks the panel as visited so the next Tab off the trigger leaves
+        // instead of bouncing straight back in.
+        bridgedRef.current = !event.shiftKey;
+        triggerRef.current?.focus();
+      }}
     >
       <strong>{label}</strong>
       <p>{description}</p>
@@ -191,9 +221,31 @@ export function Tooltip({
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => (open ? closeNow() : openNow())}
-        onFocus={openNow}
+        onFocus={(event) => {
+          // Focus returning from the panel must not re-open it, or Escape —
+          // which restores focus here — would immediately undo itself.
+          if (panelRef.current?.contains(event.relatedTarget)) return;
+          openNow();
+        }}
+        onKeyDown={(event) => {
+          if (event.key !== "Tab" || event.shiftKey || !open) return;
+
+          if (bridgedRef.current) {
+            bridgedRef.current = false;
+            return;
+          }
+
+          const first = focusableStops()[0];
+          if (!first) return;
+
+          event.preventDefault();
+          first.focus();
+        }}
         onBlur={(event) => {
-          if (!panelRef.current?.contains(event.relatedTarget)) closeNow();
+          if (!panelRef.current?.contains(event.relatedTarget)) {
+            bridgedRef.current = false;
+            closeNow();
+          }
         }}
       >
         {triggerContent ?? <InfoIcon />}

@@ -1,9 +1,21 @@
 /* ===========================================================================
-   Layout — page shell, masthead and readout, command bar, footer, and the
-   long-form pages. The ground plane is full-bleed; content sits on a rail.
+   Layout — shared page rail, masthead, hero evidence, footer, and long-form
+   pages. The ground plane is full-bleed; every visible edge sits on one rail.
    =========================================================================== */
 @layer layout {
 
+
+/* The one rail. Header, main and footer are siblings inside this frame, so the
+   frame — not one of those siblings — owns width, gutter and centring. */
+.site-frame {
+  display: flex;
+  width: 100%;
+  max-width: var(--rail-max);
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: var(--s-7) var(--gutter) var(--s-9);
+}
 
 .site-shell {
   width: 100%;
@@ -12,45 +24,49 @@
      create a scroll container, so position: sticky still resolves against the
      viewport. */
   overflow-x: clip;
-  max-width: var(--rail-max);
-  min-height: 100vh;
-  margin: 0 auto;
-  padding: var(--s-8) var(--gutter) var(--s-12);
+  flex: 1 0 auto;
+  padding: var(--s-9) 0 var(--s-11);
 }
 
-/* -- Scroll progress rail ------------------------------------------------- */
-.scroll-rail {
-  position: fixed;
-  z-index: 60;
-  top: 0;
-  left: 0;
-  width: 2px;
-  height: 100vh;
-  background: linear-gradient(
-    180deg,
-    var(--signal-500),
-    var(--signal-600)
-  );
-  opacity: 0.5;
-  pointer-events: none;
+/* The page's vertical rhythm, declared once. Blocks do not own their own
+   outer spacing — the successive gaps used to compose out of per-component
+   padding to 60 / 61 / 53 / 34px, close enough to look intended and different
+   enough to look like a mistake. Adjacent sibling margins collapse, so a block
+   that still carries a trailing margin is absorbed rather than added to. */
+.site-shell > * + * {
+  margin-top: var(--section-gap);
+}
+
+/* The home page is deliberately denser than a long-form document: its first
+   screen must contain the answer, the evidence contract and real data. */
+.site-shell:has(> .hero-evidence) {
+  padding-top: var(--s-8);
+}
+
+.site-shell:has(> .hero-evidence) > * + * {
+  margin-top: var(--s-8);
 }
 
 /* -- Masthead -------------------------------------------------------------
-   No rule under it: the double rule was the signature of the old identity.
-   Separation comes from the readout's scale and the bloom behind it. */
+   A fixed band with one hairline under it, and columns that are structural
+   rather than content-derived. The old flex row wrapped on the intrinsic
+   width of the identity cluster, so when Archivo swapped in for its metric
+   fallback the band grew 40px and pushed the whole page down: 0.38 CLS at the
+   two most common Android widths. A grid track cannot wrap. */
 .site-header {
-  display: flex;
-  gap: var(--s-6);
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding-bottom: var(--s-7);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0 var(--s-9);
+  align-items: center;
+  min-height: 52px;
+  padding-bottom: var(--s-5);
+  border-bottom: 1px solid var(--line);
 }
 
 .site-identity {
   display: flex;
   gap: var(--s-4);
-  align-items: baseline;
+  align-items: center;
   min-width: 0;
 }
 
@@ -62,81 +78,161 @@
   font-size: var(--t-17);
   font-weight: var(--w-bold);
   font-variation-settings: "wdth" var(--wd-wide);
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-11);
   line-height: 1;
   color: var(--fg-primary);
   text-decoration: none;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
+/* The mark, drawn rather than shipped: three ascending bars, which is what the
+   product is. A 9px blue square beside a letterspaced grotesque is a bullet,
+   not a lockup, and it was the one saturated element on the page with nothing
+   to say. */
 .wordmark::before {
   content: "";
-  width: 9px;
-  height: 9px;
-  border-radius: var(--r-1);
-  background: var(--signal-500);
-  box-shadow: 0 0 10px var(--signal-glow);
+  width: 0.82em;
+  height: 0.82em;
+  flex: 0 0 auto;
+  background:
+    linear-gradient(var(--signal-500) 0 0) 0 100% / 0.18em 0.35em no-repeat,
+    linear-gradient(var(--signal-500) 0 0) 0.32em 100% / 0.18em 0.59em no-repeat,
+    linear-gradient(var(--signal-500) 0 0) 0.64em 100% / 0.18em 0.82em no-repeat;
 }
 
-.site-tagline {
+/* -- Masthead navigation --------------------------------------------------
+   Plain text links, the same four on every route. Four bordered pills in a
+   masthead is heavier than anything the references do, and a masthead whose
+   contents change per page is not a masthead. */
+.site-nav {
+  display: flex;
+  gap: var(--s-8);
+  align-items: center;
+  justify-self: start;
+  min-width: 0;
+}
+
+.site-nav a,
+.site-nav-aside {
+  position: relative;
+  padding: var(--s-3) 0;
+  font-size: var(--t-13);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-13);
+  color: var(--fg-secondary);
+  white-space: nowrap;
+  transition: var(--tr-tint);
+}
+
+.site-nav a:hover,
+.site-nav-aside:hover {
+  color: var(--fg-primary);
+}
+
+/* Three mutually reinforcing cues: ink, weight and a 2px marker. Current route
+   must remain apparent without hover and without relying on hue alone. */
+.site-nav a[aria-current="page"] {
+  font-weight: var(--w-strong);
+  color: var(--fg-primary);
+}
+
+.site-nav a[aria-current="page"]::after {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--s-5) * -1);
+  left: 0;
+  height: 2px;
+  border-radius: var(--r-full);
+  background: var(--signal-500);
+  content: "";
+}
+
+/* Pulled by half an icon button's own padding so the glyph — not its 32px hit
+   box — lands on the rail's right edge, level with the end of the hairline
+   under it. */
+.header-actions {
+  display: flex;
+  gap: var(--s-7);
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: calc(var(--s-4) * -1);
+}
+
+/* -- Hero readout ---------------------------------------------------------
+   A compact title and the board's answer. The evidence contract immediately
+   below it is part of the same bounded unit, never an independently placed grid
+   child that can swap order with the leaderboard. */
+.hero-evidence {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.readout {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.readout-title {
+  max-width: 32ch;
+  font-size: var(--t-27);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-27);
+  line-height: var(--lh-27);
+  text-wrap: balance;
+}
+
+.readout-leader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "eyebrow freshness"
+    "score identity"
+    "more more";
+  gap: var(--s-3) var(--s-7);
+  align-items: end;
+}
+
+.readout-empty {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-3) var(--s-7);
+  align-items: center;
+}
+
+.readout-empty .readout-lab {
+  grid-column: 1 / -1;
+}
+
+.readout-eyebrow {
+  grid-area: eyebrow;
   font-size: var(--t-12);
+  font-weight: var(--w-medium);
   letter-spacing: var(--ls-12);
   color: var(--fg-tertiary);
 }
 
-.header-actions {
-  display: flex;
-  gap: var(--s-3);
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+.readout-leader > .freshness {
+  grid-area: freshness;
+  justify-self: end;
 }
 
-/* -- Readout --------------------------------------------------------------
-   The board's own top answer, given away instantly. This is the LCP element:
-   text, no image, in a preloaded font. */
-.readout {
-  position: relative;
+.readout-score {
   display: grid;
-  gap: var(--s-4);
-  padding: var(--s-9) 0 var(--s-8);
+  grid-area: score;
+  gap: var(--s-2);
+  align-self: end;
 }
 
-.readout::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: -12% 0 0 0;
-  background: radial-gradient(closest-side, var(--signal-glow), transparent 70%);
-  filter: blur(48px);
-  opacity: 0.55;
-  animation: pulse-soft var(--dur-ambient) ease-in-out infinite;
-  pointer-events: none;
-}
-
-.readout-eyebrow {
-  display: flex;
-  gap: var(--s-4);
-  align-items: center;
-  flex-wrap: wrap;
-  font-size: var(--t-11);
-  font-weight: var(--w-strong);
-  letter-spacing: var(--ls-11);
-  text-transform: uppercase;
-  color: var(--fg-tertiary);
-}
-
-.readout-body {
-  display: flex;
-  gap: var(--s-5) var(--s-9);
-  align-items: baseline;
-  flex-wrap: wrap;
-  row-gap: 0;
+.readout-identity {
+  grid-area: identity;
+  min-width: 0;
+  padding-bottom: var(--s-2);
 }
 
 .readout-name {
   font-size: var(--t-h1);
-  font-weight: var(--w-display);
+  font-weight: var(--w-medium);
   font-variation-settings: "wdth" var(--wd-normal);
   letter-spacing: var(--ls-h1);
   line-height: var(--lh-h1);
@@ -153,12 +249,9 @@
 }
 
 .readout-value {
-  display: flex;
-  gap: var(--s-4);
-  align-items: baseline;
-  font-family: var(--font-ui, system-ui), system-ui, sans-serif;
+  margin-left: -0.04em;
   font-size: var(--t-readout);
-  font-variant-numeric: normal;
+  font-variant-numeric: lining-nums;
   font-variation-settings: "wdth" var(--wd-normal);
   font-weight: var(--w-display);
   letter-spacing: var(--ls-readout);
@@ -166,31 +259,111 @@
   color: var(--fg-primary);
 }
 
-.readout-value .unit {
-  font-size: var(--t-15);
+.readout-unit {
+  font-size: var(--t-12);
   font-weight: var(--w-medium);
-  letter-spacing: var(--ls-11);
+  letter-spacing: var(--ls-10);
   text-transform: uppercase;
   color: var(--fg-tertiary);
+  white-space: nowrap;
 }
 
 .readout-lab {
-  font-size: var(--t-13);
-  color: var(--fg-secondary);
-}
-
-/* -- Provenance ribbon ----------------------------------------------------
-   The product's thesis, stated before the board rather than in the footer. */
-.provenance-ribbon {
-  padding: var(--s-5) 0 var(--s-7);
+  margin-top: var(--s-3);
+  max-width: 72ch;
   font-size: var(--t-13);
   line-height: var(--lh-13);
-  letter-spacing: var(--ls-13);
   color: var(--fg-secondary);
   text-wrap: pretty;
 }
 
-.provenance-ribbon strong {
+.readout-more {
+  grid-area: more;
+  align-self: end;
+  justify-self: start;
+  font-size: var(--t-13);
+  font-weight: var(--w-medium);
+  color: var(--fg-primary);
+  white-space: nowrap;
+  text-decoration-line: underline;
+  text-decoration-color: var(--line-interactive);
+  transition: var(--tr-tint);
+}
+
+.readout-more:hover {
+  text-decoration-color: var(--signal-500);
+}
+
+@media (min-width: 760px) {
+  .readout-leader {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "eyebrow eyebrow freshness"
+      "score identity more";
+    column-gap: var(--s-8);
+  }
+
+  .readout-more {
+    justify-self: end;
+  }
+}
+
+/* -- Evidence line --------------------------------------------------------
+   Counts and ownership remain visible in the closed state. The longer contract
+   is disclosed in place, so trust is available without spending half a
+   viewport before the first row. */
+.hero-evidence-line {
+  display: grid;
+  border-top: 1px solid var(--line-subtle);
+  border-bottom: 1px solid var(--line-subtle);
+}
+
+.provenance-ribbon {
+  min-width: 0;
+  font-size: var(--t-12);
+  line-height: var(--lh-12);
+  color: var(--fg-secondary);
+}
+
+.provenance-ribbon summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-2) var(--s-5);
+  align-content: center;
+  min-height: 44px;
+  padding: var(--s-3) 0;
+  list-style: none;
+  cursor: pointer;
+}
+
+.provenance-ribbon summary::-webkit-details-marker {
+  display: none;
+}
+
+.provenance-ribbon summary::after {
+  grid-area: 1 / 2 / span 2;
+  align-self: center;
+  width: 6px;
+  height: 6px;
+  margin-right: var(--s-2);
+  border-right: 1.5px solid currentcolor;
+  border-bottom: 1.5px solid currentcolor;
+  content: "";
+  transform: rotate(45deg);
+  transition: transform var(--dur-snap) var(--ease-snap);
+}
+
+.provenance-ribbon[open] summary::after {
+  transform: rotate(225deg);
+}
+
+.provenance-ribbon summary:hover,
+.provenance-ribbon[open] summary {
+  color: var(--fg-primary);
+}
+
+.provenance-ribbon strong,
+.provenance-claim {
   font-weight: var(--w-strong);
   color: var(--fg-primary);
 }
@@ -199,29 +372,82 @@
   display: inline-block;
   width: 3px;
   height: 3px;
-  margin: 0 var(--s-4);
+  margin: 0 var(--s-3);
   border-radius: var(--r-full);
   background: var(--line-strong);
   vertical-align: middle;
 }
 
-.provenance-claim {
-  color: var(--fg-primary);
+.provenance-summary {
+  color: var(--fg-secondary);
 }
 
-/* -- Freshness chip ------------------------------------------------------- */
+.provenance-detail {
+  display: grid;
+  gap: var(--s-4);
+  max-width: var(--measure);
+  padding: var(--s-5) var(--s-8) var(--s-6) 0;
+  border-top: 1px solid var(--line-subtle);
+  color: var(--fg-secondary);
+  text-wrap: pretty;
+}
+
+.change-strip {
+  display: flex;
+  gap: var(--s-5);
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: var(--s-3) 0;
+  border-top: 1px solid var(--line-subtle);
+  font-size: var(--t-12);
+  line-height: var(--lh-12);
+  color: var(--fg-secondary);
+}
+
+.change-strip a {
+  flex: 0 0 auto;
+  font-weight: var(--w-strong);
+}
+
+@media (min-width: 1000px) {
+  .hero-evidence-line {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.46fr);
+  }
+
+  .provenance-ribbon summary {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--s-5);
+  }
+
+  .provenance-ribbon summary::after {
+    grid-area: auto;
+  }
+
+  .change-strip {
+    padding-left: var(--s-7);
+    border-top: 0;
+    border-left: 1px solid var(--line-subtle);
+  }
+}
+
+/* -- Freshness chip -------------------------------------------------------
+   The case reset mirrors the .tooltip-host precedent: the chip is nested in
+   the readout eyebrow, which is uppercase, so without it one component
+   rendered "UPDATED YESTERDAY" on one route and "Updated yesterday" on
+   another. */
 .freshness {
   display: inline-flex;
   gap: var(--s-3);
   align-items: center;
   padding: var(--s-2) var(--s-4);
   border: 1px solid var(--line-subtle);
-  border-radius: var(--r-full);
-  background: var(--bg-raised);
-  box-shadow: var(--e-1);
-  font-size: var(--t-11);
+  border-radius: var(--r-1);
+  background: transparent;
+  font-size: var(--t-12);
   font-weight: var(--w-medium);
-  letter-spacing: var(--ls-11);
+  letter-spacing: var(--ls-12);
+  text-transform: none;
   color: var(--fg-secondary);
   white-space: nowrap;
 }
@@ -240,359 +466,138 @@
   box-shadow: 0 0 8px color-mix(in srgb, var(--warn) 55%, transparent);
 }
 
-/* -- Footer --------------------------------------------------------------- */
+/* -- Footer ---------------------------------------------------------------
+   The masthead mirrored, and mirrored exactly: one hairline, the wordmark at
+   the left edge and the links at the right edge of the same line, with the
+   attribution grounding both underneath. A vertical stack of four links
+   floating 1130px from the wordmark is a gap, not a composition. */
 .site-footer {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  gap: var(--s-8) var(--s-9);
-  align-items: start;
-  margin-top: var(--s-12);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-6) var(--s-9);
+  align-items: center;
   padding-top: var(--s-8);
-  border-top: 1px solid var(--line-subtle);
+  border-top: 1px solid var(--line);
 }
 
 .site-footer > p {
-  grid-column: 1;
-  max-width: 62ch;
+  grid-area: 2 / 1 / auto / -1;
+  max-width: 78ch;
   font-size: var(--t-12);
   line-height: var(--lh-12);
   color: var(--fg-tertiary);
 }
 
 .site-footer .wordmark {
-  grid-column: 1;
+  grid-area: 1 / 1;
   font-size: var(--t-13);
 }
 
 .site-footer nav {
   display: flex;
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  gap: var(--s-6);
+  grid-area: 1 / 2;
+  gap: var(--s-8);
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: flex-end;
 }
 
 .site-footer nav a {
   font-size: var(--t-12);
   font-weight: var(--w-medium);
   color: var(--fg-secondary);
+  transition: var(--tr-tint);
 }
 
 .site-footer nav a:hover {
   color: var(--fg-primary);
 }
 
-/* -- Long-form pages (methodology, model record, 404) ---------------------- */
-.longform {
-  padding-top: var(--s-8);
-}
-
-.longform-intro {
-  display: grid;
-  gap: var(--s-6);
-  max-width: var(--measure);
-  padding-bottom: var(--s-9);
-}
-
-.longform-intro h1 {
-  font-size: var(--t-h1);
-  font-weight: var(--w-display);
-  letter-spacing: var(--ls-h1);
-  line-height: var(--lh-h1);
-  text-wrap: balance;
-}
-
-.longform-intro > p {
-  font-size: var(--t-17);
-  line-height: var(--lh-17);
-  color: var(--fg-secondary);
-}
-
-.method-sections {
-  display: grid;
-  gap: var(--s-9);
-  border-top: 1px solid var(--line-subtle);
-  padding-top: var(--s-9);
-}
-
-.method-section {
-  display: grid;
-  grid-template-columns: minmax(180px, 0.32fr) minmax(0, 1fr);
-  gap: var(--s-6) var(--s-9);
-  align-items: start;
-}
-
-.method-rail h2 {
-  position: sticky;
-  top: var(--s-6);
-  font-size: var(--t-21);
+.site-footer nav a[aria-current] {
   font-weight: var(--w-strong);
-  letter-spacing: var(--ls-21);
-  line-height: var(--lh-21);
-  text-wrap: balance;
-}
-
-.method-body {
-  max-width: var(--measure);
-}
-
-.method-body > * + * {
-  margin-top: var(--s-6);
-}
-
-.method-body > p {
-  font-size: var(--t-15);
-  line-height: var(--lh-15);
-  color: var(--fg-secondary);
-}
-
-.method-body a {
   color: var(--fg-primary);
-  text-decoration-line: underline;
-  text-decoration-color: var(--line-interactive);
-  text-decoration-thickness: 1px;
-}
-
-.method-body a:hover {
-  text-decoration-color: var(--signal-500);
-  text-decoration-thickness: 2px;
-}
-
-.method-body .formula {
-  padding: var(--s-5) var(--s-6);
-  border: 1px solid var(--line-subtle);
-  border-left: 2px solid var(--signal-500);
-  border-radius: var(--r-2);
-  background: var(--bg-inset);
-  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
-  font-size: var(--t-13);
-  line-height: var(--lh-13);
-  color: var(--fg-primary);
-}
-
-/* -- Methodology: worked example, benchmark roster, corrections note ------- */
-.method-example-scroll {
-  overflow-x: auto;
-  border: 1px solid var(--line-subtle);
-  border-radius: var(--r-3);
-  background: var(--bg-raised);
-}
-
-.method-example table {
-  width: 100%;
-  min-width: 480px;
-  border-collapse: collapse;
-}
-
-.method-example th,
-.method-example td {
-  padding: var(--s-4) var(--s-5);
-  border-bottom: 1px solid var(--line-subtle);
-  text-align: right;
-  white-space: nowrap;
-}
-
-.method-example thead th {
-  font-size: var(--t-10);
-  font-weight: var(--w-strong);
-  letter-spacing: var(--ls-10);
-  text-transform: uppercase;
-  color: var(--fg-tertiary);
-}
-
-.method-example tbody tr:last-child th,
-.method-example tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.method-example tbody th {
-  font-size: var(--t-13);
-  font-weight: var(--w-strong);
-  text-align: left;
-  color: var(--fg-primary);
-}
-
-.method-example td {
-  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
-  font-size: var(--t-12);
-  font-variant-numeric: tabular-nums;
-  color: var(--fg-secondary);
-}
-
-.method-example .example-rank {
-  text-align: center;
-}
-
-.method-example .example-model {
-  text-align: left;
-}
-
-.method-example .example-index {
-  font-weight: var(--w-bold);
-  color: var(--fg-primary);
-}
-
-.method-example figcaption {
-  margin-top: var(--s-5);
-  font-size: var(--t-12);
-  line-height: var(--lh-12);
-  color: var(--fg-tertiary);
-}
-
-.method-benchlist {
-  display: grid;
-  gap: var(--s-8);
-  margin-top: var(--s-7);
-}
-
-.method-benchgroup h3 {
-  margin-bottom: var(--s-3);
-  font-size: var(--t-10);
-  font-weight: var(--w-strong);
-  letter-spacing: var(--ls-10);
-  text-transform: uppercase;
-  color: var(--fg-tertiary);
-}
-
-.method-benchgroup ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.method-benchgroup li {
-  display: grid;
-  grid-template-columns: minmax(130px, 0.42fr) minmax(0, 1fr) auto;
-  gap: var(--s-3) var(--s-6);
-  align-items: baseline;
-  padding: var(--s-5) 0;
-  border-top: 1px solid var(--line-subtle);
-}
-
-.bench-name {
-  font-size: var(--t-13);
-  font-weight: var(--w-strong);
-  letter-spacing: var(--ls-13);
-  color: var(--fg-primary);
-}
-
-.bench-desc {
-  font-size: var(--t-12);
-  line-height: var(--lh-12);
-  color: var(--fg-secondary);
-}
-
-.method-benchgroup li a {
-  font-size: var(--t-11);
-  font-weight: var(--w-medium);
-  color: var(--signal-500);
-  white-space: nowrap;
-}
-
-.method-benchgroup li a:hover {
   text-decoration: underline;
+  text-decoration-color: var(--signal-500);
+  text-underline-offset: var(--s-2);
 }
 
-.methodology-note {
-  display: flex;
-  gap: var(--s-7);
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding: var(--s-8) 0 0;
-  margin-top: var(--s-9);
-  border-top: 1px solid var(--line-subtle);
-  font-size: var(--t-12);
-  line-height: var(--lh-12);
-  color: var(--fg-tertiary);
-}
-
-.methodology-note p {
-  max-width: 68ch;
-}
-
-.not-found {
-  max-width: 62ch;
-  padding: var(--s-12) 0;
-}
-
-.not-found h1 {
-  margin-bottom: var(--s-6);
-  font-size: var(--t-h1);
-  font-weight: var(--w-display);
-  letter-spacing: var(--ls-h1);
-  line-height: var(--lh-h1);
-}
-
-.not-found p {
-  margin-bottom: var(--s-7);
-  font-size: var(--t-15);
-  line-height: var(--lh-15);
-  color: var(--fg-secondary);
-}
-
+/* Uppercase is for container labels of three words or fewer, and caps below
+   13px want tracking rather than weight — heavier than the text it introduces
+   makes a label shout. */
 .section-kicker,
 .detail-eyebrow {
   margin-bottom: var(--s-4);
   font-size: var(--t-11);
-  font-weight: var(--w-strong);
-  letter-spacing: var(--ls-11);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-10);
   text-transform: uppercase;
   color: var(--fg-tertiary);
 }
 
 @media (max-width: 900px) {
-  .method-section {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .method-rail h2 {
-    position: static;
-  }
-
   .site-footer {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .site-footer nav {
-    grid-column: 1;
-    grid-row: auto;
-    justify-content: flex-start;
+    grid-area: auto / 1;
+    gap: var(--s-6);
+    flex-wrap: wrap;
   }
 }
 
-@media (max-width: 720px) {
-  /* The name and the readout numeral cannot share a line at this width:
-     40px + 64px of type plus the gap overflows a 390px viewport. */
-  .readout-body {
-    flex-direction: column;
-    align-items: flex-start;
-    row-gap: var(--s-2);
+/* Two deterministic rows rather than a wrap: the identity and the controls
+   share the first, the nav owns the second. Which row an item lands on is
+   decided by a media query, never by how wide a webfont renders a word. */
+@media (max-width: 760px) {
+  .site-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--s-5);
+    padding-bottom: var(--s-5);
   }
 
-  .readout-value {
-    line-height: 1;
+  .site-nav {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    gap: var(--s-6);
+    justify-self: start;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
 }
 
 @media (max-width: 560px) {
-  .site-shell {
-    padding-top: var(--s-6);
+  :root {
+    --section-gap: var(--s-9);
   }
 
-  .readout {
+  .site-frame {
+    padding-top: var(--s-5);
+    padding-bottom: var(--s-8);
+  }
+
+  .site-shell {
+    padding-top: var(--s-7);
+    padding-bottom: var(--s-10);
+  }
+
+  .site-shell:has(> .hero-evidence) {
     padding-top: var(--s-7);
   }
 
-  .site-header {
-    gap: var(--s-4);
+  .readout-leader {
+    column-gap: var(--s-5);
   }
 
-  .provenance-ribbon,
-  .change-strip {
-    font-size: var(--t-12);
+  .readout-title {
+    font-size: var(--t-21);
+    letter-spacing: var(--ls-21);
+  }
+
+  .readout-name {
+    font-size: clamp(28px, 8vw, 34px);
+  }
+
+  .provenance-detail {
+    padding-right: 0;
   }
 }
 

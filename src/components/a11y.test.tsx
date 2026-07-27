@@ -9,10 +9,14 @@ import { Methodology } from "@/components/Methodology";
 import { ModelRecord } from "@/components/ModelRecord";
 import { ProvenanceRibbon } from "@/components/ProvenanceRibbon";
 import { Readout } from "@/components/Readout";
+import { toComparePayload } from "@/lib/compare";
 import { loadLeaderboardData } from "@/lib/data";
 import { coverageThreshold } from "@/lib/index";
+import { toLeaderboardClientPayload } from "@/lib/leaderboardPayload";
 
 const data = loadLeaderboardData();
+const payload = toLeaderboardClientPayload(data);
+const comparePayload = toComparePayload(data);
 const { minimumCoverageCount, percentBenchmarkCount } = coverageThreshold(
   data.benchmarks,
 );
@@ -46,7 +50,7 @@ describe("accessibility — no axe violations", () => {
       <main>
         <h1 id="leaderboard-heading">LM Board</h1>
         <Leaderboard
-          data={data}
+          payload={payload}
           minimumCoverageCount={minimumCoverageCount}
           percentBenchmarkCount={percentBenchmarkCount}
         />
@@ -62,7 +66,7 @@ describe("accessibility — no axe violations", () => {
       <main>
         <h1 id="leaderboard-heading">LM Board</h1>
         <Leaderboard
-          data={data}
+          payload={payload}
           minimumCoverageCount={minimumCoverageCount}
           percentBenchmarkCount={percentBenchmarkCount}
         />
@@ -73,10 +77,32 @@ describe("accessibility — no axe violations", () => {
     expect(await scan(container)).toEqual([]);
   }, 30000);
 
+  it("the board in the profile projection", async () => {
+    // Structurally the most different projection: the spark is a list of links
+    // inside a table cell, so list nesting and link naming are worth scanning.
+    window.history.replaceState({}, "", "/?view=profile");
+
+    try {
+      const { container } = render(
+        <main>
+          <h1 id="leaderboard-heading">LM Board</h1>
+          <Leaderboard
+            payload={payload}
+            minimumCoverageCount={minimumCoverageCount}
+            percentBenchmarkCount={percentBenchmarkCount}
+          />
+        </main>,
+      );
+
+      expect(await scan(container)).toEqual([]);
+    } finally {
+      window.history.replaceState({}, "", "/");
+    }
+  }, 30000);
+
   it("the readout and provenance ribbon", async () => {
     const { container } = render(
       <main>
-        <h1>LM Board</h1>
         <Readout leader={data.rows[0]} lastUpdated={data.lastUpdated} />
         <ProvenanceRibbon
           scoreCount={data.scoreCount}
@@ -117,7 +143,7 @@ describe("accessibility — no axe violations", () => {
   it("the compare grid", async () => {
     const { container } = render(
       <main>
-        <CompareGrid rows={data.rows} benchmarks={data.benchmarks} />
+        <CompareGrid payload={comparePayload} />
       </main>,
     );
 
@@ -132,7 +158,7 @@ describe("keyboard paths", () => {
       <main>
         <h1 id="leaderboard-heading">LM Board</h1>
         <Leaderboard
-          data={data}
+          payload={payload}
           minimumCoverageCount={minimumCoverageCount}
           percentBenchmarkCount={percentBenchmarkCount}
         />
@@ -168,7 +194,7 @@ describe("keyboard paths", () => {
       <main>
         <h1 id="leaderboard-heading">LM Board</h1>
         <Leaderboard
-          data={data}
+          payload={payload}
           minimumCoverageCount={minimumCoverageCount}
           percentBenchmarkCount={percentBenchmarkCount}
         />
@@ -184,15 +210,19 @@ describe("keyboard paths", () => {
       <main>
         <h1 id="leaderboard-heading">LM Board</h1>
         <Leaderboard
-          data={data}
+          payload={payload}
           minimumCoverageCount={minimumCoverageCount}
           percentBenchmarkCount={percentBenchmarkCount}
         />
       </main>,
     );
 
-    // Reachable by keyboard because it is a real anchor in the tab order.
-    const links = getAllByRole("link", { name: /^Source for / });
+    // Every score remains a real source anchor in static HTML. The enhanced
+    // grid removes them from sequential Tab order and exposes them through one
+    // roving cell stop instead of forcing hundreds of Tabs.
+    const links = getAllByRole("link", {
+      name: /^\d+(?:\.\d+)? — .+ source, .+, retrieved /,
+    });
     expect(links.length).toBeGreaterThan(100);
   });
 });

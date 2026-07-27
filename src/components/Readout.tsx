@@ -10,47 +10,54 @@ type ReadoutProps = {
 };
 
 /**
- * The board's own top answer, given away before the visitor does any work.
- * This is the LCP element: text in a preloaded font, no image, and its box is
- * reserved by a fixed line-height so it cannot shift.
+ * The page title and the board's top answer, before the visitor does any work.
+ * Both are text in preloaded faces, so the whole hero is fast, selectable and
+ * stable without spending the first viewport on decoration.
  */
 export function Readout({ leader, lastUpdated }: ReadoutProps) {
-  if (!leader || leader.index === null) {
-    return (
-      <div className="readout">
-        <p className="readout-eyebrow">
-          <span>Leading model</span>
-          <FreshnessChip date={lastUpdated} />
-        </p>
-        <p className="readout-lab">
-          No model currently clears the coverage threshold for an Overall Index.
-        </p>
-      </div>
-    );
-  }
+  const overall = leader?.scopes.overall;
 
   return (
-    <div className="readout readout-parallax">
-      <p className="readout-eyebrow">
-        <span>Leading the Overall Index</span>
-        <FreshnessChip date={lastUpdated} />
-      </p>
-      <div className="readout-body">
-        <h2 className="readout-name">
-          <Link href={`/model/${leader.model.id}`}>{leader.model.name}</Link>
-        </h2>
-        <p className="readout-value num">
-          {formatScore(leader.index)}
-          <span className="unit">index</span>
-        </p>
-      </div>
-      <p className="readout-lab">
-        {leader.model.lab} · {leader.coverageCount} of {leader.coverageTotal}{" "}
-        benchmarks measured
-        {leader.estimatedCount > 0
-          ? ` · ${leader.estimatedCount} estimated`
-          : null}
-      </p>
+    <div className="readout">
+      <h1 className="readout-title" id="leaderboard-heading">
+        Frontier model benchmark index
+      </h1>
+      {!leader || !overall || overall.index === null ? (
+        <div className="readout-empty">
+          <p className="readout-eyebrow">Current leader</p>
+          <FreshnessChip date={lastUpdated} />
+          <p className="readout-lab">
+            No model currently clears the coverage threshold for an Overall
+            Index.
+          </p>
+        </div>
+      ) : (
+        <div className="readout-leader">
+          <p className="readout-eyebrow">Current leader</p>
+          <FreshnessChip date={lastUpdated} />
+          <div className="readout-score">
+            <p className="readout-value">{formatScore(overall.index)}</p>
+            <p className="readout-unit">Overall Index</p>
+          </div>
+          <div className="readout-identity">
+            <h2 className="readout-name">
+              <Link href={`/model/${leader.model.id}`} prefetch={false}>
+                {leader.model.name}
+              </Link>
+            </h2>
+            <p className="readout-lab">
+              {leader.model.lab} · equal-weight mean of {overall.coverageTotal}{" "}
+              benchmarks, 0–100 · {overall.coverageCount} measured
+              {overall.estimatedCount > 0
+                ? `, ${overall.estimatedCount} estimated`
+                : null}
+            </p>
+          </div>
+          <Link className="readout-more" href="/methodology" prefetch={false}>
+            How the Index works
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

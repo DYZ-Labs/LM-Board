@@ -1,0 +1,269 @@
+/* Long-form and document-only layout. Route-scoped so methodology and record
+   prose do not occupy the leaderboard's critical stylesheet. */
+@layer layout {
+
+.site-frame:has(.longform) {
+  max-width: calc(1120px + var(--gutter) * 2);
+}
+
+.longform-intro {
+  display: grid;
+  gap: var(--s-5);
+  max-width: var(--measure);
+  padding-bottom: var(--s-9);
+}
+
+.longform-intro h1 {
+  font-size: var(--t-h1);
+  font-weight: var(--w-display);
+  letter-spacing: var(--ls-h1);
+  line-height: var(--lh-h1);
+  text-wrap: balance;
+}
+
+.longform-intro > p {
+  font-size: var(--t-17);
+  line-height: var(--lh-17);
+  color: var(--fg-secondary);
+}
+
+.method-sections {
+  display: grid;
+  gap: var(--s-9);
+  border-top: 1px solid var(--line-subtle);
+  padding-top: var(--s-9);
+}
+
+.method-section {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.32fr) minmax(0, 1fr);
+  gap: var(--s-6) var(--s-9);
+  align-items: start;
+}
+
+.method-rail h2 {
+  position: sticky;
+  top: var(--s-6);
+  font-size: var(--t-27);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-27);
+  line-height: var(--lh-27);
+  text-wrap: balance;
+}
+
+.method-body {
+  max-width: var(--measure);
+}
+
+.method-body > * + * {
+  margin-top: var(--s-6);
+}
+
+.method-body > p {
+  font-size: var(--t-15);
+  line-height: var(--lh-15);
+  color: var(--fg-secondary);
+}
+
+.vendor-term {
+  font-weight: var(--w-strong);
+  color: var(--warn);
+  white-space: nowrap;
+}
+
+.method-body a {
+  color: var(--fg-primary);
+  text-decoration-line: underline;
+  text-decoration-color: var(--line-interactive);
+  text-decoration-thickness: 1px;
+}
+
+.method-body a:hover {
+  text-decoration-color: var(--signal-500);
+  text-decoration-thickness: 2px;
+}
+
+.method-body .formula {
+  padding: var(--s-5) var(--s-6);
+  border: 1px solid var(--line-subtle);
+  border-left: 2px solid var(--signal-500);
+  border-radius: var(--r-2);
+  background: var(--bg-inset);
+  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
+  font-size: var(--t-13);
+  line-height: var(--lh-13);
+  color: var(--fg-primary);
+}
+
+.method-example-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-3);
+  background: var(--bg-raised);
+}
+
+.method-example table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+}
+
+.method-example th,
+.method-example td {
+  padding: var(--s-4);
+  border-bottom: 1px solid var(--line-subtle);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.method-example thead th {
+  font-size: var(--t-12);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-10);
+  text-transform: uppercase;
+  color: var(--fg-tertiary);
+}
+
+.method-example tbody tr:last-child th,
+.method-example tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.method-example tbody th {
+  font-size: var(--t-13);
+  font-weight: var(--w-strong);
+  text-align: left;
+  color: var(--fg-primary);
+}
+
+.method-example td {
+  font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
+  font-size: var(--t-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-secondary);
+}
+
+.method-example .example-rank {
+  text-align: center;
+}
+
+.method-example .example-model {
+  text-align: left;
+}
+
+.method-example .example-index {
+  font-weight: var(--w-bold);
+  color: var(--fg-primary);
+}
+
+.method-example figcaption {
+  margin-top: var(--s-5);
+  font-size: var(--t-12);
+  line-height: var(--lh-12);
+  color: var(--fg-tertiary);
+}
+
+.method-benchlist {
+  display: grid;
+  gap: var(--s-8);
+  margin-top: var(--s-7);
+}
+
+.method-benchgroup h3 {
+  margin-bottom: var(--s-3);
+  font-size: var(--t-11);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-10);
+  text-transform: uppercase;
+  color: var(--fg-tertiary);
+}
+
+.method-benchgroup ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.method-benchgroup li {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.42fr) minmax(0, 1fr) auto;
+  gap: var(--s-3) var(--s-6);
+  align-items: baseline;
+  padding: var(--s-5) 0;
+  scroll-margin-top: var(--s-6);
+  border-top: 1px solid var(--line-subtle);
+}
+
+.bench-name {
+  font-size: var(--t-13);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--ls-13);
+  color: var(--fg-primary);
+}
+
+.bench-desc {
+  font-size: var(--t-12);
+  line-height: var(--lh-12);
+  color: var(--fg-secondary);
+}
+
+.method-benchgroup li a {
+  font-size: var(--t-12);
+  font-weight: var(--w-medium);
+  color: var(--signal-500);
+  white-space: nowrap;
+}
+
+.method-benchgroup li a:hover {
+  text-decoration: underline;
+}
+
+.methodology-note {
+  display: flex;
+  gap: var(--s-7);
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: var(--s-8) 0 0;
+  margin-top: var(--s-9);
+  border-top: 1px solid var(--line-subtle);
+  font-size: var(--t-12);
+  line-height: var(--lh-12);
+  color: var(--fg-tertiary);
+}
+
+.methodology-note p {
+  max-width: 68ch;
+}
+
+.not-found {
+  max-width: 62ch;
+  padding: var(--s-10) 0;
+}
+
+.not-found h1 {
+  margin-bottom: var(--s-6);
+  font-size: var(--t-h1);
+  font-weight: var(--w-display);
+  letter-spacing: var(--ls-h1);
+  line-height: var(--lh-h1);
+}
+
+.not-found p {
+  margin-bottom: var(--s-7);
+  font-size: var(--t-15);
+  line-height: var(--lh-15);
+  color: var(--fg-secondary);
+}
+
+@media (max-width: 900px) {
+  .method-section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .method-rail h2 {
+    position: static;
+  }
+}
+
+}
