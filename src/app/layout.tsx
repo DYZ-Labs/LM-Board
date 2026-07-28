@@ -51,7 +51,7 @@ const initializationScript = `
   try {
     if (window.location.pathname === "/") {
       var boardParams = new URLSearchParams(window.location.search);
-      var boardKeys = ["tab", "sort", "direction", "view", "density", "q", "labs", "open"];
+      var boardKeys = ["tab", "sort", "direction", "view", "q", "labs", "open"];
       var ownsBoardState = boardKeys.some(function (key) {
         return boardParams.has(key);
       });

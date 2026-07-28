@@ -29,7 +29,6 @@ import {
   type SortColumn,
 } from "@/lib/useSort";
 import {
-  DEFAULT_DENSITY,
   DEFAULT_VIEW,
   canonicalizeBoardState,
   modelFragment,
@@ -128,7 +127,6 @@ export function Leaderboard({
       sort: DEFAULT_SORT,
       view: DEFAULT_VIEW,
       viewExplicit: false,
-      density: DEFAULT_DENSITY,
       query: "",
       providers: null,
       openWeightsOnly: false,
@@ -148,7 +146,6 @@ export function Leaderboard({
   const commandBarRef = useRef<HTMLDivElement | null>(null);
   const {
     category,
-    density,
     expandedModelId,
     openWeightsOnly,
     providers,
@@ -554,7 +551,7 @@ export function Leaderboard({
       id="leaderboard"
       aria-labelledby="leaderboard-heading"
       aria-busy={!urlStateReady || undefined}
-      data-density={density}
+      data-density="compact"
     >
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         Showing {filteredRows.length} of {data.rows.length} models. Sorted by{" "}
@@ -580,7 +577,6 @@ export function Leaderboard({
           resultCount={filteredRows.length}
           totalCount={data.rows.length}
           view={view}
-          density={density}
           onQueryChange={updateQuery}
           onQueryCommit={commitSearchTransaction}
           onQueryCancel={cancelSearchTransaction}
@@ -592,12 +588,6 @@ export function Leaderboard({
           onFilterCancel={cancelFilterTransaction}
           onClear={clearFilters}
           onViewChange={handleViewChange}
-          onDensityChange={(nextDensity) =>
-            publishState(
-              { ...boardStateRef.current, density: nextDensity },
-              "push",
-            )
-          }
         />
       </div>
 
