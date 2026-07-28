@@ -191,10 +191,9 @@
   }
 
   /* The score numeral is the citation link, and its target is the whole cell:
-     44x44 would overlap the adjacent rows at every density, and the numeral
-     itself is only ~30x18. A full cell is 108x36 at the default density, and
-     the density control can raise it to 46. `.score-cell` is the positioned
-     ancestor, so `inset: 0` resolves against it rather than the link. */
+     44x44 would overlap adjacent rows, and the numeral itself is only ~30x18.
+     `.score-cell` is the positioned ancestor, so `inset: 0` resolves against
+     it rather than the link. */
   .score-source::after {
     position: absolute;
     inset: 0;

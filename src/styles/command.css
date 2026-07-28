@@ -1,6 +1,6 @@
 /* ===========================================================================
    Command — the sticky command bar above the board: its rows, the
-   result count and the segmented density / projection switches.
+   result count and the segmented projection switch.
    =========================================================================== */
 @layer projections {
 
@@ -50,9 +50,8 @@
 }
 
 /* A command popover may be anchored near either viewport edge. Its content
-   scrolls inside the overlay rather than pushing a provider or density control
-   off-screen. The mobile sheet can replace this surface without changing the
-   state API. */
+   scrolls inside the overlay rather than pushing a provider control off-screen.
+   The mobile sheet can replace this surface without changing the state API. */
 .command-bar .popover {
   width: min(320px, calc(100vw - 24px));
   max-height: min(
@@ -115,10 +114,7 @@
   color: var(--warn);
 }
 
-/* Segmented control — density and projection switches. Two of these sit side
-   by side, so they have to be the same object twice: one track, one chip
-   geometry, one case, and a gap wide enough that six segments do not read as
-   one control with two active items. */
+/* Segmented projection switch. */
 .segmented {
   display: flex;
   gap: 1px;
@@ -128,10 +124,6 @@
   border: 1px solid var(--line);
   border-radius: var(--r-2);
   background: var(--bg-inset);
-}
-
-.segmented + .segmented {
-  margin-left: var(--s-7);
 }
 
 .segmented button {
@@ -178,14 +170,6 @@
 
   .field {
     width: 100%;
-  }
-}
-
-@media (max-width: 640px) {
-  /* Density changes table row height; the CSS card projection does not consume
-     that token, so exposing the control on a phone would be a no-op. */
-  .density-disclosure {
-    display: none;
   }
 }
 

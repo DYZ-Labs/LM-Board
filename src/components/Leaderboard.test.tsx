@@ -954,83 +954,31 @@ describe("projections", () => {
 
 });
 
-/* Wave 2 removed this control and asserted its absence here. The complaint
-   behind that — two adjacent segmented controls reading as one six-segment
-   control with two active items — was real, but row density is part of the
-   brief, so the control is back behind its own trigger instead of gone. */
 describe("row density", () => {
-  function densityGroup() {
-    return screen.getByRole("group", { name: /row density/i });
-  }
-
-  it("offers the control and marks the default", () => {
-    render(board());
-
-    expect(
-      within(densityGroup()).getByRole("button", { name: /^Default/ }),
-    ).toHaveAttribute("aria-pressed", "true");
-  });
-
-  it("applies a switch to the board and records it in the URL", async () => {
-    const user = userEvent.setup();
+  it("keeps the default density without offering a control", () => {
     const { container } = render(board());
 
-    await user.click(
-      within(densityGroup()).getByRole("button", { name: /^Dense/ }),
-    );
-
-    expect(currentUrl().searchParams.get("density")).toBe("data");
-    // The attribute the three `[data-density]` `--row-h` blocks select on.
     expect(container.querySelector(".leaderboard")).toHaveAttribute(
       "data-density",
-      "data",
+      "compact",
     );
+    expect(
+      screen.queryByRole("group", { name: /row density/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Rows$/i }),
+    ).not.toBeInTheDocument();
   });
 
-  it("restores a density from ?density", () => {
+  it("ignores and removes a legacy density parameter", () => {
     go("/?density=comfortable");
     const { container } = render(board());
 
     expect(container.querySelector(".leaderboard")).toHaveAttribute(
       "data-density",
-      "comfortable",
+      "compact",
     );
-    expect(
-      within(densityGroup()).getByRole("button", { name: /^Roomy/ }),
-    ).toHaveAttribute("aria-pressed", "true");
-  });
-
-  it("drops the parameter when the density returns to the default", async () => {
-    const user = userEvent.setup();
-    go("/?density=data");
-    render(board());
-
-    await user.click(
-      within(densityGroup()).getByRole("button", { name: /^Default/ }),
-    );
-
     expect(currentUrl().searchParams.has("density")).toBe(false);
-  });
-
-  it("keeps deterministic control markup across viewport sizes", () => {
-    Object.defineProperty(window, "innerWidth", {
-      configurable: true,
-      writable: true,
-      value: 390,
-    });
-    try {
-      render(board());
-
-      expect(
-        screen.getByRole("group", { name: /row density/i }),
-      ).toBeInTheDocument();
-    } finally {
-      Object.defineProperty(window, "innerWidth", {
-        configurable: true,
-        writable: true,
-        value: 1440,
-      });
-    }
   });
 });
 
