@@ -11,14 +11,7 @@ import {
 
 import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { CloseIcon, SearchIcon } from "@/components/Icon";
-import { trackEvent } from "@/lib/track";
 import type { ProviderSelection, ViewMode } from "@/lib/urlState";
-
-const VIEWS: { value: ViewMode; label: string; title: string }[] = [
-  { value: "table", label: "Table", title: "All benchmark columns" },
-  { value: "profile", label: "Profile", title: "Compact profile with a score spark" },
-  { value: "plot", label: "Plot", title: "Price against Index" },
-];
 
 const POPOVER_WIDTH = 320;
 const POPOVER_GUTTER = 12;
@@ -103,7 +96,6 @@ export const FilterBar = memo(function FilterBar({
   openWeightsOnly,
   resultCount,
   totalCount,
-  view,
   onQueryChange,
   onQueryCommit,
   onQueryCancel,
@@ -114,7 +106,6 @@ export const FilterBar = memo(function FilterBar({
   onFilterCommit,
   onFilterCancel,
   onClear,
-  onViewChange,
 }: FilterBarProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const filtersRef = useRef<HTMLDetailsElement>(null);
@@ -394,31 +385,6 @@ export const FilterBar = memo(function FilterBar({
             </div>
           </details>
 
-          <div className="segmented" role="group" aria-label="Projection">
-            {VIEWS.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                // The visible word has to be inside the accessible name or voice
-                // control cannot activate it (WCAG 2.5.3): "click Table" failed
-                // against an aria-label of "All benchmark columns".
-                aria-label={`${option.label} — ${option.title}`}
-                aria-pressed={view === option.value}
-                onClick={() => {
-                  // Paired with viewport width because the open question this has to
-                  // answer is whether the narrow default is the projection people
-                  // actually want, or the one they immediately switch away from.
-                  trackEvent("projection_switch", {
-                    view: option.value,
-                    width: window.innerWidth,
-                  });
-                  onViewChange(option.value);
-                }}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
         </div>
 
         <div

@@ -740,7 +740,7 @@ describe("projections", () => {
 
   it("renders every benchmark column in the table projection", () => {
     go("/?view=table");
-    render(board());
+    const { container } = render(board());
 
     for (const benchmark of data.benchmarks) {
       expect(
@@ -749,6 +749,16 @@ describe("projections", () => {
         }),
       ).toBeInTheDocument();
     }
+
+    expect(container.querySelector(".index-column")).not.toHaveClass(
+      "is-inset",
+    );
+    expect(
+      container.querySelector(".benchmark-column.is-inset .sort-button"),
+    ).toHaveAccessibleName(/^Sort by CritPt/);
+    expect(
+      container.querySelectorAll(".score-cell.is-inset"),
+    ).toHaveLength(data.rows.length);
   });
 
   it("replaces benchmark columns with a spark in the profile projection", () => {
@@ -895,34 +905,21 @@ describe("projections", () => {
     expect(links[0]).toHaveTextContent(/^Evidence · \d+ scores$/);
   });
 
-  it("serialises an explicit projection switch", async () => {
-    const user = userEvent.setup();
+  it("does not render projection controls in the command bar", () => {
     render(board());
 
-    await user.click(screen.getByRole("button", { name: /score spark/i }));
-    expect(currentUrl().searchParams.get("view")).toBe("profile");
-  });
-
-  it("uses a native view transition for projection changes when motion is allowed", async () => {
-    const user = userEvent.setup();
-    const startViewTransition = vi.fn((update: () => void) => {
-      update();
-      return {};
-    });
-    Object.defineProperty(document, "startViewTransition", {
-      configurable: true,
-      value: startViewTransition,
-    });
-
-    try {
-      render(board());
-      await user.click(screen.getByRole("button", { name: /score spark/i }));
-
-      expect(startViewTransition).toHaveBeenCalledTimes(1);
-      expect(currentUrl().searchParams.get("view")).toBe("profile");
-    } finally {
-      Reflect.deleteProperty(document, "startViewTransition");
-    }
+    expect(
+      screen.queryByRole("group", { name: "Projection" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Table —/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Profile —/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Plot —/ }),
+    ).not.toBeInTheDocument();
   });
 
   it("bypasses view transitions in reduced-motion mode", () => {

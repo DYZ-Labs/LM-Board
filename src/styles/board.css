@@ -169,6 +169,10 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   flex-direction: row-reverse;
 }
 
+.board thead .index-column .sort-button {
+  text-align: right;
+}
+
 /* The caret is column state, not part of the label. Reserving 14px for it in
    nine columns — for a glyph painted in exactly one of them — is what pushed
    "T-Bench 2.1" into an ellipsis inside a card with an empty band above it. It
@@ -477,6 +481,16 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 
 .benchmark-column {
   width: var(--col-bench);
+}
+
+@media (min-width: 1024px) {
+  /* Keep the last benchmark away from the price divider without giving its
+     numerals a different alignment model: CritPt uses the same trailing rag
+     as every other score column, inset as a unit. */
+  .board[data-view="table"]
+    :is(.benchmark-column.is-inset, .score-cell.is-inset) {
+    padding-inline-end: var(--s-8);
+  }
 }
 
 .price-column,
@@ -828,7 +842,7 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   /* Compact benchmark headings reclaim enough room for their abbreviated
      labels at the narrowest width that still renders the full table. */
   .board[data-view="table"] .benchmark-column {
-    padding-inline: var(--s-2);
+    padding-inline: var(--s-2) var(--s-4);
   }
 }
 
@@ -844,7 +858,7 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   }
 
   .board[data-view="table"] .benchmark-column {
-    padding-inline: var(--s-2);
+    padding-inline: var(--s-2) var(--s-4);
   }
 
   .board thead :is(.index-column, .price-column),
