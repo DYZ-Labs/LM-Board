@@ -6,6 +6,7 @@ type ScoreCellProps = {
   score: LeaderboardClientScore | null;
   isBest: boolean;
   benchmarkName: string;
+  centered: boolean;
   featuredOnMobile: boolean;
 };
 
@@ -13,6 +14,7 @@ export function ScoreCell({
   score,
   isBest,
   benchmarkName,
+  centered,
   featuredOnMobile,
 }: ScoreCellProps) {
   if (!score) {
@@ -22,7 +24,7 @@ export function ScoreCell({
       // model scored zero. "Measured" is also the word the visible copy uses
       // for the same fact, in the ribbon and in the Index coverage line.
       <td
-        className={`numeric-cell score-cell missing-value${featuredOnMobile ? " is-mobile-sort-score" : ""}`}
+        className={`numeric-cell score-cell missing-value${centered ? " is-centered" : ""}${featuredOnMobile ? " is-mobile-sort-score" : ""}`}
         aria-label="Not measured"
       >
         {featuredOnMobile ? (
@@ -39,7 +41,7 @@ export function ScoreCell({
 
   return (
     <td
-      className={`numeric-cell score-cell${isBest ? " is-best" : ""}${featuredOnMobile ? " is-mobile-sort-score" : ""}`}
+      className={`numeric-cell score-cell${isBest ? " is-best" : ""}${centered ? " is-centered" : ""}${featuredOnMobile ? " is-mobile-sort-score" : ""}`}
     >
       {featuredOnMobile ? (
         <span className="mobile-score-label">{benchmarkName}</span>
