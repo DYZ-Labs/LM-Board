@@ -34,7 +34,7 @@ function responseFor(url: URL, headers = securityHeaders): Response {
       contentType: "text/html; charset=utf-8",
     },
     "/compare": {
-      body: "<html><h1>Compare AI models</h1><p>Choose up to four models.</p></html>",
+      body: "<html><h1>Compare AI models</h1><h2>Choose models</h2></html>",
       contentType: "text/html; charset=utf-8",
     },
     "/model/stable-model": {

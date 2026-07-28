@@ -30,6 +30,7 @@ export function validateDataIntegrity(
   const benchmarkById = new Map(
     benchmarks.map((benchmark) => [benchmark.id, benchmark]),
   );
+  const measuredBenchmarkIds = new Set<string>();
   const scorePairs = new Set<string>();
   const reasoningEffortsByModel = new Map<string, Set<string | null>>();
 
@@ -44,13 +45,17 @@ export function validateDataIntegrity(
     const benchmark = benchmarkById.get(score.benchmarkId);
     if (!benchmark) {
       errors.push(`${prefix}: unknown benchmarkId "${score.benchmarkId}"`);
-    } else if (
-      benchmark.unit === "percent" &&
-      (score.value < 0 || score.value > 100)
-    ) {
-      errors.push(
-        `${prefix}: percent value ${score.value} must be between 0 and 100`,
-      );
+    } else {
+      measuredBenchmarkIds.add(benchmark.id);
+
+      if (
+        benchmark.unit === "percent" &&
+        (score.value < 0 || score.value > 100)
+      ) {
+        errors.push(
+          `${prefix}: percent value ${score.value} must be between 0 and 100`,
+        );
+      }
     }
 
     if (scorePairs.has(pair)) {
@@ -64,6 +69,12 @@ export function validateDataIntegrity(
       reasoningEffortsByModel.get(score.modelId) ?? new Set();
     reasoningEfforts.add(score.reasoningEffort ?? null);
     reasoningEffortsByModel.set(score.modelId, reasoningEfforts);
+  }
+
+  for (const benchmark of benchmarkById.values()) {
+    if (!measuredBenchmarkIds.has(benchmark.id)) {
+      errors.push(`Benchmark "${benchmark.id}" has no score measurements`);
+    }
   }
 
   for (const [modelId, reasoningEfforts] of reasoningEffortsByModel) {
