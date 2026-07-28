@@ -479,6 +479,22 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   width: var(--col-bench);
 }
 
+@media (min-width: 1024px) {
+  .board :is(.index-column, .index-cell, .benchmark-column.is-centered, .score-cell.is-centered) {
+    text-align: center;
+  }
+
+  .board thead :is(.index-column, .benchmark-column.is-centered)
+    :is(.column-header-controls, .sort-button) {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .board .score-cell.is-centered .score-value-line {
+    justify-content: center;
+  }
+}
+
 .price-column,
 .price-cell {
   width: var(--col-price);

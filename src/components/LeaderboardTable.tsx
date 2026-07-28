@@ -677,7 +677,7 @@ export function LeaderboardTable({
                     sort={sort}
                     onSort={onSort}
                     interactive={!headerCollapsed}
-                    className="benchmark-column"
+                    className={`benchmark-column${benchmark.id === "critpt" ? " is-centered" : ""}`}
                     tooltip={
                       <Tooltip
                         label={benchmark.name}
@@ -866,6 +866,7 @@ export function LeaderboardTable({
                           key={benchmark.id}
                           score={row.scoresByBenchmark[benchmark.id]}
                           benchmarkName={benchmark.name}
+                          centered={benchmark.id === "critpt"}
                           featuredOnMobile={
                             sort.column.kind === "benchmark" &&
                             sort.column.id === benchmark.id
