@@ -152,7 +152,7 @@ function routeSpecs(model: ModelCandidate): RouteSpec[] {
     {
       path: "/compare",
       contentTypes: ["text/html"],
-      bodyIncludes: ["Compare AI models", "Choose up to"],
+      bodyIncludes: ["Compare AI models", "Choose models"],
     },
     {
       path: `/model/${model.id}`,
