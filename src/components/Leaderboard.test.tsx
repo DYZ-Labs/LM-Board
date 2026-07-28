@@ -750,14 +750,14 @@ describe("projections", () => {
       ).toBeInTheDocument();
     }
 
-    expect(container.querySelector(".index-column")).toHaveClass(
-      "index-column",
+    expect(container.querySelector(".index-column")).not.toHaveClass(
+      "is-inset",
     );
     expect(
-      container.querySelector(".benchmark-column.is-centered .sort-button"),
+      container.querySelector(".benchmark-column.is-inset .sort-button"),
     ).toHaveAccessibleName(/^Sort by CritPt/);
     expect(
-      container.querySelectorAll(".score-cell.is-centered"),
+      container.querySelectorAll(".score-cell.is-inset"),
     ).toHaveLength(data.rows.length);
   });
 
