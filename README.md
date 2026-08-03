@@ -30,8 +30,7 @@ transparent, coverage-gated Index.
   search models, switch projections, compare up to four models, and share the
   resulting URL.
 - **Citable records.** Every model has a stable `/model/<id>` page, and the
-  static export includes a sitemap, Atom data feed, `llms.txt`, and generated
-  Open Graph cards.
+  static export includes a sitemap, `llms.txt`, and generated Open Graph cards.
 
 ## How the Index works
 
@@ -83,7 +82,9 @@ The example environment file documents three settings:
 `npm run check` covers linting, type checking, tests, data validation, the
 production build, transfer and payload budgets, and content smoke checks.
 Production builds require a public site URL so exported metadata can never
-silently point to localhost.
+silently point to localhost. [AGENTS.md](./AGENTS.md) documents the full
+command set — including running a single test file — plus layout, conventions,
+and gotchas for working in this repo.
 
 ## Data
 
@@ -160,23 +161,39 @@ short-lived workflow token creates the branch and pull request.
 GitHub disables scheduled workflows after 60 days without repository activity.
 A manual dispatch re-enables the schedule.
 
-## Architecture and operations
+## Architecture
 
 - Next.js 15 App Router, TypeScript, React, and Zod
 - Build-time data assembly and a static production export
 - Vitest projects for ranking logic, data, UI behavior, accessibility, and
   discovery
-- Generated metadata, structured data, social cards, manifest, sitemap, Atom
-  feed, and `llms.txt`
+- Generated metadata, structured data, social cards, manifest, sitemap, and
+  `llms.txt`
 - Vercel deployment with strict response headers
-- A
-  [production monitor](https://github.com/DYZ-Labs/LM-Board/actions/workflows/monitor-production.yml)
-  that probes the leaderboard, comparison page, and a stable model record every
-  15 minutes
 
-For a bad deployment, promote the previous known-good Vercel deployment. If a
-data commit caused the problem, revert it on a new branch and merge the revert
-through the normal pull-request flow.
+## Operations
+
+- **Rollback:** If the site is down or a deploy is bad, open the LM Board
+  project in the Vercel dashboard, go to **Deployments**, select the previous
+  known-good deployment, and choose **Promote**. If a data commit caused the
+  problem, `git revert <commit>` on a new branch, open and merge the resulting
+  pull request, and let Vercel deploy it.
+- **Monitoring and alerts:**
+  [`monitor-production.yml`](https://github.com/DYZ-Labs/LM-Board/actions/workflows/monitor-production.yml)
+  probes `/`, `/compare`, and a deterministic model record every 15 minutes,
+  verifying status, content type, content sentinels, redirect origin, response
+  size, and security headers with bounded requests. Failures open or update one
+  `bug` issue assigned to `@thedanielyuan`; a healthy run closes the incident.
+  Run the same probe manually with
+  `npm run monitor:production -- --base-url https://www.checklmboard.xyz`.
+- **Discovery credential:** Discovery needs only `AA_API_KEY`; repository writes
+  use the short-lived workflow token on a separate publishing runner, and
+  checkout never persists credentials.
+- **Access:** Daniel Yuan (GitHub `@thedanielyuan`) is the primary documented
+  operator. Repository and Vercel owners must keep at least one second operator
+  able to merge, inspect deployments, and promote a rollback; access ownership
+  must be verified in those services because it cannot be proven from this
+  repository.
 
 ## Contributing
 
@@ -186,6 +203,8 @@ reasoning-effort consistency, and the required checks.
 
 Additional project documentation:
 
+- [AGENTS.md](./AGENTS.md) — commands, layout, conventions, and gotchas for
+  working in this repo (written for coding agents, useful to humans)
 - [Decision log and product specification](./PLAN.md)
 - [Visual design specification](./REDESIGN_PLAN.md)
 - [Production-readiness review](./PRODUCTION_READINESS.md)
