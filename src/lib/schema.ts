@@ -26,6 +26,13 @@ const isoDateSchema = z
 
 const urlSchema = z.httpUrl();
 
+export const SourceSchema = z
+  .object({
+    url: urlSchema,
+    retrieved: isoDateSchema,
+  })
+  .strict();
+
 export const ModelSchema = z
   .object({
     id: slugSchema,
@@ -38,6 +45,7 @@ export const ModelSchema = z
       .object({
         input: z.number().finite().nonnegative(),
         output: z.number().finite().nonnegative(),
+        source: SourceSchema,
       })
       .strict()
       .optional(),
@@ -61,12 +69,7 @@ export const ScoreSchema = z
     modelId: slugSchema,
     benchmarkId: slugSchema,
     value: z.number().finite(),
-    source: z
-      .object({
-        url: urlSchema,
-        retrieved: isoDateSchema,
-      })
-      .strict(),
+    source: SourceSchema,
     settings: z.string().trim().min(1).optional(),
     reasoningEffort: z.string().trim().min(1).max(40).optional(),
     selfReported: z.boolean(),

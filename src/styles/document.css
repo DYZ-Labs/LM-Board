@@ -251,26 +251,6 @@
   max-width: 68ch;
 }
 
-.not-found {
-  max-width: 62ch;
-  padding: var(--s-10) 0;
-}
-
-.not-found h1 {
-  margin-bottom: var(--s-6);
-  font-size: var(--t-h1);
-  font-weight: var(--w-display);
-  letter-spacing: var(--ls-h1);
-  line-height: var(--lh-h1);
-}
-
-.not-found p {
-  margin-bottom: var(--s-7);
-  font-size: var(--t-15);
-  line-height: var(--lh-15);
-  color: var(--fg-secondary);
-}
-
 @media (max-width: 900px) {
   .method-section {
     grid-template-columns: minmax(0, 1fr);

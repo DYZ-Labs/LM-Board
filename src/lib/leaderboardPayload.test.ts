@@ -66,8 +66,20 @@ describe("production leaderboard payload", () => {
 
     expect(modelPayloads.every((model) => model.length === 9)).toBe(true);
     expect(expanded.rows.map((row) => row.model)).toEqual(
-      data.rows.map((row) => row.model),
+      data.rows.map((row) => ({
+        ...row.model,
+        ...(row.model.pricing
+          ? {
+              pricing: {
+                input: row.model.pricing.input,
+                output: row.model.pricing.output,
+              },
+            }
+          : {}),
+      })),
     );
+    expect(JSON.stringify(modelPayloads)).not.toContain("pricing.source");
+    expect(JSON.stringify(modelPayloads)).not.toContain("retrieved");
     expect(JSON.stringify(modelPayloads).length).toBeLessThan(
       JSON.stringify(data.rows.map((row) => row.model)).length * 0.65,
     );

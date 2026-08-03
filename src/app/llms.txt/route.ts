@@ -51,6 +51,7 @@ export function GET() {
 Each measured score stores its source URL and retrieval date. Evaluation settings are included when available.
 
 Newest score retrieval: ${data.lastUpdated}. Score retrieval window: ${data.oldestRetrieved} to ${data.lastUpdated}.
+Newest first-party pricing check: ${data.latestPricingRetrieved ?? "none listed"}. Every listed API price links to its official source and check date on the model record.
 
 ## The Index
 
@@ -69,6 +70,7 @@ ${benchmarks}
 ## Pages
 
 - [Leaderboard](${siteUrl}/)
+- [Guided model chooser](${siteUrl}/choose)
 - [Methodology, in full](${siteUrl}/methodology)
 - [Side-by-side comparison](${siteUrl}/compare)
 

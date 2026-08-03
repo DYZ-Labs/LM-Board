@@ -22,8 +22,15 @@ export function FreshnessChip({ date }: FreshnessChipProps) {
   );
 
   useEffect(() => {
-    const days = daysSince(date, new Date());
-    setRelative({ label: formatRelativeDays(days), days });
+    let active = true;
+    queueMicrotask(() => {
+      if (!active) return;
+      const days = daysSince(date, new Date());
+      setRelative({ label: formatRelativeDays(days), days });
+    });
+    return () => {
+      active = false;
+    };
   }, [date]);
 
   const isStale = relative !== null && relative.days > STALE_AFTER_DAYS;

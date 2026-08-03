@@ -1,0 +1,96 @@
+name: Audit pricing freshness
+
+on:
+  schedule:
+    - cron: "23 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: pricing-freshness-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af6772620 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit listed prices
+        id: audit
+        run: npm run pricing:audit -- --report "$RUNNER_TEMP/pricing-audit.md"
+
+      - name: Publish audit summary
+        if: ${{ always() }}
+        run: |
+          if [[ -f "$RUNNER_TEMP/pricing-audit.md" ]]; then
+            cat "$RUNNER_TEMP/pricing-audit.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Open or update one freshness issue
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: "[pricing-audit] Listed API prices need review"
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          body_file="$RUNNER_TEMP/pricing-audit-issue.md"
+          {
+            echo "The weekly pricing freshness audit found a listed price older than 30 days. Prices remain visible until a human verifies the first-party source."
+            echo
+            echo "Latest run: $RUN_URL"
+            echo
+            cat "$RUNNER_TEMP/pricing-audit.md"
+          } > "$body_file"
+
+          issue_number="$(
+            gh issue list --repo "$GITHUB_REPOSITORY" --state open \
+              --search "\"$ISSUE_TITLE\" in:title" --limit 100 \
+              --json number,title \
+              --jq '.[] | select(.title == "[pricing-audit] Listed API prices need review") | .number' \
+              | head -n 1
+          )"
+
+          if [[ -n "$issue_number" ]]; then
+            gh issue edit "$issue_number" --repo "$GITHUB_REPOSITORY" --body-file "$body_file"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --assignee thedanielyuan \
+              --label bug --title "$ISSUE_TITLE" --body-file "$body_file"
+          fi
+
+      - name: Close recovered freshness issue
+        if: ${{ success() && steps.audit.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: "[pricing-audit] Listed API prices need review"
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          issue_number="$(
+            gh issue list --repo "$GITHUB_REPOSITORY" --state open \
+              --search "\"$ISSUE_TITLE\" in:title" --limit 100 \
+              --json number,title \
+              --jq '.[] | select(.title == "[pricing-audit] Listed API prices need review") | .number' \
+              | head -n 1
+          )"
+
+          if [[ -n "$issue_number" ]]; then
+            gh issue close "$issue_number" --repo "$GITHUB_REPOSITORY" \
+              --reason completed --comment "All listed prices are fresh again. Healthy run: $RUN_URL"
+          fi

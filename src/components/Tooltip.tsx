@@ -56,7 +56,15 @@ export function Tooltip({
   const intentTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bridgedRef = useRef(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    let active = true;
+    queueMicrotask(() => {
+      if (active) setMounted(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const place = useCallback(() => {
     const trigger = triggerRef.current;

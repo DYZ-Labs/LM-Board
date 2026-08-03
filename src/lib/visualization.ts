@@ -12,12 +12,13 @@ import type {
   LeaderboardScope,
 } from "@/lib/data";
 import type { RankScope } from "@/lib/categories";
-import type { Model } from "@/lib/schema";
-
-export type PlotModel = Pick<
-  Model,
-  "id" | "name" | "lab" | "openWeights" | "pricing"
->;
+export type PlotModel = {
+  id: string;
+  name: string;
+  lab: string;
+  openWeights: boolean;
+  pricing?: { input: number; output: number };
+};
 
 export type PlotScope = Pick<
   LeaderboardScope,
@@ -69,7 +70,14 @@ export function toPlotRows(
       name: model.name,
       lab: model.lab,
       openWeights: model.openWeights,
-      ...(model.pricing === undefined ? {} : { pricing: model.pricing }),
+      ...(model.pricing === undefined
+        ? {}
+        : {
+            pricing: {
+              input: model.pricing.input,
+              output: model.pricing.output,
+            },
+          }),
     },
     scopes,
   }));

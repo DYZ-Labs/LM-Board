@@ -226,7 +226,8 @@ export function CompareGrid({ payload }: CompareGridProps) {
         <h1>Compare AI models</h1>
         <p>
           Compare up to {MAX_COMPARE} models across LM Index, scores, price, and
-          weights.
+          weights. Not sure where to start?{" "}
+          <Link href="/choose" prefetch={false}>Use the guided chooser</Link>.
         </p>
       </div>
 

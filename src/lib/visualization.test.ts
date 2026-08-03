@@ -103,7 +103,12 @@ describe("toPlotRows", () => {
           openWeights: row.model.openWeights,
           ...(row.model.pricing === undefined
             ? {}
-            : { pricing: row.model.pricing }),
+            : {
+                pricing: {
+                  input: row.model.pricing.input,
+                  output: row.model.pricing.output,
+                },
+              }),
         },
         scope: {
           index: row.scopes.overall.index,

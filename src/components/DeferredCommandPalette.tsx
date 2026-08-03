@@ -38,7 +38,7 @@ export function DeferredCommandPalette({
   const [requested, setRequested] = useState(false);
   const [remotePayload, setRemotePayload] =
     useState<CommandPalettePayload | null>(null);
-  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const [returnFocus, setReturnFocus] = useState<HTMLElement | null>(null);
   const payloadRequestRef = useRef<Promise<void> | null>(null);
   const resolvedPayload = payload ?? remotePayload;
 
@@ -80,7 +80,7 @@ export function DeferredCommandPalette({
         (event.metaKey || event.ctrlKey)
       ) {
         event.preventDefault();
-        returnFocusRef.current = document.activeElement as HTMLElement;
+        setReturnFocus(document.activeElement as HTMLElement);
         requestPalette();
         return;
       }
@@ -108,7 +108,7 @@ export function DeferredCommandPalette({
       <CommandPalette
         payload={resolvedPayload}
         initialOpen
-        initialReturnFocus={returnFocusRef.current}
+        initialReturnFocus={returnFocus}
       />
     </Suspense>
   );

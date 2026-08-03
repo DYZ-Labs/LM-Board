@@ -9,7 +9,6 @@ import type {
   ReasoningEffortLabel,
 } from "@/lib/data";
 import type { RampStep } from "@/lib/ramp";
-import type { Model } from "@/lib/schema";
 
 type ScorePayload = readonly [
   value: number,
@@ -158,7 +157,7 @@ export function expandLeaderboardClientPayload(
       outputPrice,
       url,
     ] = modelPayload;
-    const model: Model = {
+    const model: LeaderboardClientRow["model"] = {
       id,
       name,
       lab: payload.labs[labIndex]!,

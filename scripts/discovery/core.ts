@@ -638,7 +638,10 @@ function normalizePricing(
     return null;
   }
 
-  return { input, output };
+  flags.push(
+    `pricing reported upstream as $${input}/$${output} — omitted; verify the current rate against first-party documentation and add its source`,
+  );
+  return null;
 }
 
 // --- Rendering -----------------------------------------------------------

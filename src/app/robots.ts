@@ -17,6 +17,7 @@ export default function robots(): MetadataRoute.Robots {
         "/index.txt",
         "/404.txt",
         "/compare.txt",
+        "/choose.txt",
         "/methodology.txt",
         "/model/*.txt$",
       ],

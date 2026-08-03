@@ -9,7 +9,7 @@ import { toComparePayload } from "@/lib/compare";
 import { loadLeaderboardData } from "@/lib/data";
 import { serializeJsonLd } from "@/lib/jsonLd";
 import { pageMetadata, truncateDescription } from "@/lib/metadata";
-import { repositoryUrl } from "@/lib/site";
+import { catalogFreshness, repositoryUrl } from "@/lib/site";
 import { compareGraph } from "@/lib/structuredData";
 
 import "@/styles/document.css";
@@ -27,6 +27,7 @@ export function generateMetadata(): Metadata {
     path: "/compare",
     image: "/og/compare.png",
     imageAlt: `LM Board — compare any of ${board.rows.length} frontier models on ${board.benchmarks.length} benchmarks.`,
+    imageVersion: catalogFreshness(board),
   });
 }
 

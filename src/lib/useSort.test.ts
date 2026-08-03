@@ -22,6 +22,12 @@ const score = (modelId: string, value: number): Score => ({
   selfReported: false,
 });
 
+const price = (input: number, output: number): NonNullable<Model["pricing"]> => ({
+  input,
+  output,
+  source: { url: "https://example.com/pricing", retrieved: "2026-07-22" },
+});
+
 const scope = (index: number | null, rank: number | null): LeaderboardScope => ({
   index,
   rank,
@@ -144,9 +150,9 @@ describe("sortLeaderboardRows", () => {
 
   it("sorts price by input and then output", () => {
     const rows = [
-      row({ id: "input-one-output-eight", pricing: { input: 1, output: 8 } }),
-      row({ id: "input-one-output-four", pricing: { input: 1, output: 4 } }),
-      row({ id: "input-two", pricing: { input: 2, output: 1 } }),
+      row({ id: "input-one-output-eight", pricing: price(1, 8) }),
+      row({ id: "input-one-output-four", pricing: price(1, 4) }),
+      row({ id: "input-two", pricing: price(2, 1) }),
     ];
 
     expect(

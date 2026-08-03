@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import { loadLeaderboardData } from "./data";
-import { modelRecordFreshness, siteUrl } from "./site";
+import { catalogFreshness, modelRecordFreshness, siteUrl } from "./site";
 import {
+  chooseGraph,
   compareGraph,
   homeGraph,
   methodologyGraph,
@@ -232,6 +233,9 @@ describe("modelGraph", () => {
 
     expect(offers[0].price).toBe(priced.model.pricing!.input);
     expect(offers[1].price).toBe(priced.model.pricing!.output);
+    expect(offers.every((offer) => offer.url === priced.model.pricing!.source.url)).toBe(
+      true,
+    );
     expect(offers.every((offer) => offer.availability === undefined)).toBe(
       true,
     );
@@ -301,6 +305,18 @@ describe("homeGraph", () => {
 });
 
 describe("page graphs", () => {
+  it("gives the canonical chooser a closed WebPage graph without query-specific recommendations", () => {
+    const graph = chooseGraph(data);
+    const page = find(graph, "WebPage") as Node;
+
+    expect(page.url).toBe(`${siteUrl}/choose`);
+    expect(page.dateModified).toBe(catalogFreshness(data));
+    expect(page.mainEntity).toEqual({ "@id": `${siteUrl}/#dataset` });
+    expect(nodes(graph).some((node) => typeOf(node) === "ItemList")).toBe(false);
+    expect(JSON.stringify(graph)).not.toContain("Capability leader");
+    expectClosedGraph(graph);
+  });
+
   it("gives methodology a WebPage whose main entity is the TechArticle", () => {
     const graph = methodologyGraph(data);
     const page = find(graph, "WebPage") as Node;

@@ -45,15 +45,26 @@ function dirBytes(dir: string) {
   return { total, files };
 }
 
-function cssFilesOnDisk() {
-  const dir = join(OUT, "_next/static/css");
+function filesWithExtension(dir: string, extension: string): string[] {
   try {
-    return readdirSync(dir)
-      .filter((name) => name.endsWith(".css"))
-      .map((name) => join(dir, name));
+    return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const path = join(dir, entry.name);
+      return entry.isDirectory()
+        ? filesWithExtension(path, extension)
+        : entry.name.endsWith(extension)
+          ? [path]
+          : [];
+    });
   } catch {
     return [];
   }
+}
+
+function cssFilesOnDisk() {
+  // Next 15/Webpack writes `static/css`; Next 16/Turbopack writes CSS beside
+  // JavaScript in `static/chunks`. Walk the asset tree instead of encoding a
+  // compiler's private directory layout into the release gate.
+  return filesWithExtension(join(OUT, "_next/static"), ".css");
 }
 
 function linkedStaticFiles(
@@ -89,11 +100,18 @@ function linkedStaticFiles(
 }
 
 function linkedCssFiles(html: string) {
-  return linkedStaticFiles(html, "href", "css/", ".css");
+  return linkedStaticFiles(html, "href", "", ".css");
 }
 
 function linkedJsFiles(html: string) {
-  return linkedStaticFiles(html, "src", "", ".js");
+  const executableTags = [...html.matchAll(/<script\b[^>]*>/gi)]
+    // Next 16 emits a legacy polyfill with `nomodule`. Every browser in its
+    // supported matrix understands modules and therefore does not fetch or
+    // execute that fallback; charging it to first-load JS overstates transfer.
+    .filter((match) => !/\bnomodule\b/i.test(match[0]))
+    .map((match) => match[0])
+    .join("\n");
+  return linkedStaticFiles(executableTags, "src", "", ".js");
 }
 
 function fontFiles() {
@@ -132,17 +150,27 @@ function htmlText(value: string) {
 
 const homepage = join(OUT, "index.html");
 const comparePage = join(OUT, "compare.html");
+const choosePage = join(OUT, "choose.html");
 const data = loadLeaderboardData();
 const allCss = cssFilesOnDisk();
 const fonts = fontFiles();
 const fontDir = fonts.length > 0 ? dirBytes(join(OUT, "_next/static/media")) : { total: 0, files: 0 };
 const html = readFileSync(homepage, "utf8");
 const compareHtml = readFileSync(comparePage, "utf8");
+const chooseHtml = readFileSync(choosePage, "utf8");
 const homepageCss = linkedCssFiles(html);
 const homepageJs = linkedJsFiles(html);
+const chooseCss = linkedCssFiles(chooseHtml);
+const chooseJs = linkedJsFiles(chooseHtml);
+const homepageJsSet = new Set(homepageJs);
+const chooseRouteJs = chooseJs.filter((path) => !homepageJsSet.has(path));
 const homepageFlightBytes = inlineFlightBytes(html);
 const compareFlightBytes = inlineFlightBytes(compareHtml);
+const chooseFlightBytes = inlineFlightBytes(chooseHtml);
 const homepageCssText = homepageCss
+  .map((path) => readFileSync(path, "utf8"))
+  .join("\n");
+const chooseCssText = chooseCss
   .map((path) => readFileSync(path, "utf8"))
   .join("\n");
 const compareSection =
@@ -223,6 +251,36 @@ const budgets: Budget[] = [
     unit: "bytes",
   },
   {
+    label: "choose HTML (raw)",
+    actual: statSync(choosePage).size,
+    budget: 120 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "choose HTML (gzip)",
+    actual: gzipBytes(choosePage),
+    budget: 18 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "choose Flight payload",
+    actual: chooseFlightBytes,
+    budget: 48 * 1024,
+    unit: "bytes",
+  },
+  {
+    label: "choose DOM elements",
+    actual: elementCount(chooseHtml),
+    budget: 1_200,
+    unit: "count",
+  },
+  {
+    label: "choose route JS (gzip)",
+    actual: chooseRouteJs.reduce((total, path) => total + gzipBytes(path), 0),
+    budget: 24 * 1024,
+    unit: "bytes",
+  },
+  {
     label: "homepage CSS (raw)",
     actual: homepageCss.reduce((total, path) => total + statSync(path).size, 0),
     budget: 60 * 1024,
@@ -235,13 +293,13 @@ const budgets: Budget[] = [
     unit: "bytes",
   },
   {
-    label: "homepage linked JS (raw)",
+    label: "homepage executable JS (raw)",
     actual: homepageJs.reduce((total, path) => total + statSync(path).size, 0),
     budget: 550 * 1024,
     unit: "bytes",
   },
   {
-    label: "homepage linked JS (gzip)",
+    label: "homepage executable JS (gzip)",
     actual: homepageJs.reduce((total, path) => total + gzipBytes(path), 0),
     budget: 180 * 1024,
     unit: "bytes",
@@ -323,6 +381,37 @@ const sentinels: { label: string; ok: boolean }[] = [
       compareHtml.includes("compare-initial-empty") &&
       compareHtml.includes("compare-initial-skeleton") &&
       compareHtml.includes("comparePending"),
+  },
+  {
+    label: "renders chooser structure and default shortlist",
+    ok:
+      /<section\b[^>]*\bid="choose"[^>]*\baria-label="Choose a model"/.test(
+        chooseHtml,
+      ) &&
+      chooseHtml.includes("Find a model for the work") &&
+      /Overall(?:<!-- -->)? recommendations/.test(chooseHtml) &&
+      (chooseHtml.match(/class="chooser-card"/g) ?? []).length >= 2,
+  },
+  {
+    label: "ships all chooser task controls and price provenance",
+    ok:
+      ["overall", "reasoning", "coding", "math", "agentic"].every(
+        (task) =>
+          new RegExp(`name="task"[^>]*value="${task}"`).test(chooseHtml),
+      ) &&
+      chooseHtml.includes("Official pricing") &&
+      chooseHtml.includes("Checked"),
+  },
+  {
+    label: "measures chooser Flight payload and route JS",
+    ok: chooseFlightBytes > 0 && chooseJs.length > 0 && chooseRouteJs.length > 0,
+  },
+  {
+    label: "covers chooser deep links before hydration",
+    ok:
+      chooseHtml.includes("chooser-initial-skeleton") &&
+      chooseHtml.includes("choosePending") &&
+      chooseCssText.includes("data-choose-pending"),
   },
 ];
 
