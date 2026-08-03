@@ -28,11 +28,7 @@ export type LeaderboardScope = {
   coverageTotal: number;
   coverageRatio: number;
   estimatedCount: number;
-  /**
-   * Models that clear the coverage bar in this scope — the denominator `rank`
-   * was measured against. It rides on the scope so no surface can render a
-   * rank without the field it means anything relative to.
-   */
+  /** The denominator behind `rank`, carried with every scope for citation. */
   rankedFieldSize: number;
 };
 
@@ -92,7 +88,7 @@ export type LeaderboardData = {
 /**
  * The board only renders a score's value and publisher qualification.
  * Sources, retrieval dates, and evaluation settings live on the model record
- * pages; sending them for all 456 homepage cells would duplicate evidence the
+ * pages; sending them for every homepage score cell would duplicate evidence the
  * non-interactive table cannot expose.
  */
 export type LeaderboardClientScore = Pick<Score, "value" | "selfReported">;
@@ -213,13 +209,26 @@ export function loadLeaderboardData(): LeaderboardData {
       benchmarks,
       distributions,
     );
+    const overallIndex = calculateLmBoardIndex(
+      modelScores,
+      benchmarksForScope(benchmarks, "overall"),
+      estimatedScores,
+    );
     const scopes = Object.fromEntries(
       RANK_SCOPES.map((scope) => {
-        const indexResult = calculateLmBoardIndex(
-          modelScores,
-          benchmarksForScope(benchmarks, scope),
-          estimatedScores,
-        );
+        const indexResult =
+          scope === "overall"
+            ? overallIndex
+            : calculateLmBoardIndex(
+                modelScores,
+                benchmarksForScope(benchmarks, scope),
+                estimatedScores,
+                {
+                  // Category ranks may bridge missing measurements only after
+                  // the model proves broad evidence on the Overall suite.
+                  allowCompleteEstimatedIndex: overallIndex.value !== null,
+                },
+              );
 
         return [
           scope,

@@ -186,7 +186,7 @@ describe("loadLeaderboardData", () => {
       reasoning: [1, 2, 2, 4],
       coding: [1, 2, 2, 4],
       math: [1, 1, 3, null],
-      agentic: [1, 1, null, null],
+      agentic: [1, 1, 1, null],
     });
 
     expect(sparseModel!.scopes.overall).toEqual({
@@ -235,15 +235,16 @@ describe("loadLeaderboardData", () => {
     });
     // An estimate feeds the Index only; it never becomes a published score.
     expect(partialModel!.scoresByBenchmark["agentic-benchmark"]).toBeNull();
-    // ...and it never lifts a model over the gate it failed.
+    // Overall qualification allows a complete category estimate without
+    // turning the estimate into a published measurement.
     expect(partialModel!.scopes.agentic).toEqual({
-      index: null,
-      rank: null,
+      index: 80,
+      rank: 1,
       coverageCount: 0,
       coverageTotal: 1,
       coverageRatio: 0,
-      estimatedCount: 0,
-      rankedFieldSize: 2,
+      estimatedCount: 1,
+      rankedFieldSize: 3,
     });
   });
 
@@ -273,12 +274,13 @@ describe("loadLeaderboardData", () => {
       reasoning: [4],
       coding: [4],
       math: [3],
-      agentic: [2],
+      agentic: [3],
     });
-    // A model that fails the gate still learns how big the field it missed is.
+    // A model that fails both the scope and Overall gates still learns how big
+    // the field it missed is.
     expect(
       data.rows.find((row) => row.model.id === "sparse-model")!.scopes.agentic,
-    ).toMatchObject({ rank: null, rankedFieldSize: 2 });
+    ).toMatchObject({ rank: null, rankedFieldSize: 3 });
   });
 
   it("spans each benchmark over every measured score", () => {

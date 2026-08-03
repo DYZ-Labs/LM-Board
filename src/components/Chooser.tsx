@@ -62,6 +62,7 @@ const ACCESS_OPTIONS: Array<{
   { value: "any", label: "Any", detail: "API or open weights" },
   { value: "api", label: "Hosted API", detail: "First-party price listed" },
   { value: "open", label: "Open weights", detail: "Weights available" },
+  { value: "proprietary", label: "Proprietary", detail: "Closed weights" },
 ];
 
 const CONTEXT_OPTIONS: Array<{ value: ContextFloor; label: string }> = [
@@ -201,12 +202,7 @@ export function Chooser({ payload }: ChooserProps) {
   return (
     <section className="longform chooser-page" id="choose" aria-label="Choose a model">
       <div className="longform-intro chooser-intro">
-        <p className="section-kicker">Guided model chooser</p>
         <h1>Find a model for the work</h1>
-        <p>
-          Apply practical constraints, then inspect a deterministic shortlist
-          built from the same Index and coverage rules as the leaderboard.
-        </p>
       </div>
 
       <form

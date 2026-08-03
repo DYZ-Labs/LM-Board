@@ -162,6 +162,7 @@ export function calculateLmBoardIndex(
   scores: readonly Score[],
   benchmarks: readonly Benchmark[],
   estimatedScores: EstimatedScores,
+  options: { allowCompleteEstimatedIndex?: boolean } = {},
 ): IndexResult {
   const eligibleBenchmarkIds = new Set(
     benchmarks
@@ -176,16 +177,17 @@ export function calculateLmBoardIndex(
   const totalCount = eligibleBenchmarkIds.size;
   const scoredCount = measured.size;
   const coverage = totalCount === 0 ? 0 : scoredCount / totalCount;
-  const qualifies =
+  const clearsMeasuredGate =
     totalCount > 0 &&
     scoredCount >= Math.ceil(totalCount * MIN_INDEX_COVERAGE);
 
-  if (!qualifies) {
+  if (!clearsMeasuredGate && !options.allowCompleteEstimatedIndex) {
     return { value: null, scoredCount, totalCount, coverage, estimatedCount: 0 };
   }
 
-  // Coverage is judged on measured scores alone; estimates only fill the gaps
-  // of a model that already cleared the bar.
+  // Overall coverage can qualify a model for a category whose remaining values
+  // are all estimable. The fallback must produce a complete category Index: a
+  // partial estimate would reward whichever benchmark happens to be present.
   const values: number[] = [];
   let estimatedCount = 0;
 
@@ -203,6 +205,13 @@ export function calculateLmBoardIndex(
 
     values.push(estimate);
     estimatedCount += 1;
+  }
+
+  if (
+    values.length === 0 ||
+    (!clearsMeasuredGate && values.length !== totalCount)
+  ) {
+    return { value: null, scoredCount, totalCount, coverage, estimatedCount: 0 };
   }
 
   return {

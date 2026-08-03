@@ -29,6 +29,7 @@ export type BoardUrlState = {
   query: string;
   providers: ProviderSelection;
   openWeightsOnly: boolean;
+  proprietaryWeightsOnly: boolean;
   expandedModelId: string | null;
 };
 
@@ -53,7 +54,7 @@ export function viewFromUrl(value: string | null): ViewMode | null {
 }
 
 /* -- Filters --------------------------------------------------------------
-   Search, provider and open-weights are as much a description of "the board I
+   Search, provider and weight access are as much a description of "the board I
    am looking at" as the tab or the sort, so they belong in the URL: without
    them the Copy view action hands someone a link to a different board than the
    one on screen. Each parser fails closed to "no filter", so a hand-edited or
@@ -112,6 +113,10 @@ export function providersFromUrl(
 }
 
 export function openWeightsFromUrl(value: string | null): boolean {
+  return value === "1";
+}
+
+export function proprietaryWeightsFromUrl(value: string | null): boolean {
   return value === "1";
 }
 
@@ -276,7 +281,9 @@ export function canonicalizeBoardState(
         row.model.id === candidate.expandedModelId &&
         (candidate.providers === null ||
           candidate.providers.includes(row.model.lab)) &&
-        (!candidate.openWeightsOnly || row.model.openWeights) &&
+        ((!candidate.openWeightsOnly && !candidate.proprietaryWeightsOnly) ||
+          (candidate.openWeightsOnly && row.model.openWeights) ||
+          (candidate.proprietaryWeightsOnly && !row.model.openWeights)) &&
         matchesModelQuery(candidate.query, row),
     );
 
@@ -314,6 +321,9 @@ export function parseBoardUrl(
         context.labs,
       ),
       openWeightsOnly: openWeightsFromUrl(url.searchParams.get("open")),
+      proprietaryWeightsOnly: proprietaryWeightsFromUrl(
+        url.searchParams.get("proprietary"),
+      ),
       expandedModelId: expandedRow?.model.id ?? null,
     },
     context,
@@ -378,6 +388,12 @@ export function serializeBoardUrl(
 
   if (canonical.openWeightsOnly) url.searchParams.set("open", "1");
   else url.searchParams.delete("open");
+
+  if (canonical.proprietaryWeightsOnly) {
+    url.searchParams.set("proprietary", "1");
+  } else {
+    url.searchParams.delete("proprietary");
+  }
 
   const expandedRow = canonical.expandedModelId
     ? context.rows.find((row) => row.model.id === canonical.expandedModelId)

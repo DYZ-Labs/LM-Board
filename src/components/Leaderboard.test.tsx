@@ -247,6 +247,20 @@ describe("category switching", () => {
 
     expect(currentUrl().searchParams.get("sort")).toBe(codingBenchmark.id);
   });
+
+  it("labels every estimated Index on the active category", async () => {
+    const user = userEvent.setup();
+    render(board());
+
+    await user.click(screen.getByRole("tab", { name: "Agentic" }));
+
+    const estimatedModels = data.rows.filter(
+      (row) => row.scopes.agentic.estimatedCount > 0,
+    );
+    expect(
+      screen.getAllByTitle(/benchmark values estimated in this Index$/),
+    ).toHaveLength(estimatedModels.length);
+  });
 });
 
 describe("filtering", () => {
@@ -345,6 +359,36 @@ describe("filters survive a round trip through the URL", () => {
     render(board());
 
     expect(screen.getByRole("checkbox", { name: "Open weights" })).toBeChecked();
+  });
+
+  it("records the proprietary filter and shows only proprietary models", async () => {
+    const user = userEvent.setup();
+    render(board());
+
+    await user.click(screen.getByRole("checkbox", { name: "Proprietary" }));
+
+    const expectedIds = new Set(
+      data.rows
+        .filter((row) => !row.model.openWeights)
+        .map((row) => row.model.id),
+    );
+    const visibleIds = new Set(
+      screen
+        .getAllByRole("button", { name: /^Show details for/ })
+        .map((button) =>
+          button.getAttribute("aria-controls")!.replace(/^details-/, ""),
+        ),
+    );
+
+    expect(currentUrl().searchParams.get("proprietary")).toBe("1");
+    expect(visibleIds).toEqual(expectedIds);
+  });
+
+  it("restores the proprietary filter from ?proprietary", () => {
+    go("/?proprietary=1");
+    render(board());
+
+    expect(screen.getByRole("checkbox", { name: "Proprietary" })).toBeChecked();
   });
 
   it("records selected providers and restores them", () => {

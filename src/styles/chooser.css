@@ -46,7 +46,7 @@
 }
 
 .chooser-access-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .chooser-radio-grid label {
@@ -155,11 +155,8 @@
   font-size: var(--t-12);
 }
 
-.chooser-price-input:focus-within,
 .chooser-control select:focus-visible {
-  border-color: var(--signal-500);
-  outline: 2px solid var(--signal-500);
-  outline-offset: 2px;
+  outline: 0;
 }
 
 .chooser-price-input input {
@@ -195,7 +192,6 @@
 
 .chooser-form-actions {
   padding-top: var(--s-5);
-  border-top: 1px solid var(--line-subtle);
 }
 
 .chooser-form-actions .btn,

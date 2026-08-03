@@ -70,6 +70,7 @@ type FilterBarProps = {
   providerFilterActive: boolean;
   query: string;
   openWeightsOnly: boolean;
+  proprietaryWeightsOnly: boolean;
   resultCount: number;
   totalCount: number;
   view: ViewMode;
@@ -79,6 +80,7 @@ type FilterBarProps = {
   onToggleLab: (lab: string) => void;
   onSetLabs: (labs: ProviderSelection) => void;
   onOpenWeightsChange: (checked: boolean) => void;
+  onProprietaryWeightsChange: (checked: boolean) => void;
   onFilterOpen: () => void;
   onFilterCommit: () => void;
   onFilterCancel: () => void;
@@ -94,6 +96,7 @@ export const FilterBar = memo(function FilterBar({
   providerFilterActive,
   query,
   openWeightsOnly,
+  proprietaryWeightsOnly,
   resultCount,
   totalCount,
   onQueryChange,
@@ -102,6 +105,7 @@ export const FilterBar = memo(function FilterBar({
   onToggleLab,
   onSetLabs,
   onOpenWeightsChange,
+  onProprietaryWeightsChange,
   onFilterOpen,
   onFilterCommit,
   onFilterCancel,
@@ -117,14 +121,16 @@ export const FilterBar = memo(function FilterBar({
   >(null);
   const trimmedQuery = query.trim();
   const activeFilterCount =
-    (providerFilterActive ? 1 : 0) + (openWeightsOnly ? 1 : 0);
+    (providerFilterActive ? 1 : 0) +
+    (openWeightsOnly ? 1 : 0) +
+    (proprietaryWeightsOnly ? 1 : 0);
   const hasFilters = activeFilterCount > 0 || trimmedQuery.length > 0;
 
   function navigateFilterOptions(
     event: ReactKeyboardEvent<HTMLInputElement>,
     index: number,
   ) {
-    const optionCount = labs.length + 1;
+    const optionCount = labs.length + 2;
     let nextIndex: number | null = null;
 
     switch (event.key) {
@@ -247,6 +253,15 @@ export const FilterBar = memo(function FilterBar({
             key: "open",
             label: "Open weights",
             remove: () => onOpenWeightsChange(false),
+          },
+        ]
+      : []),
+    ...(proprietaryWeightsOnly
+      ? [
+          {
+            key: "proprietary",
+            label: "Proprietary",
+            remove: () => onProprietaryWeightsChange(false),
           },
         ]
       : []),
@@ -381,6 +396,24 @@ export const FilterBar = memo(function FilterBar({
                   onChange={(event) => onOpenWeightsChange(event.target.checked)}
                 />
                 <span>Open weights</span>
+              </label>
+              <label className="check">
+                <input
+                  ref={(node) => {
+                    filterOptionRefs.current[labs.length + 1] = node;
+                  }}
+                  type="checkbox"
+                  tabIndex={activeFilterOption === labs.length + 1 ? 0 : -1}
+                  checked={proprietaryWeightsOnly}
+                  onFocus={() => setActiveFilterOption(labs.length + 1)}
+                  onKeyDown={(event) =>
+                    navigateFilterOptions(event, labs.length + 1)
+                  }
+                  onChange={(event) =>
+                    onProprietaryWeightsChange(event.target.checked)
+                  }
+                />
+                <span>Proprietary</span>
               </label>
             </div>
           </details>

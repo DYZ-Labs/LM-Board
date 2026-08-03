@@ -130,6 +130,7 @@ export function Leaderboard({
       query: "",
       providers: null,
       openWeightsOnly: false,
+      proprietaryWeightsOnly: false,
       expandedModelId: null,
     }),
     [],
@@ -148,6 +149,7 @@ export function Leaderboard({
     category,
     expandedModelId,
     openWeightsOnly,
+    proprietaryWeightsOnly,
     providers,
     query,
     sort,
@@ -180,12 +182,23 @@ export function Leaderboard({
       data.rows.filter((row) => {
         const matchesLab =
           providers === null || providers.includes(row.model.lab);
-        const matchesWeights = !openWeightsOnly || row.model.openWeights;
+        const hasWeightsFilter =
+          openWeightsOnly || proprietaryWeightsOnly;
+        const matchesWeights =
+          !hasWeightsFilter ||
+          (openWeightsOnly && row.model.openWeights) ||
+          (proprietaryWeightsOnly && !row.model.openWeights);
         const matchesQuery = matchesModelQuery(query, row);
 
         return matchesLab && matchesWeights && matchesQuery;
       }),
-    [data.rows, openWeightsOnly, providers, query],
+    [
+      data.rows,
+      openWeightsOnly,
+      proprietaryWeightsOnly,
+      providers,
+      query,
+    ],
   );
   const sortedRows = useMemo(
     () => sortLeaderboardRows(filteredRows, sort, category),
@@ -504,6 +517,13 @@ export function Leaderboard({
     });
   }
 
+  function setProprietaryWeightsOnly(checked: boolean) {
+    publishFilterChange({
+      ...boardStateRef.current,
+      proprietaryWeightsOnly: checked,
+    });
+  }
+
   function clearFilters() {
     commitSearchTransaction();
     filterTransactionRef.current = null;
@@ -513,6 +533,7 @@ export function Leaderboard({
         providers: null,
         query: "",
         openWeightsOnly: false,
+        proprietaryWeightsOnly: false,
       },
       "push",
     );
@@ -574,6 +595,7 @@ export function Leaderboard({
           providerFilterActive={providers !== null}
           query={query}
           openWeightsOnly={openWeightsOnly}
+          proprietaryWeightsOnly={proprietaryWeightsOnly}
           resultCount={filteredRows.length}
           totalCount={data.rows.length}
           view={view}
@@ -583,6 +605,7 @@ export function Leaderboard({
           onToggleLab={toggleLab}
           onSetLabs={setProviders}
           onOpenWeightsChange={setOpenWeightsOnly}
+          onProprietaryWeightsChange={setProprietaryWeightsOnly}
           onFilterOpen={beginFilterTransaction}
           onFilterCommit={commitFilterTransaction}
           onFilterCancel={cancelFilterTransaction}

@@ -14,7 +14,7 @@ type MethodologyProps = {
   issuesUrl: string | null;
 };
 
-// Illustrative four-benchmark tab: coverage bar is ceil(4 × 0.6) = 3.
+// Illustrative four-benchmark Overall suite: coverage is ceil(4 × 0.6) = 3.
 // Model B sits at the midpoint of the three benchmarks it was measured on, so
 // its Bench 2 gap is estimated at the midpoint of Bench 2: (90.0 + 96.0) / 2.
 const EXAMPLE_BENCHMARKS = ["Bench 1", "Bench 2", "Bench 3", "Bench 4"];
@@ -106,8 +106,9 @@ export function Methodology({
           Analysis &mdash; then computes one equal-weight Index per category.
           Every measured score keeps a source link, retrieval date, and any
           available evaluation settings. Missing benchmark results are
-          estimated only inside the Index and are disclosed as estimates;
-          models below 60% measured coverage are not ranked.
+          estimated only inside the Index and are disclosed as estimates. An
+          Overall rank requires 60% measured coverage; clearing that broad
+          evidence gate also permits complete estimated category Indexes.
         </p>
       </div>
 
@@ -208,7 +209,9 @@ export function Methodology({
               never counted as zero, and an estimate is never published as a
               score &mdash; the table still shows &ldquo;&mdash;&rdquo; in that
               column, and the model row reports how many of its benchmarks were
-              estimated.
+              estimated. A category Index may be entirely estimated when a
+              broadly measured model has no result in that category; it is
+              labeled as estimated rather than presented as a measurement.
             </p>
             <figure className="method-example">
               {/* A scroll container needs to be reachable without a pointer;
@@ -291,8 +294,8 @@ export function Methodology({
                 </table>
               </div>
               <figcaption>
-                An illustrative tab with four benchmarks, where ranking requires
-                three. Model B ranks first on the strength of the three
+                An illustrative Overall suite with four benchmarks, where
+                ranking requires three. Model B ranks first on the strength of the three
                 benchmarks it was measured on; its Bench 2 gap is estimated at
                 the level it performs elsewhere, so the omission is neither a
                 penalty nor a free pass. Model C scores well but covers only two
@@ -305,7 +308,7 @@ export function Methodology({
               &mdash; applies the same average to its own set of benchmarks, and
               the tabs are not the same size.
               {singleBenchmarkTabs
-                ? ` Where a category has a single benchmark — ${singleBenchmarkTabs} today — the Index is that benchmark's score, and the word "average" is doing no work.`
+                ? ` Where a category has a single benchmark — ${singleBenchmarkTabs} today — the Index is that benchmark's measured score when available, or a disclosed estimate for a model that cleared the Overall evidence gate.`
                 : null}
             </p>
           </div>
@@ -317,17 +320,22 @@ export function Methodology({
           </header>
           <div className="method-body">
             <p>
-              An average over two benchmarks says less than an average over
-              eight, so a model is ranked only once it has scores on at least
-              60% of a tab&apos;s benchmarks. On the Overall tab that is
-              currently {minimumCoverageCount} of {percentBenchmarkCount}.
-              Below that bar a model still appears with every score it has, but
-              shows &ldquo;Insufficient data&rdquo; in place of an Index and
-              &ldquo;&mdash;&rdquo; in place of a rank. Only measured results
-              count toward the bar &mdash; estimates fill the gaps of a model
-              that already cleared it, never carry a model over it. Without this
-              rule, a model evaluated
-              only on its strongest few benchmarks could top the table.
+              Broad evidence comes first. An Overall rank requires measured
+              scores on at least 60% of the full suite &mdash; currently{" "}
+              {minimumCoverageCount} of {percentBenchmarkCount}. Once a model
+              clears that gate, every category can receive a complete Index:
+              measured category scores are used directly and every remaining
+              gap is estimated from the model&apos;s standing across its measured
+              benchmarks. A model that has not cleared Overall can still rank
+              in a category by measuring at least 60% of that category.
+            </p>
+            <p>
+              If a model clears neither route, it still appears with every
+              measured score but shows &ldquo;Insufficient data&rdquo; and no
+              rank. Estimates never become score records, and an incomplete
+              estimated Index is rejected. This keeps sparse evidence from
+              becoming a free pass while allowing broadly tested models to be
+              compared across every category.
             </p>
             <p>
               Models with the same Index share the same rank, and the next
