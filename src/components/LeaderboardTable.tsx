@@ -183,7 +183,7 @@ export function LeaderboardTable({
   >({});
   const isProfile = view === "profile";
   // A single measured benchmark makes its category Index redundant, but an
-  // estimated Index still needs its own visible, explicitly labelled cell.
+  // estimated Index still needs its own numeric cell because the score is absent.
   const showIndexColumn =
     isProfile ||
     visibleBenchmarks.length !== 1 ||
@@ -543,8 +543,8 @@ export function LeaderboardTable({
           Overall ranking requires measured scores on at least 60% of the full
           suite — currently {minimumCoverageCount} of {percentBenchmarkCount}.
           Once that broad evidence gate is clear, category gaps may be estimated
-          at the model&apos;s measured percentile standing. Estimates are labeled
-          and missing results are never counted as zero.
+          at the model&apos;s measured percentile standing. Missing results are
+          never counted as zero.
         </>
       }
       sourceUrl="/methodology"
@@ -866,17 +866,7 @@ export function LeaderboardTable({
                             triggerContent={<>Insufficient data</>}
                           />
                         ) : (
-                          <span className="index-value">
-                            <span>{formatScore(activeScope.index)}</span>
-                            {activeScope.estimatedCount > 0 ? (
-                              <Badge
-                                tone="warn"
-                                title={`${activeScope.estimatedCount} of ${activeScope.coverageTotal} benchmark values estimated in this Index`}
-                              >
-                                {activeScope.estimatedCount} est.
-                              </Badge>
-                            ) : null}
-                          </span>
+                          formatScore(activeScope.index)
                         )}
                       </td>
                     ) : null}

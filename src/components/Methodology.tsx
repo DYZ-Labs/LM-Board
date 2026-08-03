@@ -208,8 +208,7 @@ export function Methodology({
               skipping a benchmark neither helps nor hurts. A missing score is
               never counted as zero, and an estimate is never published as a
               score &mdash; the table still shows &ldquo;&mdash;&rdquo; in that
-              column, and the model row reports how many of its benchmarks were
-              estimated. A category Index may be entirely estimated when a
+              column. A category Index may be entirely estimated when a
               broadly measured model has no result in that category; it is
               labeled as estimated rather than presented as a measurement.
             </p>
