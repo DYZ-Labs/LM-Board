@@ -116,7 +116,7 @@ GitHub disables scheduled workflows after 60 days without repository activity; a
 
 ## Seed snapshot
 
-The current snapshot contains 62 models, 8 benchmarks, and 456 scores. The original 2026-07-17 seed, the subsequent model refresh, the 2025 back-catalog addition, the 2026 catch-up batch, and the first curated discovery pull request are documented in the decision log in `PLAN.md`.
+The current snapshot contains 63 models, 8 benchmarks, and 456 scores. The original 2026-07-17 seed, the subsequent model refresh, the 2025 back-catalog addition, the 2026 catch-up batch, and the curated discovery pull requests are documented in the decision log in `PLAN.md`.
 
 ## License
 

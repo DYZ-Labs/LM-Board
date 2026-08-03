@@ -5340,6 +5340,43 @@
       "status": "ignored",
       "firstSeen": "2026-07-25",
       "note": "provider not tracked (auto)"
+    },
+    {
+      "aaId": "fe4c0848-e284-4e52-a79d-cdc28392f1a9",
+      "aaSlug": "deepseek-v4-flash",
+      "aaName": "DeepSeek V4 Flash 0731 (Reasoning, Max Effort)",
+      "creator": "deepseek",
+      "status": "added",
+      "modelId": "deepseek-v4-flash-0731",
+      "firstSeen": "2026-08-03",
+      "note": "scaffolded (auto)"
+    },
+    {
+      "aaId": "512d17ef-13d2-4f65-bf9b-154b0dec7e8d",
+      "aaSlug": "kimi-k3-low",
+      "aaName": "Kimi K3 (low)",
+      "creator": "kimi",
+      "status": "ignored",
+      "firstSeen": "2026-08-03",
+      "note": "reasoning-effort variant of existing kimi-k3 (curated 2026-08-03)"
+    },
+    {
+      "aaId": "7261504e-503c-4a66-a9d3-a3272cdf9ad6",
+      "aaSlug": "inkling-small",
+      "aaName": "Inkling Small",
+      "creator": "thinking-machines",
+      "status": "ignored",
+      "firstSeen": "2026-08-03",
+      "note": "provider not tracked (auto)"
+    },
+    {
+      "aaId": "8014c311-fa23-4a4b-8485-8a864db8a113",
+      "aaSlug": "celeris-1",
+      "aaName": "Celeris-1",
+      "creator": "celeris",
+      "status": "ignored",
+      "firstSeen": "2026-08-03",
+      "note": "provider not tracked (auto)"
     }
   ]
 }
