@@ -823,9 +823,6 @@ export function LeaderboardTable({
                           </Link>
                           <span className="model-lab">{row.model.lab}</span>
                         </span>
-                        {row.model.openWeights ? (
-                          <Badge tone="pos">Open</Badge>
-                        ) : null}
                         {row.reasoningEffortLabel ? (
                           <Badge
                             tone="neutral"

@@ -57,12 +57,12 @@ const TASK_OPTIONS: Array<{ value: ChooserTask; label: string }> = [
 const ACCESS_OPTIONS: Array<{
   value: ChooserAccess;
   label: string;
-  detail: string;
+  detail?: string;
 }> = [
-  { value: "any", label: "Any", detail: "API or open weights" },
+  { value: "any", label: "Any" },
   { value: "api", label: "Hosted API", detail: "First-party price listed" },
   { value: "open", label: "Open weights", detail: "Weights available" },
-  { value: "proprietary", label: "Proprietary", detail: "Closed weights" },
+  { value: "proprietary", label: "Proprietary", detail: "Proprietary weights" },
 ];
 
 const CONTEXT_OPTIONS: Array<{ value: ContextFloor; label: string }> = [
@@ -248,7 +248,7 @@ export function Chooser({ payload }: ChooserProps) {
                 />
                 <span>
                   <strong>{option.label}</strong>
-                  <small>{option.detail}</small>
+                  {option.detail ? <small>{option.detail}</small> : null}
                 </span>
               </label>
             ))}
@@ -354,7 +354,7 @@ export function Chooser({ payload }: ChooserProps) {
           <div>
             <h2 ref={resultHeadingRef} tabIndex={-1}>
               {applied.task === "overall"
-                ? "Recommendations"
+                ? "Models"
                 : `${taskLabel} recommendations`}
             </h2>
           </div>

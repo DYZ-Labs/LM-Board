@@ -407,7 +407,7 @@ export function ScatterPlot(props: ScatterPlotProps) {
     selectedPoint.free
       ? "free"
       : `$${formatPrice(selectedPoint.price)} per million tokens`
-  }. ${selectedPoint.row.model.openWeights ? "Open" : "Closed"} weights. ${
+  }. ${selectedPoint.row.model.openWeights ? "Open weights" : "Proprietary"}. ${
     selectedPoint.frontier
       ? "On the efficient frontier in this view."
       : "Not on the efficient frontier in this view."
@@ -727,7 +727,7 @@ export function ScatterPlot(props: ScatterPlotProps) {
                   point.free
                     ? "free input"
                     : `$${formatPrice(point.price)} per million input tokens`
-                }${point.row.model.openWeights ? ", open weights" : ", closed weights"}${
+                }${point.row.model.openWeights ? ", open weights" : ", proprietary"}${
                   point.frontier ? ", on the efficient frontier" : ""
                 }`}
                 onClick={() => {
@@ -791,7 +791,7 @@ export function ScatterPlot(props: ScatterPlotProps) {
       <p className="plot-legend text-tertiary">
         <span className="row">
           <i aria-hidden="true" />{" "}
-          {isValueView ? "Filled: closed weights" : "Closed weights"}
+          {isValueView ? "Filled: proprietary" : "Proprietary"}
         </span>
         <span className="row">
           <i className="is-open" aria-hidden="true" />{" "}
@@ -844,7 +844,7 @@ export function ScatterPlot(props: ScatterPlotProps) {
                     <td>
                       {point.free ? "Free" : `$${formatPrice(point.price)}`}
                     </td>
-                    <td>{point.row.model.openWeights ? "Open" : "Closed"}</td>
+                    <td>{point.row.model.openWeights ? "Open" : "Proprietary"}</td>
                     <td>{point.frontier ? "Yes" : "No"}</td>
                   </tr>
                 ))}

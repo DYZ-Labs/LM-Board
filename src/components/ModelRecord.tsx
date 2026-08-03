@@ -195,7 +195,7 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
         <summary>
           <span>Model facts</span>
           <span className="record-summary-values">
-            {model.openWeights ? "Open weights" : "Closed weights"} ·{" "}
+            {model.openWeights ? "Open weights" : "Proprietary"} ·{" "}
             {model.pricing
               ? `$${formatPrice(model.pricing.input)} / $${formatPrice(model.pricing.output)} per 1M`
               : "Price not listed"}
@@ -220,7 +220,7 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
           </div>
           <div>
             <dt>Weights</dt>
-            <dd>{model.openWeights ? "Open weights" : "Closed weights"}</dd>
+            <dd>{model.openWeights ? "Open weights" : "Proprietary"}</dd>
           </div>
           <div>
             <dt>Context window</dt>

@@ -119,6 +119,15 @@ describe("ScatterPlot", () => {
     expect(open.length).toBeLessThan(plotted.length);
   });
 
+  it("labels every non-open model as proprietary, never closed weights", () => {
+    const { container } = render(
+      <ScatterPlot rows={rows} category="overall" />,
+    );
+
+    expect(container).toHaveTextContent("Proprietary");
+    expect(container.innerHTML).not.toMatch(/closed weights/i);
+  });
+
   it("uses one keyboard stop with named options and one selected record link", () => {
     const { container } = render(
       <ScatterPlot rows={rows} category="overall" />,
