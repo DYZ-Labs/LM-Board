@@ -755,5 +755,29 @@
       "output": 25
     },
     "url": "https://www.anthropic.com/news/claude-opus-5"
+  },
+  {
+    "id": "deepseek-v4-flash-2",
+    "name": "DeepSeek V4 Flash 0731",
+    "lab": "DeepSeek",
+    "releaseDate": "2026-07-31",
+    "openWeights": false,
+    "pricing": {
+      "input": 0.14,
+      "output": 0.28
+    },
+    "url": "https://artificialanalysis.ai/models/deepseek-v4-flash"
+  },
+  {
+    "id": "kimi-k3-low",
+    "name": "Kimi K3",
+    "lab": "Moonshot AI",
+    "releaseDate": "2026-07-16",
+    "openWeights": false,
+    "pricing": {
+      "input": 3,
+      "output": 15
+    },
+    "url": "https://artificialanalysis.ai/models/kimi-k3-low"
   }
 ]
