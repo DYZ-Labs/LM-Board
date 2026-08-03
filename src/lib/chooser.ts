@@ -90,7 +90,7 @@ export type ChooserPayload = {
 };
 
 export type ShortlistLabel =
-  | "Capability leader"
+  | "Most capable"
   | "Lowest input price"
   | "Largest context"
   | "Open-weights leader"
@@ -374,7 +374,7 @@ export function buildChooserShortlist(
   }
 
   const winners: Array<[ChooserModel | undefined, ShortlistLabel]> = [
-    [capabilityLeader, "Capability leader"],
+    [capabilityLeader, "Most capable"],
     [
       [...ranked]
         .filter((model) => model.pricing !== null)

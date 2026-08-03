@@ -38,7 +38,7 @@ function responseFor(url: URL, headers = securityHeaders): Response {
       contentType: "text/html; charset=utf-8",
     },
     "/choose": {
-      body: "<html><h1>Find a model for the work</h1><button>Update shortlist</button><a>Compare shortlist</a></html>",
+      body: "<html><h1>Find a model for the work</h1><button>Find</button><a>Compare</a></html>",
       contentType: "text/html; charset=utf-8",
     },
     "/model/stable-model": {

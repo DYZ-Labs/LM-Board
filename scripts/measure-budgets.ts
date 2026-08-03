@@ -389,7 +389,7 @@ const sentinels: { label: string; ok: boolean }[] = [
         chooseHtml,
       ) &&
       chooseHtml.includes("Find a model for the work") &&
-      /Overall(?:<!-- -->)? recommendations/.test(chooseHtml) &&
+      chooseHtml.includes("Recommendations") &&
       (chooseHtml.match(/class="chooser-card"/g) ?? []).length >= 2,
   },
   {

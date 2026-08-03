@@ -146,7 +146,7 @@ describe("populated comparison", () => {
     await screen.findByRole("link", { name: "Alpha" });
     expect(container.querySelectorAll(".score-cell a")).toHaveLength(0);
     expect(container.querySelector(".score-cell")).toHaveTextContent("92.5");
-    expect(screen.getByText(/Best score in each row/)).toBeInTheDocument();
+    expect(screen.queryByText(/Best score in each row/)).not.toBeInTheDocument();
   });
 
   it("restores focus after column removal and politely announces the count", async () => {

@@ -280,7 +280,6 @@ export function Chooser({ payload }: ChooserProps) {
                   </option>
                 ))}
               </select>
-              <small>Models with unknown context are excluded when set.</small>
             </label>
 
             <label className="chooser-control">
@@ -295,7 +294,7 @@ export function Chooser({ payload }: ChooserProps) {
                   inputMode="decimal"
                   value={draft.input}
                   aria-invalid={submitAttempted && inputError ? true : undefined}
-                  aria-describedby="chooser-input-help chooser-input-error"
+                  aria-describedby="chooser-input-error"
                   onChange={(event) =>
                     setDraft((current) => ({
                       ...current,
@@ -305,7 +304,6 @@ export function Chooser({ payload }: ChooserProps) {
                 />
                 <span>/ 1M</span>
               </span>
-              <small id="chooser-input-help">Leave blank for no cap.</small>
               <span className="chooser-error" id="chooser-input-error" role="alert">
                 {submitAttempted ? inputError : null}
               </span>
@@ -323,7 +321,7 @@ export function Chooser({ payload }: ChooserProps) {
                   inputMode="decimal"
                   value={draft.output}
                   aria-invalid={submitAttempted && outputError ? true : undefined}
-                  aria-describedby="chooser-output-help chooser-output-error"
+                  aria-describedby="chooser-output-error"
                   onChange={(event) =>
                     setDraft((current) => ({
                       ...current,
@@ -333,7 +331,6 @@ export function Chooser({ payload }: ChooserProps) {
                 />
                 <span>/ 1M</span>
               </span>
-              <small id="chooser-output-help">Leave blank for no cap.</small>
               <span className="chooser-error" id="chooser-output-error" role="alert">
                 {submitAttempted ? outputError : null}
               </span>
@@ -343,32 +340,28 @@ export function Chooser({ payload }: ChooserProps) {
 
         <div className="chooser-form-actions">
           <button className="btn btn-primary" type="submit">
-            Update shortlist
+            Find
           </button>
           <button
             className="btn"
             type="button"
             onClick={() => publish(DEFAULT_CHOOSER_STATE, "reset")}
           >
-            Reset constraints
+            Reset
           </button>
-          <p>Prices are USD per million uncached input or output tokens.</p>
+          <p>Prices are in USD</p>
         </div>
       </form>
 
       <div className="chooser-results-region">
         <div className="chooser-results-head">
           <div>
-            <p className="section-kicker">Applied shortlist</p>
             <h2 ref={resultHeadingRef} tabIndex={-1}>
-              {taskLabel} recommendations
+              {applied.task === "overall"
+                ? "Recommendations"
+                : `${taskLabel} recommendations`}
             </h2>
           </div>
-          <p className="chooser-result-count" role="status" aria-live="polite" aria-atomic="true">
-            {ready
-              ? `${shortlist.cards.length} ${shortlist.cards.length === 1 ? "model" : "models"} shown from ${shortlist.counts.afterCoverage} ranked candidates.`
-              : ""}
-          </p>
         </div>
 
         <div className="chooser-results-live">
@@ -571,16 +564,16 @@ export function Chooser({ payload }: ChooserProps) {
                 })
               }
             >
-              Compare shortlist
+              Compare
             </Link>
           ) : (
             <button className="btn btn-primary" type="button" disabled>
-              Compare shortlist
+              Compare
             </button>
           )}
           <CopyLinkButton
             surface="chooser"
-            label="Copy shortlist"
+            label="Copy"
             confirmation="Shortlist link copied"
           />
           {shortlist.cards.length < 2 ? (

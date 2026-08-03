@@ -159,8 +159,8 @@ function routeSpecs(model: ModelCandidate): RouteSpec[] {
       contentTypes: ["text/html"],
       bodyIncludes: [
         "Find a model for the work",
-        "Update shortlist",
-        "Compare shortlist",
+        "Find",
+        "Compare",
       ],
     },
     {
