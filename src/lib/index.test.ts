@@ -98,6 +98,42 @@ describe("calculateLmBoardIndex", () => {
       expect(result.value).toBeNull();
       expect(result.estimatedCount).toBe(0);
     });
+
+    it("allows a complete estimated category Index after broader qualification", () => {
+      const result = calculateLmBoardIndex(
+        [score("a", 80), score("b", 90)],
+        benchmarks,
+        new Map([
+          ["c", 70],
+          ["d", 70],
+          ["e", 70],
+        ]),
+        { allowCompleteEstimatedIndex: true },
+      );
+
+      expect(result).toEqual({
+        value: 76,
+        scoredCount: 2,
+        totalCount: 5,
+        coverage: 0.4,
+        estimatedCount: 3,
+      });
+    });
+
+    it("rejects an incomplete fallback Index", () => {
+      const result = calculateLmBoardIndex(
+        [score("a", 80), score("b", 90)],
+        benchmarks,
+        new Map([
+          ["c", 70],
+          ["d", 70],
+        ]),
+        { allowCompleteEstimatedIndex: true },
+      );
+
+      expect(result.value).toBeNull();
+      expect(result.estimatedCount).toBe(0);
+    });
   });
 
   it("fills gaps with estimates once a model clears the gate", () => {

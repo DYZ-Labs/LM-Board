@@ -10,6 +10,7 @@ import {
   openWeightsFromUrl,
   parseBoardUrl,
   providersFromUrl,
+  proprietaryWeightsFromUrl,
   queryFromUrl,
   rowFromFragment,
   serializeBoardUrl,
@@ -114,6 +115,12 @@ describe("filter parsing", () => {
     expect(openWeightsFromUrl(null)).toBe(false);
   });
 
+  it("treats anything but 1 as proprietary weights off", () => {
+    expect(proprietaryWeightsFromUrl("1")).toBe(true);
+    expect(proprietaryWeightsFromUrl("true")).toBe(false);
+    expect(proprietaryWeightsFromUrl(null)).toBe(false);
+  });
+
   it("distinguishes all, none and a canonical provider subset", () => {
     expect(providersFromUrl(null, labs)).toBeNull();
     expect(providersFromUrl("none", labs)).toEqual([]);
@@ -177,7 +184,7 @@ describe("board URL codec", () => {
 
   it("round-trips every owned field and preserves foreign state", () => {
     const source = new URL(
-      "https://lm.test/?utm_source=x&tab=reasoning&sort=reasoning-test&direction=asc&view=plot&density=data&q=opus&labs=openai,anthropic&open=1#claude-opus-5",
+      "https://lm.test/?utm_source=x&tab=reasoning&sort=reasoning-test&direction=asc&view=plot&density=data&q=opus&labs=openai,anthropic&open=1&proprietary=1#claude-opus-5",
     );
     const parsed = parseBoardUrl(source, context);
     const serialized = serializeBoardUrl(source, parsed, context);

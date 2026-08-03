@@ -222,7 +222,6 @@ export function CompareGrid({ payload }: CompareGridProps) {
       aria-label="Compare models"
     >
       <div className="longform-intro compare-intro">
-        <p className="section-kicker">Model comparison</p>
         <h1>Compare AI models</h1>
         <p>
           Compare up to {MAX_COMPARE} models across LM Index, scores, price, and

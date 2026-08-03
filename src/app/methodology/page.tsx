@@ -21,11 +21,11 @@ export function generateMetadata(): Metadata {
   return pageMetadata({
     title: "Methodology — LM Board",
     description: truncateDescription(
-      `How the Index is built: an equal-weight mean across ${data.benchmarks.length} benchmarks, source and retrieval details for measured scores, and a ${minimumCoverageCount}-of-${data.benchmarks.length} coverage requirement before ranking.`,
+      `How the Index is built: an equal-weight mean across ${data.benchmarks.length} benchmarks, a ${minimumCoverageCount}-of-${data.benchmarks.length} Overall evidence gate, and disclosed category estimates.`,
     ),
     path: "/methodology",
     image: "/og/methodology.png",
-    imageAlt: `LM Board methodology — ${data.scoreCount} source-linked measured scores, an equal-weight Index, and a ${minimumCoverageCount}-of-${data.benchmarks.length} coverage requirement.`,
+    imageAlt: `LM Board methodology — ${data.scoreCount} source-linked measured scores, an equal-weight Index, a ${minimumCoverageCount}-of-${data.benchmarks.length} Overall evidence gate, and disclosed estimates.`,
   });
 }
 

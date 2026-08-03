@@ -104,6 +104,7 @@ describe("initial comparison paint", () => {
     );
 
     expect(markup).toContain("compare-initial-empty");
+    expect(markup).not.toContain("Model comparison");
     expect(markup).toContain("compare-initial-skeleton");
     expect(css).toMatch(
       /\.compare-initial-skeleton\s*{\s*display:\s*none;/,

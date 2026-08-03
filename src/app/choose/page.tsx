@@ -21,7 +21,7 @@ export function generateMetadata(): Metadata {
   const data = loadLeaderboardData();
 
   return pageMetadata({
-    title: "Choose an AI model — LM Board",
+    title: "Find models - LM Board",
     description: truncateDescription(
       `Generate a cited shortlist from ${data.rows.length} frontier models using task Index, API or open-weight access, context window, and first-party token prices.`,
     ),

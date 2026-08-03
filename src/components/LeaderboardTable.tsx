@@ -182,7 +182,12 @@ export function LeaderboardTable({
     Record<string, DetailPhase>
   >({});
   const isProfile = view === "profile";
-  const showIndexColumn = isProfile || visibleBenchmarks.length !== 1;
+  // A single measured benchmark makes its category Index redundant, but an
+  // estimated Index still needs its own visible, explicitly labelled cell.
+  const showIndexColumn =
+    isProfile ||
+    visibleBenchmarks.length !== 1 ||
+    rows.some((row) => row.scopes[category].estimatedCount > 0);
   const columnCount =
     3 +
     Number(showIndexColumn) +
@@ -535,11 +540,11 @@ export function LeaderboardTable({
       }
       meta={
         <>
-          A model is ranked only once it has measured scores on at least 60% of
-          the tab&apos;s benchmarks — currently {minimumCoverageCount} of{" "}
-          {percentBenchmarkCount} on Overall. Gaps below that bar are never
-          filled; gaps above it are estimated at the model&apos;s own standing
-          so missing results are never counted as zero.
+          Overall ranking requires measured scores on at least 60% of the full
+          suite — currently {minimumCoverageCount} of {percentBenchmarkCount}.
+          Once that broad evidence gate is clear, category gaps may be estimated
+          at the model&apos;s measured percentile standing. Estimates are labeled
+          and missing results are never counted as zero.
         </>
       }
       sourceUrl="/methodology"
@@ -849,10 +854,11 @@ export function LeaderboardTable({
                                 This model has measured scores on{" "}
                                 {activeScope.coverageCount} of{" "}
                                 {activeScope.coverageTotal} benchmarks on this
-                                tab. An Index needs at least 60%.
+                                tab and does not qualify through the Overall
+                                evidence gate.
                               </>
                             }
-                            meta="Every score it does have is still shown and still sortable. Missing results are never counted as zero."
+                            meta="Every score it does have is still shown and sortable. Missing results are never counted as zero, and an incomplete estimate never receives a rank."
                             sourceUrl="/methodology"
                             sourceLabel="Why the rule exists"
                             triggerClassName="insufficient-label"
@@ -860,7 +866,17 @@ export function LeaderboardTable({
                             triggerContent={<>Insufficient data</>}
                           />
                         ) : (
-                          formatScore(activeScope.index)
+                          <span className="index-value">
+                            <span>{formatScore(activeScope.index)}</span>
+                            {activeScope.estimatedCount > 0 ? (
+                              <Badge
+                                tone="warn"
+                                title={`${activeScope.estimatedCount} of ${activeScope.coverageTotal} benchmark values estimated in this Index`}
+                              >
+                                {activeScope.estimatedCount} est.
+                              </Badge>
+                            ) : null}
+                          </span>
                         )}
                       </td>
                     ) : null}

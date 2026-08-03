@@ -110,7 +110,7 @@ describe("chooser eligibility", () => {
     candidate("unranked", { input: 1, context: 400000, index: null }),
   ];
 
-  it("defines any, API, and open access exactly", () => {
+  it("defines any, API, open, and proprietary access exactly", () => {
     expect(buildChooserShortlist(models, state()).counts.afterAccess).toBe(5);
     expect(
       buildChooserShortlist(models, state({ access: "api" })).counts.afterAccess,
@@ -118,6 +118,10 @@ describe("chooser eligibility", () => {
     expect(
       buildChooserShortlist(models, state({ access: "open" })).counts.afterAccess,
     ).toBe(2);
+    expect(
+      buildChooserShortlist(models, state({ access: "proprietary" })).counts
+        .afterAccess,
+    ).toBe(4);
   });
 
   it("excludes unknown context only when a floor is applied and keeps the boundary", () => {

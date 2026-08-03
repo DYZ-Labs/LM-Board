@@ -9,7 +9,7 @@ export const CHOOSER_TASKS = [
 ] as const;
 
 export type ChooserTask = (typeof CHOOSER_TASKS)[number];
-export type ChooserAccess = "any" | "api" | "open";
+export type ChooserAccess = "any" | "api" | "open" | "proprietary";
 export type ContextFloor = 0 | 128000 | 200000 | 400000 | 1000000;
 
 export type ChooserState = {
@@ -119,7 +119,12 @@ export type ChooserShortlist = {
   capabilityLeader: ChooserModel | null;
 };
 
-const ACCESS_VALUES = new Set<ChooserAccess>(["any", "api", "open"]);
+const ACCESS_VALUES = new Set<ChooserAccess>([
+  "any",
+  "api",
+  "open",
+  "proprietary",
+]);
 const CONTEXT_FROM_URL = new Map<string, ContextFloor>([
   ["128k", 128000],
   ["200k", 200000],
@@ -316,6 +321,7 @@ function capabilityOrder(task: ChooserTask) {
 function qualifiesForAccess(model: ChooserModel, access: ChooserAccess) {
   if (access === "api") return model.pricing !== null;
   if (access === "open") return model.openWeights;
+  if (access === "proprietary") return !model.openWeights;
   return model.openWeights || model.pricing !== null;
 }
 

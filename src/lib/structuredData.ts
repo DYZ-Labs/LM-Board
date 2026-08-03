@@ -105,7 +105,7 @@ function boardDataset(data: LeaderboardData): JsonLdNode {
     publisher: reference(LM_BOARD_ORGANIZATION_ID),
     citation: ARTIFICIAL_ANALYSIS_URL,
     isBasedOn: data.benchmarks.map((benchmark) => benchmark.sourceUrl),
-    measurementTechnique: `${ownership} LM Board runs no evaluations; it computes an equal-weight Index and ranks models after the measured-coverage requirement is met.`,
+    measurementTechnique: `${ownership} LM Board runs no evaluations; Overall ranking requires measured coverage, after which complete category gaps may be estimated from measured percentile standing and disclosed as estimates.`,
     keywords: [
       "LLM benchmarks",
       "AI leaderboard",
@@ -399,7 +399,7 @@ export function methodologyGraph(data: LeaderboardData) {
         "@type": "TechArticle",
         "@id": articleId,
         headline: "How LM Board computes its frontier-model Index",
-        description: `The score collection rules, equal-weight Index, and ${minimumCoverageCount}-of-${data.benchmarks.length} measured-coverage requirement before a model is ranked.`,
+        description: `The score collection rules, equal-weight Index, ${minimumCoverageCount}-of-${data.benchmarks.length} Overall measured-coverage requirement, and disclosed category estimates.`,
         url,
         dateModified: data.lastUpdated,
         author: reference(LM_BOARD_ORGANIZATION_ID),

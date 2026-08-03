@@ -55,7 +55,7 @@ Newest first-party pricing check: ${data.latestPricingRetrieved ?? "none listed"
 
 ## The Index
 
-LM Board computes the Overall Index as the equal-weight arithmetic mean of a model's values on the tracked benchmarks. A model is ranked only when at least ${minimumCoverageCount} of ${data.benchmarks.length} benchmarks are measured for it. Above that bar, remaining gaps are estimated at the model's measured percentile standing and disclosed as estimates; below it, gaps are never filled and the model carries no Index. Ranking is standard competition ranking, so models with an identical Index share a rank.
+LM Board computes the Overall Index as the equal-weight arithmetic mean of a model's values on the tracked benchmarks. An Overall rank requires at least ${minimumCoverageCount} of ${data.benchmarks.length} measured benchmarks. Once that broad evidence gate is clear, complete category gaps may be estimated at the model's measured percentile standing and are disclosed as estimates; estimates never become measured score records. A model may also qualify directly by measuring at least 60% of a category. Ranking is standard competition ranking, so models with an identical Index share a rank.
 
 ## Licensing and citation
 
