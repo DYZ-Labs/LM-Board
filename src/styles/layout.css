@@ -665,4 +665,27 @@
   }
 }
 
+/* The not-found boundary is part of every App Router tree. Keeping its tiny
+   layout in the shared sheet prevents Next from preloading the entire
+   long-form document stylesheet on the leaderboard just to style a 404. */
+.not-found {
+  max-width: 62ch;
+  padding: var(--s-10) 0;
+}
+
+.not-found h1 {
+  margin-bottom: var(--s-6);
+  font-size: var(--t-h1);
+  font-weight: var(--w-display);
+  letter-spacing: var(--ls-h1);
+  line-height: var(--lh-h1);
+}
+
+.not-found p {
+  margin-bottom: var(--s-7);
+  font-size: var(--t-15);
+  line-height: var(--lh-15);
+  color: var(--fg-secondary);
+}
+
 }

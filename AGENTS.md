@@ -1,7 +1,7 @@
 # AGENTS.md
 
 LM Board is a static, hand-curated leaderboard of frontier language-model benchmark
-scores, live at https://www.checklmboard.xyz. Next.js 15 App Router, strict
+scores, live at https://www.checklmboard.xyz. Next.js 16 App Router, strict
 TypeScript, Zod 4, plain CSS; `output: "export"` produces a pure static site in
 `out/` — no backend, no database. The thesis: we don't run evals, we curate
 published ones, and every score carries a source URL and retrieval date.
@@ -31,6 +31,7 @@ npm test -- src/lib/urlState.test.ts   # one test file (<1 s) — use while iter
 npm run lint                           # ESLint, zero warnings allowed
 npm run typecheck                      # tsc --noEmit
 npm run validate:data                  # Zod + cross-file integrity on data/*.json
+npm run pricing:audit                  # fail on future or >30-day-old listed prices
 npm run build                          # validate:data + static export to out/
 npm run measure -- --check             # payload budgets; reads out/, so build first
 npm run check                          # full gate: lint, typecheck, test, build, budgets
@@ -38,6 +39,9 @@ npm run check                          # full gate: lint, typecheck, test, build
 
 `npm run check` is the exact command CI (`.github/workflows/ci.yml`) and Vercel
 (`vercel.json` buildCommand) run. Green `check` locally means green CI.
+Production builds intentionally pass Next 16's `--webpack` opt-out: its default
+Turbopack output exceeds the unchanged homepage raw-JS budget. Development may
+still use the default Turbopack compiler.
 
 Vitest has two projects: `lib` (Node env — `src/lib/**/*.test.ts` and
 `scripts/**/*.test.ts`) and `ui` (jsdom — `src/components/**/*.test.tsx`, setup
@@ -46,7 +50,7 @@ in `vitest.setup.ts`).
 Occasional:
 
 ```bash
-npm run og -- --only <model-id>    # regenerate one OG card (or `--only home`)
+npm run og -- --only <model-id>    # one OG card (`home`, `choose`, etc. also work)
 npm run og:verify                  # pixel checks on the generated cards
 npm run icons                      # rebuild derived icons from committed source PNGs
 npm run discover:models -- --help  # AA discovery CLI; dry-run by default, needs AA_API_KEY
@@ -61,13 +65,14 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
   for the data files (types inferred from it). `index.ts` is the ranking/Index
   math, not a barrel export.
 - `src/components/` — React components, colocated `*.test.tsx`.
-- `src/app/` — routes: `/`, `/model/[id]`, `/compare`, `/methodology`, plus
+- `src/app/` — routes: `/`, `/model/[id]`, `/compare`, `/choose`, `/methodology`, plus
   `llms.txt`, `palette.json`, sitemap, robots, manifest.
 - `src/styles/` — hand-authored CSS cascade layers; design tokens in `tokens.css`.
 - `scripts/` — tsx CLIs: data validation, OG cards, icons, payload budgets,
   discovery, production monitor. Tests colocated.
 - `.github/workflows/` — `ci.yml`; `discover-models.yml` (weekly, opens scaffold
-  PRs); `monitor-production.yml` (probes prod every 15 min, files issues).
+  PRs); `audit-pricing.yml` (weekly freshness issue); `monitor-production.yml`
+  (probes prod every 15 min, files issues).
 
 ## Data rules
 
@@ -75,6 +80,9 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
   slugs; dates are `YYYY-MM-DD`.
 - Every score needs `source.url`, `source.retrieved`, and a truthful
   `selfReported`. Missing scores are omitted — never zero, never a placeholder.
+- Every optional price needs first-party `source.url` and `source.retrieved`.
+  Validation rejects Artificial Analysis pricing URLs; the weekly audit flags
+  prices older than 30 days without removing them.
 - `reasoningEffort` must be identical across all of a model's scores, or absent
   from all of them.
 - `model.url` must be the official vendor announcement or model card. Validation

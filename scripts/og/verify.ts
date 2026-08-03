@@ -106,6 +106,10 @@ async function main() {
       overall: { ...first.scopes.overall, index: null, rank: null, coverageCount: 0 },
     },
   };
+  const lowest = [...data.rows].sort(
+    (a, b) =>
+      (a.scopes.overall.index ?? 0) - (b.scopes.overall.index ?? 0),
+  )[0];
 
   // The proof card for an auto-discovered benchmark count has to be internally
   // consistent: the prototype's rendered 6/9/12-column cards all still read
@@ -132,7 +136,13 @@ async function main() {
   const cases: { name: string; card: () => Card; values?: boolean }[] = [
     { name: "site", card: () => siteCard(data) },
     { name: "model", card: () => modelCard(byId("anthropic-claude-opus-5"), data) },
-    { name: "edge-lowest", card: () => modelCard([...data.rows].sort((a, b) => (a.scopes.overall.index ?? 0) - (b.scopes.overall.index ?? 0))[0], data) },
+    {
+      name: "edge-lowest",
+      card: () => modelCard(lowest, data),
+      values: Object.values(lowest.scoresByBenchmark).some(
+        (score) => score !== null,
+      ),
+    },
     { name: "edge-noindex", card: () => modelCard(data.rows.find((row) => row.scopes.coding.index === null) ?? first, data, { scope: "coding" }) },
     { name: "edge-nodata", card: () => modelCard(noData, data), values: false },
     { name: "edge-tie", card: () => modelCard(first, data, { tied: true }) },
@@ -152,7 +162,13 @@ async function main() {
 
   for (const testCase of [
     ...cases,
-    ...rows.map((row) => ({ name: `all-${row.model.id}`, card: () => modelCard(row, data), values: true })),
+    ...rows.map((row) => ({
+      name: `all-${row.model.id}`,
+      card: () => modelCard(row, data),
+      values: Object.values(row.scoresByBenchmark).some(
+        (score) => score !== null,
+      ),
+    })),
   ]) {
     if (testCase.values === false) dashOnly.add(testCase.name);
     const card = testCase.card();

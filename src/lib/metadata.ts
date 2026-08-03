@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { loadLeaderboardData } from "@/lib/data";
 import { formatScore } from "@/lib/format";
 import type { LeaderboardRow } from "@/lib/data";
-import { modelRecordFreshness } from "@/lib/site";
+import { catalogFreshness, modelRecordFreshness } from "@/lib/site";
 
 /**
  * Next merges a route's `openGraph` with the layout's by replacing it wholesale,
@@ -22,7 +22,7 @@ export type PageMetadataInput = {
   /** Site-absolute path to the 1200×630 card. */
   image: string;
   imageAlt: string;
-  /** Record-local cache key; defaults to the board's newest score retrieval. */
+  /** Record-local cache key; defaults to the newest score or pricing check. */
   imageVersion?: string;
   type?: "website" | "article";
   publishedTime?: string;
@@ -50,7 +50,7 @@ export function pageMetadata(input: PageMetadataInput): Metadata {
     path,
     image,
     imageAlt,
-    imageVersion = loadLeaderboardData().lastUpdated,
+    imageVersion = catalogFreshness(loadLeaderboardData()),
     type = "website",
     publishedTime,
     modifiedTime,

@@ -128,9 +128,21 @@ describe("modelPageMetadata", () => {
 
   it("does not borrow another model's newer retrieval for its card version", () => {
     const row = data.rows[0];
-    const recordDate = "2025-12-31";
+    const recordDate = "2026-07-15";
     const olderRecord = {
       ...row,
+      model: {
+        ...row.model,
+        pricing: row.model.pricing
+          ? {
+              ...row.model.pricing,
+              source: {
+                ...row.model.pricing.source,
+                retrieved: recordDate,
+              },
+            }
+          : undefined,
+      },
       scoresByBenchmark: Object.fromEntries(
         Object.entries(row.scoresByBenchmark).map(([id, score]) => [
           id,
@@ -247,11 +259,19 @@ describe("modelRecordFreshness", () => {
     expect(modelRecordFreshness(row)).toEqual({
       firstScoreRetrieved: dates[0],
       latestScoreRetrieved: dates.at(-1),
-      lastModified: dates.at(-1),
+      pricingRetrieved: row.model.pricing?.source.retrieved ?? null,
+      lastModified: [
+        row.model.releaseDate,
+        dates.at(-1),
+        row.model.pricing?.source.retrieved,
+      ]
+        .filter((value): value is string => value !== undefined)
+        .sort()
+        .at(-1),
     });
   });
 
-  it("falls back to the model release date when no score is stored", () => {
+  it("uses pricing freshness when no score is stored", () => {
     const row = data.rows[0];
     const scoreless = {
       ...row,
@@ -263,6 +283,26 @@ describe("modelRecordFreshness", () => {
     expect(modelRecordFreshness(scoreless)).toEqual({
       firstScoreRetrieved: null,
       latestScoreRetrieved: null,
+      pricingRetrieved: row.model.pricing?.source.retrieved ?? null,
+      lastModified:
+        row.model.pricing?.source.retrieved ?? row.model.releaseDate,
+    });
+  });
+
+  it("falls back to release date when a record has neither scores nor pricing", () => {
+    const row = data.rows[0];
+    const bare = {
+      ...row,
+      model: { ...row.model, pricing: undefined },
+      scoresByBenchmark: Object.fromEntries(
+        Object.keys(row.scoresByBenchmark).map((id) => [id, null]),
+      ),
+    };
+
+    expect(modelRecordFreshness(bare)).toEqual({
+      firstScoreRetrieved: null,
+      latestScoreRetrieved: null,
+      pricingRetrieved: null,
       lastModified: row.model.releaseDate,
     });
   });

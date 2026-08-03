@@ -38,6 +38,7 @@ export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
+    let active = true;
     const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
     const syncSystemTheme = () => {
       if (document.documentElement.dataset.themeSource !== "explicit") {
@@ -55,9 +56,14 @@ export function ThemeToggle() {
           ? "explicit"
           : "system";
     applyTheme(currentTheme, source);
-    setTheme(currentTheme);
+    queueMicrotask(() => {
+      if (active) setTheme(currentTheme);
+    });
     mediaQuery.addEventListener("change", syncSystemTheme);
-    return () => mediaQuery.removeEventListener("change", syncSystemTheme);
+    return () => {
+      active = false;
+      mediaQuery.removeEventListener("change", syncSystemTheme);
+    };
   }, []);
 
   function toggleTheme() {

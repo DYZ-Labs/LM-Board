@@ -231,50 +231,60 @@ export function LeaderboardTable({
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    let active = true;
+    let frame: number | null = null;
 
-    // In reduced-motion mode there is no intermediate visual state, so the
-    // accessibility tree and DOM follow the URL state immediately too.
-    if (reducedMotion) {
-      setDetailPhases(
-        expandedModelId && visibleIds.has(expandedModelId)
-          ? { [expandedModelId]: "open" }
-          : {},
-      );
-      return;
-    }
-
-    setDetailPhases((current) => {
-      const next: Record<string, DetailPhase> = {};
-
-      for (const [id, phase] of Object.entries(current)) {
-        if (!visibleIds.has(id)) continue;
-        next[id] =
-          id === expandedModelId
-            ? phase === "open"
-              ? "open"
-              : "opening"
-            : "closing";
+    // Defer the state transition out of the effect body so one URL-state
+    // synchronization cannot trigger a cascading render. Reduced motion still
+    // skips the intermediate visual phase entirely.
+    queueMicrotask(() => {
+      if (!active) return;
+      if (reducedMotion) {
+        setDetailPhases(
+          expandedModelId && visibleIds.has(expandedModelId)
+            ? { [expandedModelId]: "open" }
+            : {},
+        );
+        return;
       }
 
-      if (expandedModelId && visibleIds.has(expandedModelId)) {
-        next[expandedModelId] ??= "opening";
-      }
+      setDetailPhases((current) => {
+        const next: Record<string, DetailPhase> = {};
 
-      const unchanged =
-        Object.keys(current).length === Object.keys(next).length &&
-        Object.entries(next).every(([id, phase]) => current[id] === phase);
-      return unchanged ? current : next;
+        for (const [id, phase] of Object.entries(current)) {
+          if (!visibleIds.has(id)) continue;
+          next[id] =
+            id === expandedModelId
+              ? phase === "open"
+                ? "open"
+                : "opening"
+              : "closing";
+        }
+
+        if (expandedModelId && visibleIds.has(expandedModelId)) {
+          next[expandedModelId] ??= "opening";
+        }
+
+        const unchanged =
+          Object.keys(current).length === Object.keys(next).length &&
+          Object.entries(next).every(([id, phase]) => current[id] === phase);
+        return unchanged ? current : next;
+      });
+
+      if (!expandedModelId) return;
+      frame = window.requestAnimationFrame(() => {
+        setDetailPhases((current) =>
+          current[expandedModelId] === "opening"
+            ? { ...current, [expandedModelId]: "open" }
+            : current,
+        );
+      });
     });
 
-    if (!expandedModelId) return;
-    const frame = window.requestAnimationFrame(() => {
-      setDetailPhases((current) =>
-        current[expandedModelId] === "opening"
-          ? { ...current, [expandedModelId]: "open" }
-          : current,
-      );
-    });
-    return () => window.cancelAnimationFrame(frame);
+    return () => {
+      active = false;
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
   }, [expandedModelId, rows]);
 
   const completeDetailExit = useCallback((modelId: string) => {

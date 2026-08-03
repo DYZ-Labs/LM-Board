@@ -356,11 +356,11 @@ describe("buildScaffolds", () => {
       releaseDate: "2026-07-20",
       openWeights: false,
       contextWindow: 1050000,
-      pricing: { input: 5, output: 30 },
       url: "https://artificialanalysis.ai/models/gpt-5-7",
     });
-    expect(gpt?.flags).toHaveLength(1);
+    expect(gpt?.flags).toHaveLength(2);
     expect(gpt?.flags[0]).toMatch(/MUST replace/);
+    expect(gpt?.flags[1]).toMatch(/first-party documentation/);
   });
 
   it("falls back and flags when upstream metadata is missing", () => {

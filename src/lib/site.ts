@@ -1,4 +1,4 @@
-import type { LeaderboardRow } from "@/lib/data";
+import type { LeaderboardData, LeaderboardRow } from "@/lib/data";
 
 function normalizeUrl(url: string | undefined) {
   const normalized = url?.trim().replace(/\/$/, "");
@@ -27,16 +27,28 @@ export const repositoryUrl = normalizeUrl(
 );
 export const issuesUrl = repositoryUrl ? `${repositoryUrl}/issues` : null;
 
+/** Latest catalog evidence date for routes that render both scores and prices. */
+export function catalogFreshness(
+  data: Pick<LeaderboardData, "lastUpdated" | "latestPricingRetrieved">,
+) {
+  return data.latestPricingRetrieved &&
+    data.latestPricingRetrieved > data.lastUpdated
+    ? data.latestPricingRetrieved
+    : data.lastUpdated;
+}
+
 export type ModelRecordFreshness = {
   /** Earliest score retrieval represented by this record, when it has scores. */
   firstScoreRetrieved: string | null;
   /** Latest score retrieval represented by this record, when it has scores. */
   latestScoreRetrieved: string | null;
+  /** First-party price check represented by this record, when priced. */
+  pricingRetrieved: string | null;
   /**
    * Best record-local date available for sitemap and Dataset freshness.
-   * A score retrieval is when the record's evidence changed; a scoreless
-   * record falls back to its own release date rather than borrowing an
-   * unrelated board-wide update.
+   * Score and pricing retrievals both change record evidence; a record with
+   * neither falls back to its release date rather than borrowing an unrelated
+   * board-wide update.
    */
   lastModified: string;
 };
@@ -55,10 +67,20 @@ export function modelRecordFreshness(
     .sort();
   const firstScoreRetrieved = retrieved.at(0) ?? null;
   const latestScoreRetrieved = retrieved.at(-1) ?? null;
+  const pricingRetrieved = row.model.pricing?.source.retrieved ?? null;
+  const lastModified = [
+    row.model.releaseDate,
+    latestScoreRetrieved,
+    pricingRetrieved,
+  ]
+    .filter((value): value is string => value !== null)
+    .sort()
+    .at(-1) as string;
 
   return {
     firstScoreRetrieved,
     latestScoreRetrieved,
-    lastModified: latestScoreRetrieved ?? row.model.releaseDate,
+    pricingRetrieved,
+    lastModified,
   };
 }

@@ -17,7 +17,7 @@ A fast, trustworthy, single-page leaderboard: ~15–20 frontier language models 
 
 ## 3. Stack
 
-- **Next.js 15 (App Router) + TypeScript + plain CSS**, built with `output: 'export'` → pure static files (deploy to Vercel/Netlify/GitHub Pages).
+- **Next.js 16 (App Router) + TypeScript + plain CSS**, built with `output: 'export'` → pure static files (deploy to Vercel/Netlify/GitHub Pages).
 - **Zod** for data validation at build time and in CI. A typo'd score or dangling `modelId` must fail the build, never ship.
 - **No other runtime dependencies.** No table library (20 rows — hand-roll a sort hook), no chart library (score bars are plain CSS), no state library.
 
@@ -33,7 +33,11 @@ type Model = {
   releaseDate: string;           // ISO date
   openWeights: boolean;
   contextWindow?: number;        // tokens
-  pricing?: { input: number; output: number };  // USD per Mtok
+  pricing?: {                           // USD per Mtok
+    input: number;
+    output: number;
+    source: { url: string; retrieved: string };
+  };
   url: string;                   // official announcement / model card
 };
 
@@ -59,6 +63,9 @@ type Score = {
 **Rules:**
 
 - `source` is mandatory on every score. No citation → no score.
+- `pricing.source` is mandatory whenever pricing is present. It points to
+  first-party documentation and records the date that listing was checked;
+  Artificial Analysis and other aggregators are not pricing sources.
 - Where a benchmark has a canonical third-party leaderboard (e.g. SWE-bench Verified), prefer that number over the vendor's. `selfReported: true` renders as a small visible marker.
 - At most one score per (model, benchmark) pair. If a lab reports multiple configurations, record the flagship configuration and note it in `settings`.
 - Missing scores render as a muted "—" and sort to the bottom of that column.
@@ -228,3 +235,6 @@ Arena-style ELO/voting · running our own evals · historical score trends · pe
   - **Tooling:** component tests now exist (jsdom + Testing Library, closing audit finding SEV-02) and CI gates on transfer-size budgets plus a content smoke check via `npm run measure -- --check`. `@vercel/analytics` is the one runtime dependency added — same-origin, cookieless, and requiring no CSP change; removing it is a two-line revert if the zero-runtime-dependency rule is reinstated.
 - **2026-08-03 — DeepSeek V4 Flash 0731 retained; Kimi K3 low rejected:** DeepSeek's official July 31 model card identifies V4 Flash 0731 as the official release that supersedes the April preview after separate post-training, so it remains a dated model entry rather than overwriting the preview. Its metadata now cites DeepSeek's official model card, records the published open weights and 1,000,000-token context, and keeps the current first-party $0.14/$0.28 per-million-token rates. Moonshot documents `low` as a `reasoning_effort` setting on the same `kimi-k3` model, so the auto-scaffolded Kimi K3 low duplicate was removed and its append-only discovery row marked ignored.
 - **2026-08-03 — Full score and pricing audit:** all 62 models with benchmark records had their per-model Artificial Analysis pages fetched again. The 448 scores covering 61 unchanged model pages matched the committed values exactly, so only their retrieval dates advanced to 2026-08-03. Artificial Analysis had repointed the DeepSeek V4 Flash slug from the board's 2026-04-24 checkpoint to “DeepSeek V4 Flash 0731 (Reasoning, Max Effort),” released 2026-07-31; the preview's eight April-run values therefore retain their 2026-07-22 retrieval date instead of silently substituting the separately listed 0731 checkpoint. No benchmark value, source URL, or score count changed. A same-day first-party pricing review updated GPT-5.6 Terra from $2.50/$15 to $2/$12 and GPT-5.6 Luna from $1/$6 to $0.20/$1.20 following OpenAI's July 30 price cut, removed DeepSeek V3.2 pricing after its first-party API retirement, and restored Devstral 2 at Mistral's currently listed $0.40/$2 rate. Every other listed price and intentional omission remains unchanged.
+- **2026-08-03 — Sourced pricing contract (owner-approved; amends the earlier same-day pricing note):** every optional price now carries a strict first-party `source.url` and ISO `source.retrieved` date. The atomic migration rechecked all 51 listed prices against official provider documentation and rejects Artificial Analysis pricing URLs. OpenAI's current official pricing documentation lists GPT-5.6 Terra at $2.50/$15 and GPT-5.6 Luna at $1/$6 per million input/output tokens; those values supersede the unsupported price-cut figures recorded in the earlier same-day audit entry. Model records show the source and checked date, structured-data Offers use that source URL, and pricing retrieval participates in record, sitemap, and OG cache freshness without changing the separate score-retrieval clock. `npm run pricing:audit` deterministically reports future or older-than-30-day checks; the weekly workflow maintains one deduplicated issue and leaves stale prices visible for human review.
+- **2026-08-03 — Guided model chooser (owner-approved; adds a static product route):** `/choose` is a client-hydrated static route for developers and technical leads. Its canonical URL stores task (`overall`, `reasoning`, `coding`, `math`, `agentic`), access (`any`, `api`, `open`), context floor, and optional inclusive input/output price caps; defaults are omitted and unrelated query parameters survive. `any` means open weights or a sourced first-party API price, `api` requires such pricing, and `open` requires open weights. Context floors exclude unknown contexts and any price cap excludes unpriced models. After constraints, models without a valid selected-task Index are reported separately. The deterministic four-card policy selects capability leader, lowest input price, largest context, and open-weights leader with documented tie-breaks, deduplicates multi-winners, and fills from task-Index order. It does not change Index math, weights, categories, coverage, or rank. The route receives only identity, five derived scope summaries, context, weights, and sourced pricing—never benchmark scores, settings, or score URLs—and links cards in order to the existing comparison. Analytics measure `chooser_apply`, `shortlist_compare`, and `shortlist_record_open`; the launch target is ≥20% pageview-to-comparison conversion after 100 visits with <10% no-result applications. CI enforces `/choose` at ≤120 KiB raw HTML, ≤18 KiB gzip, ≤48 KiB Flight, ≤1,200 DOM elements, and ≤24 KiB gzip route-specific JavaScript.
+- **2026-08-03 — Owned Next.js 16 migration (supersedes the stale single-package dependency branch):** Next and `eslint-config-next` move together from 15.5.21 to 16.2.12, the ESLint configuration uses the package's native flat exports, and Node types remain on the Node 22 line. Next 16's default Turbopack build exceeded the unchanged 550 KiB homepage raw-JS ceiling, so production uses the framework's documented `next build --webpack` opt-out while development may use Turbopack. The asset meter now discovers CSS in either compiler layout and excludes Next's `nomodule` polyfill from modern-browser transfer rather than raising a budget. The resulting homepage is 496.3 KiB raw / 151.0 KiB gzip executable JavaScript. The full dependency audit still reports build-tool advisories inherited through Next's bundled PostCSS and optional Sharp plus a dev-only ESLint glob advisory; because the deployment is a pure static export with no Next server or image optimizer, that residual exposure is confined to trusted CI/build inputs and is recorded in `SECURITY.md` pending compatible upstream releases.

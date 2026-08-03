@@ -40,7 +40,7 @@ import { renderCard } from "./og/render";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const defaultOutputDirectory = join(root, "public", "og");
-export const MINIMUM_EXPECTED_CARDS = 66;
+export const MINIMUM_EXPECTED_CARDS = 67;
 
 export type OgJob = {
   path: string;
@@ -53,6 +53,22 @@ export function buildOgJobs(): OgJob[] {
 
   return [
     { path: "home.png", card: () => siteCard(data) },
+    {
+      path: "choose.png",
+      card: () =>
+        siteCard(data, {
+          hero: "4",
+          heroLabel: "Deterministic recommendations",
+          spec: [
+            ["Task scopes", "5"],
+            ["Access modes", "3"],
+            [
+              "Sourced prices",
+              String(data.rows.filter((row) => row.model.pricing).length),
+            ],
+          ],
+        }),
+    },
     {
       path: "compare.png",
       card: () =>
@@ -102,6 +118,7 @@ function targetForOnly(only: string) {
 
   if (
     withoutExtension === "home" ||
+    withoutExtension === "choose" ||
     withoutExtension === "compare" ||
     withoutExtension === "methodology" ||
     withoutExtension === "value"
@@ -124,7 +141,7 @@ export function selectOgJobs(jobs: OgJob[], only?: string): OgJob[] {
 
   if (selected.length !== 1) {
     throw new Error(
-      `Unknown OG card ${JSON.stringify(only)}. Use home, compare, methodology, value, or an exact model id.`,
+      `Unknown OG card ${JSON.stringify(only)}. Use home, choose, compare, methodology, value, or an exact model id.`,
     );
   }
 
@@ -298,7 +315,7 @@ function readOnlyArgument(argv: string[]) {
   const value = argv[index + 1];
   if (!value || value.startsWith("--")) {
     throw new Error(
-      "--only requires home, compare, methodology, value, or a model id.",
+      "--only requires home, choose, compare, methodology, value, or a model id.",
     );
   }
 

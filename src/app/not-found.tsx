@@ -6,8 +6,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { repositoryUrl } from "@/lib/site";
 
-import "@/styles/document.css";
-
 // No `robots` here: Next emits `noindex` for the not-found boundary itself, and
 // declaring it again put the directive in out/404.html twice.
 export const metadata: Metadata = {

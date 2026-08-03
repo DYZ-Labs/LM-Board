@@ -23,6 +23,12 @@ export type ConversionEvent =
   | "row_expand"
   /** Table / profile / plot. Pairs with viewport to judge the narrow default. */
   | "projection_switch"
+  /** Chooser constraints were applied, reset, or explicitly relaxed. */
+  | "chooser_apply"
+  /** The generated shortlist was opened in the comparison route. */
+  | "shortlist_compare"
+  /** A record was opened from a chooser recommendation card. */
+  | "shortlist_record_open"
   /**
    * A ⌘K result was opened. `kind` says whether the palette is used to reach
    * models, benchmarks or pages; `query` carries only its length, because the

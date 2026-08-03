@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { loadLeaderboardData } from "@/lib/data";
-import { modelRecordFreshness, siteUrl } from "@/lib/site";
+import { catalogFreshness, modelRecordFreshness, siteUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -11,13 +11,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: siteUrl,
-      lastModified: data.lastUpdated,
+      lastModified: catalogFreshness(data),
       changeFrequency: "weekly",
       priority: 1,
     },
     // Google ignores changefreq and priority and treats lastmod as its only
     // freshness signal, so a page without one is a page it has no reason to
-    // recrawl. Both of these re-render whenever the dataset moves.
+    // recrawl. These catalog surfaces re-render whenever their inputs move.
     {
       url: `${siteUrl}/methodology`,
       lastModified: data.lastUpdated,
@@ -26,9 +26,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${siteUrl}/compare`,
-      lastModified: data.lastUpdated,
+      lastModified: catalogFreshness(data),
       changeFrequency: "monthly",
       priority: 0.5,
+    },
+    {
+      url: `${siteUrl}/choose`,
+      lastModified: catalogFreshness(data),
+      changeFrequency: "weekly",
+      priority: 0.8,
     },
     // One entry per model record. These are the citation surfaces, so they
     // carry their own newest retrieval rather than borrowing an unrelated

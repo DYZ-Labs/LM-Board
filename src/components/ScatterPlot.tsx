@@ -334,10 +334,15 @@ export function ScatterPlot(props: ScatterPlotProps) {
 
   useEffect(() => {
     if (plot === null) {
+      // The plotted field is the source of truth; keeping a selection after it
+      // disappears would leave aria-activedescendant pointing at no element.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedId(null);
       return;
     }
 
+    // Selection is derived from the newly computed field and must settle in
+    // the same commit cycle so a shared `?point=` opens without a default flash.
     setSelectedId((current) => {
       if (
         current &&

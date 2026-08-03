@@ -60,6 +60,13 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
           >
             Compare
           </Link>
+          <Link
+            className="btn"
+            href="/choose"
+            prefetch={false}
+          >
+            Find alternatives
+          </Link>
           <a
             className="btn link-external"
             href={model.url}
@@ -195,8 +202,8 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
           </span>
         </summary>
         <p className="record-facts-note">
-          Copied from the linked provider page; no separate retrieval date is
-          stored.
+          Model facts come from the provider page. Listed API prices carry a
+          separate first-party source and check date.
         </p>
         <dl className="model-metadata" id="record-facts">
           <div>
@@ -235,6 +242,30 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
               {model.pricing
                 ? `$${formatPrice(model.pricing.output)}`
                 : "Not listed"}
+            </dd>
+          </div>
+          <div>
+            <dt>Price source</dt>
+            <dd>
+              {model.pricing ? (
+                <span className="record-source">
+                  <a
+                    className="link-external"
+                    href={model.pricing.source.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    data-source="pricing"
+                  >
+                    Official pricing <ExternalIcon className="ext" />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                  <time dateTime={model.pricing.source.retrieved}>
+                    Checked {formatDate(model.pricing.source.retrieved)}
+                  </time>
+                </span>
+              ) : (
+                "Not listed"
+              )}
             </dd>
           </div>
           <div>

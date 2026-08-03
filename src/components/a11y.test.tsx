@@ -4,12 +4,14 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 import { CompareGrid } from "@/components/CompareGrid";
+import { Chooser } from "@/components/Chooser";
 import { Leaderboard } from "@/components/Leaderboard";
 import { Methodology } from "@/components/Methodology";
 import { ModelRecord } from "@/components/ModelRecord";
 import { ProvenanceRibbon } from "@/components/ProvenanceRibbon";
 import { Readout } from "@/components/Readout";
 import { toComparePayload } from "@/lib/compare";
+import { toChooserPayload } from "@/lib/chooser";
 import { loadLeaderboardData } from "@/lib/data";
 import { coverageThreshold } from "@/lib/index";
 import { toLeaderboardClientPayload } from "@/lib/leaderboardPayload";
@@ -17,6 +19,7 @@ import { toLeaderboardClientPayload } from "@/lib/leaderboardPayload";
 const data = loadLeaderboardData();
 const payload = toLeaderboardClientPayload(data);
 const comparePayload = toComparePayload(data);
+const chooserPayload = toChooserPayload(data);
 const { minimumCoverageCount, percentBenchmarkCount } = coverageThreshold(
   data.benchmarks,
 );
@@ -144,6 +147,16 @@ describe("accessibility — no axe violations", () => {
     const { container } = render(
       <main>
         <CompareGrid payload={comparePayload} />
+      </main>,
+    );
+
+    expect(await scan(container)).toEqual([]);
+  }, 20000);
+
+  it("the guided chooser", async () => {
+    const { container } = render(
+      <main>
+        <Chooser payload={chooserPayload} />
       </main>,
     );
 

@@ -6,7 +6,7 @@ import sitemap from "@/app/sitemap";
 
 import { loadLeaderboardData } from "./data";
 import { formatCount } from "./format";
-import { modelRecordFreshness, siteUrl } from "./site";
+import { catalogFreshness, modelRecordFreshness, siteUrl } from "./site";
 
 const data = loadLeaderboardData();
 
@@ -23,6 +23,7 @@ describe("robots.txt contract", () => {
       "/index.txt",
       "/404.txt",
       "/compare.txt",
+      "/choose.txt",
       "/methodology.txt",
       "/model/*.txt$",
     ]);
@@ -35,6 +36,7 @@ describe("sitemap contract", () => {
     const urls = sitemap().map((entry) => entry.url);
 
     expect(urls).toContain(`${siteUrl}/compare`);
+    expect(urls).toContain(`${siteUrl}/choose`);
     expect(urls).toContain(`${siteUrl}/methodology`);
     expect(urls).not.toContain(`${siteUrl}/value`);
   });
@@ -51,6 +53,16 @@ describe("sitemap contract", () => {
       expect(entry?.lastModified).toBe(
         modelRecordFreshness(row).lastModified,
       );
+    }
+  });
+
+  it("uses catalog freshness for routes that display sourced pricing", () => {
+    const entries = sitemap();
+
+    for (const path of ["", "/compare", "/choose"]) {
+      expect(
+        entries.find((entry) => entry.url === `${siteUrl}${path}`)?.lastModified,
+      ).toBe(catalogFreshness(data));
     }
   });
 });
@@ -82,6 +94,9 @@ describe("llms.txt artifact", () => {
       );
     }
     expect(text).toContain(`Newest score retrieval: ${data.lastUpdated}.`);
+    expect(text).toContain(
+      `Newest first-party pricing check: ${data.latestPricingRetrieved}.`,
+    );
     expect(text).toContain(`dataset as of ${data.lastUpdated}`);
     expect(text).toContain(
       "Add the date you actually accessed the site when citing a retrieval date.",
@@ -98,5 +113,6 @@ describe("llms.txt artifact", () => {
       expect(text).toContain(`${siteUrl}/model/${row.model.id}`);
     }
     expect(text).not.toContain(`${siteUrl}/value`);
+    expect(text).toContain(`${siteUrl}/choose`);
   });
 });

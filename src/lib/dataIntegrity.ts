@@ -34,6 +34,26 @@ export function validateDataIntegrity(
   const scorePairs = new Set<string>();
   const reasoningEffortsByModel = new Map<string, Set<string | null>>();
 
+  for (const [index, model] of models.entries()) {
+    if (!model.pricing) continue;
+
+    const hostname = new URL(model.pricing.source.url).hostname;
+    if (
+      hostname === "artificialanalysis.ai" ||
+      hostname.endsWith(".artificialanalysis.ai")
+    ) {
+      errors.push(
+        `models.json[${index}].pricing.source.url: pricing must use first-party documentation, not artificialanalysis.ai`,
+      );
+    }
+
+    if (model.pricing.source.retrieved < model.releaseDate) {
+      errors.push(
+        `models.json[${index}].pricing.source.retrieved: cannot predate model release ${model.releaseDate}`,
+      );
+    }
+  }
+
   for (const [index, score] of scores.entries()) {
     const prefix = `scores.json[${index}]`;
     const pair = `${score.modelId}::${score.benchmarkId}`;

@@ -8,6 +8,14 @@ const fixtures = vi.hoisted(() => {
       lab: "Lab Ten",
       releaseDate: "2026-07-22",
       openWeights: false,
+      pricing: {
+        input: 1,
+        output: 4,
+        source: {
+          url: "https://example.com/pricing/model-ten",
+          retrieved: "2026-07-27",
+        },
+      },
       url: "https://example.com/models/model-ten",
     },
     {
@@ -293,6 +301,7 @@ describe("loadLeaderboardData", () => {
 
     expect(data.oldestRetrieved).toBe("2026-07-15");
     expect(data.lastUpdated).toBe("2026-07-26");
+    expect(data.latestPricingRetrieved).toBe("2026-07-27");
     expect(data.selfReportedCount).toBe(1);
   });
 });

@@ -10,7 +10,7 @@ type SiteMastheadProps = {
    * points home; "static" is plain text outside the router.
    */
   variant?: "home" | "link" | "static";
-  current?: "leaderboard" | "compare" | "methodology";
+  current?: "leaderboard" | "choose" | "compare" | "methodology";
   id?: string;
 };
 
@@ -52,6 +52,13 @@ export function SiteMasthead({
               aria-current={current === "leaderboard" ? "page" : undefined}
             >
               Leaderboard
+            </Link>
+            <Link
+              href="/choose"
+              prefetch={false}
+              aria-current={current === "choose" ? "page" : undefined}
+            >
+              Choose
             </Link>
             <Link
               href="/compare"

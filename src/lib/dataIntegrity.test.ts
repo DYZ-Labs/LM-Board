@@ -46,4 +46,52 @@ describe("validateDataIntegrity", () => {
       ),
     ).toEqual(['Benchmark "unmeasured" has no score measurements']);
   });
+
+  it("rejects Artificial Analysis as pricing provenance", () => {
+    const pricedModel: Model = {
+      ...model,
+      pricing: {
+        input: 1,
+        output: 2,
+        source: {
+          url: "https://artificialanalysis.ai/models/model",
+          retrieved: "2026-07-28",
+        },
+      },
+    };
+
+    expect(
+      validateDataIntegrity(
+        [pricedModel],
+        [benchmark("measured")],
+        [score("measured")],
+      ),
+    ).toContain(
+      "models.json[0].pricing.source.url: pricing must use first-party documentation, not artificialanalysis.ai",
+    );
+  });
+
+  it("rejects a pricing check that predates the model release", () => {
+    const pricedModel: Model = {
+      ...model,
+      pricing: {
+        input: 1,
+        output: 2,
+        source: {
+          url: "https://example.com/pricing",
+          retrieved: "2026-07-27",
+        },
+      },
+    };
+
+    expect(
+      validateDataIntegrity(
+        [pricedModel],
+        [benchmark("measured")],
+        [score("measured")],
+      ),
+    ).toContain(
+      "models.json[0].pricing.source.retrieved: cannot predate model release 2026-07-28",
+    );
+  });
 });

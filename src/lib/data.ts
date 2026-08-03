@@ -72,7 +72,10 @@ export type LeaderboardData = {
   rows: LeaderboardRow[];
   benchmarks: Benchmark[];
   labs: string[];
+  /** Latest score-source retrieval; pricing freshness is tracked separately. */
   lastUpdated: string;
+  /** Latest first-party pricing retrieval represented in the model catalog. */
+  latestPricingRetrieved: string | null;
   scoreCount: number;
   /**
    * Keyed by benchmark id, over every score in the dataset. A bar that encodes
@@ -94,10 +97,15 @@ export type LeaderboardData = {
  */
 export type LeaderboardClientScore = Pick<Score, "value" | "selfReported">;
 
+export type LeaderboardClientModel = Omit<Model, "pricing"> & {
+  pricing?: Pick<NonNullable<Model["pricing"]>, "input" | "output">;
+};
+
 export type LeaderboardClientRow = Omit<
   LeaderboardRow,
-  "scoresByBenchmark"
+  "model" | "scoresByBenchmark"
 > & {
+  model: LeaderboardClientModel;
   scoresByBenchmark: Record<string, LeaderboardClientScore | null>;
 };
 
@@ -307,12 +315,21 @@ export function loadLeaderboardData(): LeaderboardData {
       score.source.retrieved > latest ? score.source.retrieved : latest,
     "",
   );
+  const latestPricingRetrieved = models.reduce<string | null>(
+    (latest, model) => {
+      const retrieved = model.pricing?.source.retrieved;
+      if (!retrieved) return latest;
+      return latest === null || retrieved > latest ? retrieved : latest;
+    },
+    null,
+  );
 
   cachedLeaderboardData = {
     rows,
     benchmarks,
     labs,
     lastUpdated,
+    latestPricingRetrieved,
     scoreCount: scores.length,
     benchmarkDomains,
     oldestRetrieved,

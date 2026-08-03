@@ -37,6 +37,10 @@ function responseFor(url: URL, headers = securityHeaders): Response {
       body: "<html><h1>Compare AI models</h1><h2>Choose models</h2></html>",
       contentType: "text/html; charset=utf-8",
     },
+    "/choose": {
+      body: "<html><h1>Find a model for the work</h1><button>Update shortlist</button><a>Compare shortlist</a></html>",
+      contentType: "text/html; charset=utf-8",
+    },
     "/model/stable-model": {
       body: "<html><h1>Stable Model</h1><h2>Scores and sources</h2></html>",
       contentType: "text/html; charset=utf-8",
@@ -88,6 +92,7 @@ describe("runProductionMonitor", () => {
     expect(requestedPaths).toEqual([
       "/",
       "/compare",
+      "/choose",
       "/model/stable-model",
     ]);
     expect(report).toMatchObject({
@@ -96,7 +101,7 @@ describe("runProductionMonitor", () => {
       modelId: "stable-model",
       ok: true,
     });
-    expect(report.checks).toHaveLength(3);
+    expect(report.checks).toHaveLength(4);
     expect(report.checks.every((check) => check.ok)).toBe(true);
   });
 

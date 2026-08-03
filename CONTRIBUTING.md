@@ -21,6 +21,34 @@ npm run validate:data
 4. Record the public release date, weights status, context window, and base per-million-token pricing when available.
 5. Do not invent missing metadata. Optional fields should remain absent when they cannot be verified.
 
+### Pricing provenance
+
+Pricing is optional, but provenance is not. A listed price must use this complete
+shape:
+
+```json
+{
+  "input": 1.25,
+  "output": 5,
+  "source": {
+    "url": "https://provider.example/official-pricing",
+    "retrieved": "2026-08-03"
+  }
+}
+```
+
+- Use current official first-party pricing documentation. Artificial Analysis,
+  search snippets, reseller prices, and third-party hosting prices are rejected.
+- Record uncached base or short-context USD rates per million tokens. If a
+  provider only publishes materially different tiers that cannot be represented
+  truthfully, omit pricing rather than averaging or estimating it.
+- Update both prices and `source.retrieved` only after checking the live source.
+  A retrieval-date-only refresh is acceptable when the official figures are
+  unchanged.
+- Run `npm run pricing:audit`. A listed price older than 30 days remains visible
+  with its checked date until a human verifies it; do not silently delete or
+  replace a stale value.
+
 ## Adding or updating scores
 
 1. Add one record per model/benchmark pair in `data/scores.json`.
@@ -53,6 +81,7 @@ Run all checks before opening a pull request:
 
 ```bash
 npm run check
+npm run pricing:audit
 ```
 
 This is the same lint, type-check, test, data-validation, production-build,
@@ -64,6 +93,7 @@ navigation.
 ## Pull-request checklist
 
 - [ ] Every score has a direct source URL and retrieval date.
+- [ ] Every listed price has a first-party source URL and retrieval date no more than 30 days old.
 - [ ] Model and benchmark IDs are valid and no pair is duplicated.
 - [ ] Evaluation settings and self-reported status are accurate.
 - [ ] Reasoning-effort labels are consistent across each affected model.
