@@ -94,7 +94,7 @@ describe("chooser initial state", () => {
 
     expect(markup).toContain("chooser-results-live");
     expect(markup).toContain("chooser-initial-skeleton");
-    expect(markup).toContain("Capability leader");
+    expect(markup).toContain("Most capable");
     expect(css).toMatch(
       /html\[data-choose-pending="true"\]\s+\.chooser-results-live\s*{\s*display:\s*none;/,
     );
@@ -118,14 +118,16 @@ describe("chooser application", () => {
     go("/choose?utm_source=test");
     const user = userEvent.setup();
     render(chooser());
-    await screen.findByText(/4 models shown from 4 ranked candidates/);
+    expect(
+      await screen.findAllByRole("link", { name: "Open model record" }),
+    ).toHaveLength(4);
 
     const cap = screen.getByRole("spinbutton", { name: /Maximum input price/ });
     await user.type(cap, "0");
     expect(screen.getAllByRole("link", { name: "Open model record" })).toHaveLength(4);
 
-    await user.click(screen.getByRole("button", { name: "Update shortlist" }));
-    const heading = screen.getByRole("heading", { name: "Overall recommendations" });
+    await user.click(screen.getByRole("button", { name: "Find" }));
+    const heading = screen.getByRole("heading", { name: "Recommendations" });
     expect(heading).toHaveFocus();
     expect(screen.getByRole("heading", { name: /No ranked models/ })).toBeInTheDocument();
     const url = new URL(window.location.href);
@@ -137,11 +139,13 @@ describe("chooser application", () => {
   it("shows inline validation and leaves the applied shortlist untouched", async () => {
     const user = userEvent.setup();
     render(chooser());
-    await screen.findByText(/4 models shown/);
+    expect(
+      await screen.findAllByRole("link", { name: "Open model record" }),
+    ).toHaveLength(4);
     const cap = screen.getByRole("spinbutton", { name: /Maximum input price/ });
     fireEvent.change(cap, { target: { value: "-1" } });
 
-    await user.click(screen.getByRole("button", { name: "Update shortlist" }));
+    await user.click(screen.getByRole("button", { name: "Find" }));
     expect(screen.getByText("Price cannot be negative.")).toBeInTheDocument();
     expect(screen.getAllByRole("article")).toHaveLength(4);
     expect(new URL(window.location.href).searchParams.has("input")).toBe(false);
@@ -149,24 +153,28 @@ describe("chooser application", () => {
 
   it("restores applied controls and results on browser history navigation", async () => {
     render(chooser());
-    await screen.findByText(/4 models shown/);
+    expect(
+      await screen.findAllByRole("link", { name: "Open model record" }),
+    ).toHaveLength(4);
 
     window.history.pushState({}, "", "/choose?access=open&context=1m");
     window.dispatchEvent(new PopStateEvent("popstate"));
 
     expect(await screen.findByRole("radio", { name: /Open weights/ })).toBeChecked();
     expect(screen.getByRole("combobox", { name: /Minimum context/ })).toHaveValue("1000000");
-    expect(screen.getByText(/1 model shown from 1 ranked candidate/)).toBeInTheDocument();
+    expect(screen.getAllByRole("article")).toHaveLength(1);
   });
 });
 
 describe("shortlist actions and evidence", () => {
   it("renders multi-label cards, price citations, and compare order", async () => {
     render(chooser());
-    await screen.findByText(/4 models shown/);
+    expect(
+      await screen.findAllByRole("link", { name: "Open model record" }),
+    ).toHaveLength(4);
 
     for (const label of [
-      "Capability leader",
+      "Most capable",
       "Lowest input price",
       "Largest context",
       "Open-weights leader",
@@ -175,7 +183,7 @@ describe("shortlist actions and evidence", () => {
     }
     expect(screen.getAllByRole("link", { name: /Official pricing/ })).toHaveLength(4);
     expect(screen.getAllByText(/Checked Aug 3, 2026/)).toHaveLength(4);
-    expect(screen.getByRole("link", { name: "Compare shortlist" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Compare" })).toHaveAttribute(
       "href",
       "/compare?models=alpha,beta,gamma,delta",
     );
@@ -194,7 +202,7 @@ describe("shortlist actions and evidence", () => {
     try {
       render(chooser());
       await screen.findByRole("heading", { name: "Math recommendations" });
-      await user.click(screen.getByRole("button", { name: "Copy shortlist" }));
+      await user.click(screen.getByRole("button", { name: "Copy" }));
       expect(writeText).toHaveBeenCalledWith(
         expect.stringContaining("/choose?task=math&access=api&utm_source=test"),
       );
@@ -216,6 +224,8 @@ describe("shortlist actions and evidence", () => {
     expect(screen.getByText(/1 otherwise eligible model was excluded/)).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Remove price caps" }));
     await waitFor(() => expect(new URL(window.location.href).searchParams.has("input")).toBe(false));
-    expect(screen.getByText(/4 models shown/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getAllByRole("article")).toHaveLength(4);
+    });
   });
 });

@@ -313,7 +313,7 @@ describe("page graphs", () => {
     expect(page.dateModified).toBe(catalogFreshness(data));
     expect(page.mainEntity).toEqual({ "@id": `${siteUrl}/#dataset` });
     expect(nodes(graph).some((node) => typeOf(node) === "ItemList")).toBe(false);
-    expect(JSON.stringify(graph)).not.toContain("Capability leader");
+    expect(JSON.stringify(graph)).not.toContain("Most capable");
     expectClosedGraph(graph);
   });
 

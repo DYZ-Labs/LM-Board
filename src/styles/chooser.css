@@ -13,11 +13,6 @@
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: var(--s-6);
-  padding: var(--s-7);
-  border: 1px solid var(--line);
-  border-radius: var(--r-4);
-  background: var(--bg-raised);
-  box-shadow: var(--e-2);
 }
 
 .chooser-fieldset {
@@ -123,10 +118,12 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--s-5);
+  align-items: start;
 }
 
 .chooser-control {
   display: grid;
+  grid-template-rows: minmax(1em, auto) minmax(44px, auto) minmax(1em, auto);
   gap: var(--s-3);
   min-width: 0;
   font-size: var(--t-12);
@@ -441,7 +438,6 @@ html[data-choose-pending="true"] .chooser-initial-skeleton {
 @media (max-width: 760px) {
   .chooser-form {
     grid-template-columns: minmax(0, 1fr);
-    padding: var(--s-6);
   }
 
   .chooser-task-fieldset,

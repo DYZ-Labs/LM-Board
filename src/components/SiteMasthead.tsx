@@ -58,7 +58,7 @@ export function SiteMasthead({
               prefetch={false}
               aria-current={current === "choose" ? "page" : undefined}
             >
-              Choose
+              Find
             </Link>
             <Link
               href="/compare"

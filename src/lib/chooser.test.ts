@@ -177,7 +177,7 @@ describe("deterministic shortlist", () => {
       "fourth",
     ]);
     expect(result.cards[0].labels).toEqual([
-      "Capability leader",
+      "Most capable",
       "Lowest input price",
       "Largest context",
       "Open-weights leader",
