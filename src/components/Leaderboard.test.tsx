@@ -248,18 +248,13 @@ describe("category switching", () => {
     expect(currentUrl().searchParams.get("sort")).toBe(codingBenchmark.id);
   });
 
-  it("labels every estimated Index on the active category", async () => {
+  it("shows estimated category Indexes without an estimate badge", async () => {
     const user = userEvent.setup();
     render(board());
 
     await user.click(screen.getByRole("tab", { name: "Agentic" }));
 
-    const estimatedModels = data.rows.filter(
-      (row) => row.scopes.agentic.estimatedCount > 0,
-    );
-    expect(
-      screen.getAllByTitle(/benchmark values estimated in this Index$/),
-    ).toHaveLength(estimatedModels.length);
+    expect(screen.queryByText(/^\d+ est\.$/)).not.toBeInTheDocument();
   });
 });
 

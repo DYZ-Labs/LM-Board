@@ -517,13 +517,6 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   color: var(--fg-primary);
 }
 
-.index-value {
-  display: inline-flex;
-  gap: var(--s-2);
-  align-items: center;
-  justify-content: flex-end;
-}
-
 .model-row.is-podium .index-cell {
   color: var(--signal-300);
 }
@@ -934,12 +927,6 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 
   .index-cell {
     font-size: var(--t-13);
-  }
-
-  .index-value {
-    flex-direction: column;
-    gap: 0;
-    align-items: flex-end;
   }
 
   .price-cell {
