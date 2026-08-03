@@ -26,7 +26,7 @@ NEXT_PUBLIC_SITE_URL=https://www.checklmboard.xyz
 
 ```bash
 npm run dev                            # dev server on http://localhost:3000
-npm test                               # full Vitest suite (~400 tests, ~20 s)
+npm test                               # full Vitest suite (~370 tests, ~20 s)
 npm test -- src/lib/urlState.test.ts   # one test file (<1 s) — use while iterating
 npm run lint                           # ESLint, zero warnings allowed
 npm run typecheck                      # tsc --noEmit
@@ -48,7 +48,7 @@ Occasional:
 ```bash
 npm run og -- --only <model-id>    # regenerate one OG card (or `--only home`)
 npm run og:verify                  # pixel checks on the generated cards
-npm run icons                      # rebuild committed favicons from src/app/icon.svg
+npm run icons                      # rebuild derived icons from committed source PNGs
 npm run discover:models -- --help  # AA discovery CLI; dry-run by default, needs AA_API_KEY
 npm run monitor:production -- --base-url https://www.checklmboard.xyz
 ```
@@ -61,8 +61,8 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
   for the data files (types inferred from it). `index.ts` is the ranking/Index
   math, not a barrel export.
 - `src/components/` — React components, colocated `*.test.tsx`.
-- `src/app/` — routes: `/`, `/model/[id]`, `/compare`, `/value`, `/methodology`,
-  plus `feed.xml`, `llms.txt`, sitemap, robots, manifest.
+- `src/app/` — routes: `/`, `/model/[id]`, `/compare`, `/methodology`, plus
+  `llms.txt`, `palette.json`, sitemap, robots, manifest.
 - `src/styles/` — hand-authored CSS cascade layers; design tokens in `tokens.css`.
 - `scripts/` — tsx CLIs: data validation, OG cards, icons, payload budgets,
   discovery, production monitor. Tests colocated.
@@ -83,7 +83,7 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
 - `data/upstream-seen.json` is append-only. To reject a scaffolded model, delete
   its `models.json` entry and flip its ledger row to `"ignored"` (removing
   `modelId`). Never delete ledger rows.
-- Data changes also update the README seed-snapshot counts and add a decision-log
+- Data changes also update the README snapshot counts and add a decision-log
   entry in `PLAN.md` (see CONTRIBUTING.md).
 
 ## Conventions
@@ -105,8 +105,11 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
 ## Gotchas
 
 - `public/og/` is generated output (gitignored), rebuilt by the `prebuild` hook —
-  never hand-edit it. The icons directly in `public/` *are* committed; after
-  changing `src/app/icon.svg`, regenerate them with `npm run icons`.
+  never hand-edit it. The icons directly in `public/` *are* committed:
+  `favicon-32.png`, `icon-64.png`, `icon-192.png`, and `icon-512.png` are
+  supplied source art, and `npm run icons` derives `favicon.ico`,
+  `apple-touch-icon.png`, and `icon-maskable-512.png` from them — regenerate the
+  derived three, never hand-edit them.
 - jsdom is forced to 1440 px wide in `vitest.setup.ts` so the board hydrates into
   the desktop table projection; tests for narrow-viewport behavior set
   `window.innerWidth` themselves.

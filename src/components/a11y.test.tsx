@@ -205,8 +205,8 @@ describe("keyboard paths", () => {
     expect(panel).toHaveAttribute("aria-labelledby", "tab-overall");
   });
 
-  it("exposes the score source as a link, not a hover-only affordance", () => {
-    const { getAllByRole } = render(
+  it("renders leaderboard scores as non-interactive text", () => {
+    const { container } = render(
       <main>
         <h1 id="leaderboard-heading">LM Board</h1>
         <Leaderboard
@@ -217,12 +217,14 @@ describe("keyboard paths", () => {
       </main>,
     );
 
-    // Every score remains a real source anchor in static HTML. The enhanced
-    // grid removes them from sequential Tab order and exposes them through one
-    // roving cell stop instead of forcing hundreds of Tabs.
-    const links = getAllByRole("link", {
-      name: /^\d+(?:\.\d+)? — .+ source, .+, retrieved /,
-    });
-    expect(links.length).toBeGreaterThan(100);
+    const measuredCells = [
+      ...container.querySelectorAll<HTMLElement>(
+        ".score-cell:not(.missing-value)",
+      ),
+    ];
+    expect(measuredCells.length).toBeGreaterThan(100);
+    expect(
+      measuredCells.every((cell) => cell.querySelector("a, button") === null),
+    ).toBe(true);
   });
 });

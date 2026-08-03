@@ -16,6 +16,10 @@
  * anywhere in this file: the card it replaces said "17 models" over a dataset
  * of 62 for months, because one of them was a literal.
  */
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import type { Benchmark } from "../../src/lib/schema";
 import type { LeaderboardData, LeaderboardRow } from "../../src/lib/data";
 import { benchmarksForScope, type RankScope } from "../../src/lib/index";
@@ -36,8 +40,14 @@ import {
 
 export type Style = Record<string, string | number>;
 export type Node = {
-  type: "div";
-  props: { style: Style; children?: Node[] | string };
+  type: "div" | "img";
+  props: {
+    style: Style;
+    children?: Node[] | string;
+    src?: string;
+    width?: number;
+    height?: number;
+  };
 };
 
 export type InkBox = {
@@ -52,6 +62,11 @@ export type Card = { nodes: Node[]; ink: InkBox[]; alt: string };
 
 export const CARD = { width: 1200, height: 630 };
 
+const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const brandIcon =
+  "data:image/png;base64," +
+  readFileSync(join(root, "public", "icon-64.png")).toString("base64");
+
 export const RAILS = {
   gutterLeft: 64,
   gutterRight: 1136,
@@ -59,7 +74,7 @@ export const RAILS = {
   bodyBottom: 542,
 
   markCentre: 54,
-  wordmarkRail: 90,
+  wordmarkRail: 114,
 
   kickerCap: 143,
   nameCap: 188,
@@ -352,10 +367,21 @@ function masthead(builder: Builder) {
   }, "masthead wordmark");
 
   builder.add(
-    box(RAILS.gutterLeft, RAILS.markCentre - 6, 12, 12, {
-      borderRadius: "999px",
-      backgroundColor: C.signal500,
-    }),
+    {
+      type: "img",
+      props: {
+        src: brandIcon,
+        width: 36,
+        height: 36,
+        style: {
+          position: "absolute",
+          left: `${RAILS.gutterLeft}px`,
+          top: `${RAILS.markCentre - 18}px`,
+          width: "36px",
+          height: "36px",
+        },
+      },
+    },
   );
   builder.text("mono400", 20, "checklmboard.xyz", {
     letterSpacing: 0.01 * 20,
@@ -676,12 +702,12 @@ export function valueCard(data: LeaderboardData): Card {
 
   const specX = RAILS.gutterRight - RAILS.specWidth;
   const spec: [string, string][] = [
-    ["Efficient frontier", String(frontier.size)],
+    ["Best-value options", String(frontier.size)],
     [
       "Listed input / 1M",
       `$${formatPrice(minimumPrice)}–$${formatPrice(maximumPrice)}`,
     ],
-    ["Top Overall Index", formatScore(maximumIndex)],
+    ["Top LM Index", formatScore(maximumIndex)],
   ];
   spec.forEach(([key, value], index) => {
     const top = RAILS.specTop + index * RAILS.specRow;
@@ -790,7 +816,7 @@ export function valueCard(data: LeaderboardData): Card {
       {
         faceKey: "mono400",
         size: 18,
-        text: "Higher Overall Index",
+        text: "Higher LM Index",
         color: C.signal300,
         gapBefore: 10,
       },
@@ -804,7 +830,7 @@ export function valueCard(data: LeaderboardData): Card {
       {
         faceKey: "mono400",
         size: 18,
-        text: `${frontier.size} efficient`,
+        text: `${frontier.size} best value`,
         color: C.fgTertiary,
         gapBefore: 10,
       },
@@ -818,7 +844,7 @@ export function valueCard(data: LeaderboardData): Card {
       {
         faceKey: "archivo400",
         size: 19,
-        text: "Provider-listed price + computed Index",
+        text: "Provider-listed price + LM Index",
         color: C.fgTertiary,
       },
     ],
@@ -828,7 +854,7 @@ export function valueCard(data: LeaderboardData): Card {
   return {
     nodes: builder.nodes,
     ink: builder.ink,
-    alt: `LM Board value view — ${points.length} models plotted by provider-listed input-token price and Overall Index; ${frontier.size} models sit on the efficient frontier.`,
+    alt: `LM Board value view — ${points.length} models plotted by provider-listed input-token price and LM Index; ${frontier.size} models sit on the best-value line.`,
   };
 }
 

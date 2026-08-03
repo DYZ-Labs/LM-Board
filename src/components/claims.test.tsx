@@ -90,28 +90,40 @@ describe("freshness", () => {
     // "7 scores retrieved on Jul 25" counted the last day of a nine-day
     // collection and read as though the other 449 were older than they are.
     expect(text).not.toMatch(/\d+ scores? retrieved on/);
-    expect(container.textContent).toContain("Model data feed");
   });
 
-  it("names the newest score rather than implying the board was refreshed", () => {
+  it("labels the newest model without implying the whole board was refreshed", () => {
     const { container } = render(<FreshnessChip date={data.lastUpdated} />);
 
-    expect(container.textContent).toContain("Newest score");
+    expect(container.textContent).toContain("Newest Model");
   });
 });
 
 describe("page hierarchy and navigation", () => {
   it("uses a descriptive home h1 rather than the wordmark", () => {
-    const { getByRole } = render(
+    const { container, getByRole } = render(
       <Readout leader={data.rows[0]} lastUpdated={data.lastUpdated} />,
     );
 
     expect(
       getByRole("heading", {
         level: 1,
-        name: "Frontier model benchmark index",
+        name: "Benchmark Scores for Frontier AI Models",
       }),
     ).toBeInTheDocument();
+
+    expect(container.querySelector(".readout-field svg")).toHaveAttribute(
+      "aria-label",
+      expect.stringContaining(
+        `${data.rows.filter((row) => row.scopes.overall.index !== null).length} models ranked`,
+      ),
+    );
+    expect(container.querySelector(".readout-lab")).toHaveTextContent(
+      data.rows[0]!.model.lab,
+    );
+    expect(container.querySelector(".readout-lab")).not.toHaveTextContent(
+      /benchmarks measured|estimates?/i,
+    );
   });
 
   it("marks exactly the explicit current masthead route", () => {
@@ -148,8 +160,6 @@ describe("the site footer", () => {
 
     expect(hrefs).toContain("/methodology");
     expect(hrefs).toContain("/compare");
-    expect(hrefs).toContain("/feed.xml");
-    expect(container.textContent).toContain("Model data feed");
   });
 
   it("names Artificial Analysis in the independence disclaimer", () => {
@@ -166,10 +176,10 @@ describe("the site footer", () => {
 
   it("marks an exact route as a page and a model record as a leaderboard location", () => {
     const { rerender } = render(
-      <SiteFooter current="value" repositoryUrl={null} />,
+      <SiteFooter current="methodology" repositoryUrl={null} />,
     );
 
-    expect(screen.getByRole("link", { name: "Value" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Methodology" })).toHaveAttribute(
       "aria-current",
       "page",
     );
@@ -178,7 +188,7 @@ describe("the site footer", () => {
     expect(
       screen.getByRole("link", { name: "Leaderboard" }),
     ).toHaveAttribute("aria-current", "location");
-    expect(screen.getByRole("link", { name: "Value" })).not.toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Methodology" })).not.toHaveAttribute(
       "aria-current",
     );
   });

@@ -47,18 +47,10 @@ describe("command palette destinations", () => {
     }
   });
 
-  it("offers the dedicated Value surface", () => {
+  it("does not offer the removed Value surface", () => {
     const entries = buildPaletteEntries(payload);
 
-    expect(entries).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: "view-value",
-          href: "/value",
-          detail: "Price versus performance",
-        }),
-      ]),
-    );
+    expect(entries.find((entry) => entry.id === "view-value")).toBeUndefined();
   });
 });
 

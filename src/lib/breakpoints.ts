@@ -24,6 +24,7 @@ export const BREAKPOINT_QUERY_VALUES = [
   BREAKPOINTS.documentCompact,
   BREAKPOINTS.layoutWide,
   BREAKPOINTS.tablet - 1,
+  BREAKPOINTS.tablet,
   BREAKPOINTS.plotWide - 1,
   BREAKPOINTS.plotWide,
   BREAKPOINTS.tableFluid - 0.02,

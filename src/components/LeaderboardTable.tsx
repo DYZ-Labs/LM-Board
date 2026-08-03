@@ -14,17 +14,17 @@ import {
 
 import { Badge } from "@/components/Badge";
 import { DetailPanel } from "@/components/DetailPanel";
-import { ChevronRightIcon, CloseIcon, ExternalIcon } from "@/components/Icon";
-import {
-  ScoreCell,
-  scoreHost,
-  type ScoreInspection,
-} from "@/components/ScoreCell";
+import { ChevronRightIcon } from "@/components/Icon";
+import { ScoreCell } from "@/components/ScoreCell";
 import { ScoreSpark } from "@/components/ScoreSpark";
 import { Tooltip } from "@/components/Tooltip";
 import type { LeaderboardClientRow } from "@/lib/data";
-import { formatDate, formatPrice, formatScore } from "@/lib/format";
-import type { RankScope } from "@/lib/index";
+import { formatPrice, formatScore } from "@/lib/format";
+import {
+  LM_INDEX_EXPANDED_LABEL,
+  LM_INDEX_LABEL,
+  type RankScope,
+} from "@/lib/index";
 import type { ScoreDomain } from "@/lib/ramp";
 import { trackEvent } from "@/lib/track";
 import type { Benchmark } from "@/lib/schema";
@@ -45,7 +45,7 @@ const compactBenchmarkLabels: Record<string, string> = {
   "aa-lcr": "AA-LCR",
   ifbench: "IFBench",
   critpt: "CritPt",
-  "terminal-bench-v2-1": "T-Bench 2.1",
+  "terminal-bench-v2-1": "T-Bench",
   scicode: "SciCode",
   "tau3-banking": "τ³-Banking",
 };
@@ -167,23 +167,13 @@ export function LeaderboardTable({
   onToggleDetails,
   onClearFilters,
 }: LeaderboardTableProps) {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
   const headRef = useRef<HTMLTableSectionElement | null>(null);
   const tableRef = useRef<HTMLTableElement | null>(null);
-  const [hasHorizontalScrollOffset, setHasHorizontalScrollOffset] =
-    useState(false);
   // The card layout clips the header row to 1x1 rather than `display: none`,
   // so the column names keep naming their cells. Its controls do not survive
   // that: they were focusable, invisible and unhittable at once — seven tab
   // stops at 390px that landed a keyboard user on nothing.
   const [headerCollapsed, setHeaderCollapsed] = useState(false);
-  // A scroll region is a landmark and a tab stop. At four of the five widths
-  // this board is used at the table fits, so declaring one unconditionally
-  // announced a scrollable region that cannot scroll and put a focus stop in
-  // front of every keyboard user for nothing.
-  const [overflows, setOverflows] = useState(false);
-  const [inspectedScore, setInspectedScore] =
-    useState<ScoreInspection | null>(null);
   const [activeCellId, setActiveCellId] = useState<string | undefined>();
   const activeCellIdRef = useRef<string | undefined>(undefined);
   const activeCellRef = useRef<HTMLElement | null>(null);
@@ -191,9 +181,6 @@ export function LeaderboardTable({
   const [detailPhases, setDetailPhases] = useState<
     Record<string, DetailPhase>
   >({});
-  const scoreTriggerRef = useRef<HTMLAnchorElement | null>(null);
-  const scoreInspectorRef = useRef<HTMLElement | null>(null);
-  const scoreReturnFocusRef = useRef<HTMLElement | null>(null);
   const isProfile = view === "profile";
   const showIndexColumn = isProfile || visibleBenchmarks.length !== 1;
   const columnCount =
@@ -208,6 +195,12 @@ export function LeaderboardTable({
     category === "overall"
       ? "Overall"
       : `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
+  const indexLabel =
+    category === "overall"
+      ? LM_INDEX_LABEL
+      : `${scopeLabel} Index`;
+  const indexExpandedLabel =
+    category === "overall" ? LM_INDEX_EXPANDED_LABEL : indexLabel;
   const mobileSortOptions: {
     value: string;
     label: string;
@@ -217,7 +210,7 @@ export function LeaderboardTable({
     { value: "model", label: "Model", column: { kind: "model" } },
     {
       value: "index",
-      label: `${scopeLabel} Index`,
+      label: indexLabel,
       column: { kind: "index" },
     },
     ...visibleBenchmarks.map((benchmark) => ({
@@ -292,51 +285,6 @@ export function LeaderboardTable({
       return next;
     });
   }, []);
-
-  const closeScoreInspector = useCallback(
-    ({ restoreFocus = true }: { restoreFocus?: boolean } = {}) => {
-      setInspectedScore(null);
-      if (restoreFocus) {
-        const returnFocus =
-          scoreReturnFocusRef.current ?? scoreTriggerRef.current;
-        window.requestAnimationFrame(() => returnFocus?.focus());
-      }
-      scoreReturnFocusRef.current = null;
-    },
-    [],
-  );
-
-  useEffect(() => {
-    if (!inspectedScore) return;
-
-    const frame = window.requestAnimationFrame(() => {
-      scoreInspectorRef.current?.focus();
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [inspectedScore]);
-
-  useEffect(() => {
-    if (!inspectedScore) return;
-
-    function closeOnEscape(event: globalThis.KeyboardEvent) {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        closeScoreInspector();
-      }
-    }
-
-    document.addEventListener("keydown", closeOnEscape);
-    return () => document.removeEventListener("keydown", closeOnEscape);
-  }, [closeScoreInspector, inspectedScore]);
-
-  useEffect(() => {
-    if (
-      inspectedScore &&
-      !rows.some((row) => row.model.id === inspectedScore.modelId)
-    ) {
-      closeScoreInspector({ restoreFocus: false });
-    }
-  }, [closeScoreInspector, inspectedScore, rows]);
 
   const gridCells = useCallback(() => {
     const table = tableRef.current;
@@ -532,7 +480,6 @@ export function LeaderboardTable({
         return;
       }
       case "Escape":
-        if (inspectedScore) closeScoreInspector();
         return;
       default:
         return;
@@ -546,30 +493,6 @@ export function LeaderboardTable({
     );
     activateGridCell(matrix[nextRow]![nextColumn]);
   }
-
-  // The table's own box, not the scroller's `scrollWidth`: under `overflow-x:
-  // clip` the scroller has no scrolling box to report, and clip is the default
-  // now that the header row has to stick to the viewport.
-  useEffect(() => {
-    const scroller = scrollRef.current;
-    if (!scroller || typeof ResizeObserver === "undefined") return;
-
-    function measure() {
-      if (!scroller) return;
-      const table = scroller.firstElementChild;
-      if (!table) return;
-
-      const wider =
-        table.getBoundingClientRect().width > scroller.clientWidth + 1;
-      setOverflows((current) => (current === wider ? current : wider));
-    }
-
-    const observer = new ResizeObserver(measure);
-    observer.observe(scroller);
-    if (scroller.firstElementChild) observer.observe(scroller.firstElementChild);
-
-    return () => observer.disconnect();
-  }, []);
 
   // Measured, not matched against the breakpoint that does the clipping: the
   // rule lives in responsive.css and is scoped to one projection, so a copy of
@@ -593,7 +516,7 @@ export function LeaderboardTable({
 
   const indexTooltip = (
     <Tooltip
-      label={`${scopeLabel} Index`}
+      label={indexExpandedLabel}
       description={
         <>
           The equal-weight mean of a model&apos;s scores across the benchmarks
@@ -606,7 +529,7 @@ export function LeaderboardTable({
           the tab&apos;s benchmarks — currently {minimumCoverageCount} of{" "}
           {percentBenchmarkCount} on Overall. Gaps below that bar are never
           filled; gaps above it are estimated at the model&apos;s own standing
-          and marked <em>est.</em>
+          so missing results are never counted as zero.
         </>
       }
       sourceUrl="/methodology"
@@ -616,17 +539,10 @@ export function LeaderboardTable({
 
   return (
     <>
-      {/* Present in both projections, and not only because each one describes
-          itself differently: the server always renders `table` and narrow
-          viewports flip to `profile` on mount, so an element that exists in one
-          and not the other shifts everything below the board after hydration.
-          Off the page because it is a description, not a caption — sighted
-          readers get the pinned column's shadow, which appears exactly when
-          sideways scrolling is real. */}
-      <p className="sr-only" id="board-scroll-instructions">
+      <p className="sr-only" id="board-grid-instructions">
         {isProfile
           ? `${visibleBenchmarks.length} benchmark bars, each scaled to that benchmark's measured range. Open the benchmark profile for the complete evidence table.`
-          : `${columnCount} columns. Rank and model stay pinned while the board scrolls. Use arrow keys to move through cells, Enter to activate the primary action, and F2 then Tab to reach every action in the current cell. Escape returns to the grid.`}
+          : `${columnCount} columns. Use arrow keys to move through cells, Enter to activate the primary action, and F2 then Tab to reach every action in the current cell. Escape returns to the grid.`}
       </p>
       <div className="mobile-sort-controls">
         <label>
@@ -667,26 +583,7 @@ export function LeaderboardTable({
           </button>
         </div>
       </div>
-      <div
-        ref={scrollRef}
-        className={`board-scroll${hasHorizontalScrollOffset ? " is-scrolled" : ""}`}
-        {...(overflows
-          ? {
-              role: "region",
-              // Not aria-labelledby the page heading: the enclosing <section>
-              // already uses it, and two nested landmarks sharing one name is
-              // ambiguous to anyone navigating by landmark.
-              "aria-label": `${scopeLabel} leaderboard`,
-              "aria-describedby": "board-scroll-instructions",
-            }
-          : {})}
-        onScroll={(event) => {
-          const isScrolled = event.currentTarget.scrollLeft > 0;
-          setHasHorizontalScrollOffset((current) =>
-            current === isScrolled ? current : isScrolled,
-          );
-        }}
-      >
+      <div className="board-scroll">
         <table
           ref={tableRef}
           className="board"
@@ -698,6 +595,7 @@ export function LeaderboardTable({
           aria-rowcount={rows.length + 1}
           aria-colcount={columnCount}
           aria-activedescendant={activeCellId}
+          aria-describedby="board-grid-instructions"
           onKeyDown={onGridKeyDown}
           onBlur={(event) => {
             const next = event.relatedTarget;
@@ -710,7 +608,7 @@ export function LeaderboardTable({
           }}
         >
           <caption className="sr-only">
-            Models ranked by {scopeLabel} Index. Sort with a column header; open
+            Models ranked by {indexExpandedLabel}. Sort with a column header; open
             a model for sources and details.
           </caption>
           <thead ref={headRef}>
@@ -736,14 +634,18 @@ export function LeaderboardTable({
               {showIndexColumn ? (
                 <SortableHeader
                   column={{ kind: "index" }}
-                  label={`${scopeLabel} index`}
+                  label={indexLabel}
                   sort={sort}
                   onSort={onSort}
                   interactive={!headerCollapsed}
                   className="index-column"
                   tooltip={indexTooltip}
                 >
-                  {category === "overall" ? "Index" : `${scopeLabel} Index`}
+                  {category === "overall" ? (
+                    <span title={LM_INDEX_EXPANDED_LABEL}>{LM_INDEX_LABEL}</span>
+                  ) : (
+                    indexLabel
+                  )}
                 </SortableHeader>
               ) : null}
               {isProfile ? (
@@ -775,7 +677,7 @@ export function LeaderboardTable({
                     sort={sort}
                     onSort={onSort}
                     interactive={!headerCollapsed}
-                    className="benchmark-column"
+                    className={`benchmark-column${benchmark.id === "critpt" ? " is-inset" : ""}`}
                     tooltip={
                       <Tooltip
                         label={benchmark.name}
@@ -906,6 +808,9 @@ export function LeaderboardTable({
                           </Link>
                           <span className="model-lab">{row.model.lab}</span>
                         </span>
+                        {row.model.openWeights ? (
+                          <Badge tone="pos">Open</Badge>
+                        ) : null}
                         {row.reasoningEffortLabel ? (
                           <Badge
                             tone="neutral"
@@ -913,9 +818,6 @@ export function LeaderboardTable({
                           >
                             {row.reasoningEffortLabel}
                           </Badge>
-                        ) : null}
-                        {row.model.openWeights ? (
-                          <Badge tone="pos">Open</Badge>
                         ) : null}
                       </div>
                       <Link
@@ -948,20 +850,7 @@ export function LeaderboardTable({
                             triggerContent={<>Insufficient data</>}
                           />
                         ) : (
-                          <span className="index-value-line">
-                            <span>{formatScore(activeScope.index)}</span>
-                            {/* Neutral, not warn: an estimate is a
-                                methodological fact, and amber is reserved for
-                                vendor-reported provenance. */}
-                            {activeScope.estimatedCount > 0 ? (
-                              <Badge
-                                tone="neutral"
-                                title={`${activeScope.estimatedCount} benchmark${activeScope.estimatedCount === 1 ? "" : "s"} estimated at this model's own standing`}
-                              >
-                                {activeScope.estimatedCount} est.
-                              </Badge>
-                            ) : null}
-                          </span>
+                          formatScore(activeScope.index)
                         )}
                       </td>
                     ) : null}
@@ -976,29 +865,12 @@ export function LeaderboardTable({
                         <ScoreCell
                           key={benchmark.id}
                           score={row.scoresByBenchmark[benchmark.id]}
-                          modelId={row.model.id}
-                          modelName={modelLabel}
-                          benchmarkId={benchmark.id}
                           benchmarkName={benchmark.name}
-                          domain={benchmarkDomains[benchmark.id]}
+                          inset={benchmark.id === "critpt"}
                           featuredOnMobile={
                             sort.column.kind === "benchmark" &&
                             sort.column.id === benchmark.id
                           }
-                          active={
-                            inspectedScore?.id ===
-                            `${row.model.id}-${benchmark.id}`
-                          }
-                          onInspect={(inspection, trigger) => {
-                            scoreTriggerRef.current = trigger;
-                            const activeElement = document.activeElement;
-                            scoreReturnFocusRef.current =
-                              activeElement instanceof HTMLElement &&
-                              activeElement !== document.body
-                                ? activeElement
-                                : trigger;
-                            setInspectedScore(inspection);
-                          }}
                           isBest={
                             row.scoresByBenchmark[benchmark.id]?.value ===
                             bestScores[benchmark.id]
@@ -1032,82 +904,6 @@ export function LeaderboardTable({
           </tbody>
         </table>
       </div>
-      {inspectedScore ? (
-        <aside
-          ref={scoreInspectorRef}
-          className="score-inspector"
-          id="score-inspector"
-          role="dialog"
-          tabIndex={-1}
-          aria-modal="false"
-          aria-labelledby="score-inspector-title"
-        >
-          <div className="score-inspector-head">
-            <div>
-              <p className="section-kicker">Score source</p>
-              <h2 id="score-inspector-title">
-                {inspectedScore.modelName} · {inspectedScore.benchmarkName}
-              </h2>
-            </div>
-            <button
-              type="button"
-              className="btn-icon"
-              aria-label="Close score source"
-              onClick={() => closeScoreInspector()}
-            >
-              <CloseIcon />
-            </button>
-          </div>
-          <p className="score-inspector-value num">
-            {formatScore(inspectedScore.score.value)}
-            {inspectedScore.isBest ? (
-              <span> Best measured score in this column</span>
-            ) : null}
-          </p>
-          <dl>
-            <div>
-              <dt>Source</dt>
-              <dd>{scoreHost(inspectedScore.score.source.url)}</dd>
-            </div>
-            <div>
-              <dt>Retrieved</dt>
-              <dd>{formatDate(inspectedScore.score.source.retrieved)}</dd>
-            </div>
-            <div>
-              <dt>Measurement</dt>
-              <dd>
-                {inspectedScore.score.selfReported
-                  ? "Vendor-reported"
-                  : "Published by Artificial Analysis"}
-              </dd>
-            </div>
-          </dl>
-          {inspectedScore.score.settings ? (
-            <p className="score-inspector-settings">
-              <strong>Settings</strong>
-              {inspectedScore.score.settings}
-            </p>
-          ) : null}
-          <div className="score-inspector-actions">
-            <a
-              className="btn btn-primary link-external"
-              href={inspectedScore.score.source.url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Open source <ExternalIcon className="ext" />
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
-            <Link
-              className="btn"
-              href={`/model/${inspectedScore.modelId}#benchmark-${inspectedScore.benchmarkId}`}
-              prefetch={false}
-            >
-              Open model evidence
-            </Link>
-          </div>
-        </aside>
-      ) : null}
     </>
   );
 }

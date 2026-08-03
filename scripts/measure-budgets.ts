@@ -132,19 +132,16 @@ function htmlText(value: string) {
 
 const homepage = join(OUT, "index.html");
 const comparePage = join(OUT, "compare.html");
-const valuePage = join(OUT, "value.html");
 const data = loadLeaderboardData();
 const allCss = cssFilesOnDisk();
 const fonts = fontFiles();
 const fontDir = fonts.length > 0 ? dirBytes(join(OUT, "_next/static/media")) : { total: 0, files: 0 };
 const html = readFileSync(homepage, "utf8");
 const compareHtml = readFileSync(comparePage, "utf8");
-const valueHtml = readFileSync(valuePage, "utf8");
 const homepageCss = linkedCssFiles(html);
 const homepageJs = linkedJsFiles(html);
 const homepageFlightBytes = inlineFlightBytes(html);
 const compareFlightBytes = inlineFlightBytes(compareHtml);
-const valueFlightBytes = inlineFlightBytes(valueHtml);
 const homepageCssText = homepageCss
   .map((path) => readFileSync(path, "utf8"))
   .join("\n");
@@ -157,7 +154,7 @@ const compareSkeleton =
 const compareSkeletonRows = (
   compareSkeleton.match(/<th scope="row">/g) ?? []
 ).length;
-const expectedCompareRows = 5 + data.benchmarks.length;
+const expectedCompareRows = 4 + data.benchmarks.length;
 const preloads = (html.match(/as="font"/g) ?? []).length;
 
 // What the browser actually fetches on first paint. next/font emits one file
@@ -226,30 +223,6 @@ const budgets: Budget[] = [
     unit: "bytes",
   },
   {
-    label: "value HTML (raw)",
-    actual: statSync(valuePage).size,
-    budget: 200 * 1024,
-    unit: "bytes",
-  },
-  {
-    label: "value HTML (gzip)",
-    actual: gzipBytes(valuePage),
-    budget: 28 * 1024,
-    unit: "bytes",
-  },
-  {
-    label: "value Flight payload",
-    actual: valueFlightBytes,
-    budget: 40 * 1024,
-    unit: "bytes",
-  },
-  {
-    label: "value DOM elements",
-    actual: elementCount(valueHtml),
-    budget: 1_400,
-    unit: "count",
-  },
-  {
     label: "homepage CSS (raw)",
     actual: homepageCss.reduce((total, path) => total + statSync(path).size, 0),
     budget: 60 * 1024,
@@ -308,8 +281,8 @@ const sentinels: { label: string; ok: boolean }[] = [
   { label: "renders the score count", ok: /cited scores/.test(html) },
   { label: "renders the board", ok: /class="board"/.test(html) },
   {
-    label: "renders score provenance links",
-    ok: (html.match(/class="score-source"/g) ?? []).length === data.scoreCount,
+    label: "keeps leaderboard scores non-interactive",
+    ok: !html.includes('class="score-source"'),
   },
   { label: "renders the readout", ok: /class="readout/.test(html) },
   {
@@ -350,24 +323,6 @@ const sentinels: { label: string; ok: boolean }[] = [
       compareHtml.includes("compare-initial-empty") &&
       compareHtml.includes("compare-initial-skeleton") &&
       compareHtml.includes("comparePending"),
-  },
-  {
-    label: "renders the value plot and its data table",
-    ok:
-      /class="plot-area"/.test(valueHtml) &&
-      /class="plot-data"/.test(valueHtml) &&
-      data.rows.every((row) => valueHtml.includes(row.model.id)),
-  },
-  {
-    label: "keeps score evidence out of the value payload",
-    ok:
-      !valueHtml.includes("scoresByBenchmark") &&
-      !valueHtml.includes("rampByBenchmark") &&
-      !valueHtml.includes("sourceRefs"),
-  },
-  {
-    label: "measures value Flight payload",
-    ok: valueFlightBytes > 0 && valueFlightBytes < homepageFlightBytes,
   },
 ];
 

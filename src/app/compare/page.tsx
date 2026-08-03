@@ -22,7 +22,7 @@ export function generateMetadata(): Metadata {
   return pageMetadata({
     title: "Compare models — LM Board",
     description: truncateDescription(
-      `Put up to four of ${board.rows.length} frontier models side by side across all ${board.benchmarks.length} tracked benchmarks; every measured score links to its source.`,
+      `Compare up to four of ${board.rows.length} frontier models side by side across LM Index, ${board.benchmarks.length} benchmarks, pricing, and weights.`,
     ),
     path: "/compare",
     image: "/og/compare.png",

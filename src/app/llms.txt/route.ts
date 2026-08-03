@@ -69,10 +69,8 @@ ${benchmarks}
 ## Pages
 
 - [Leaderboard](${siteUrl}/)
-- [Price versus performance and the efficient frontier](${siteUrl}/value)
 - [Methodology, in full](${siteUrl}/methodology)
 - [Side-by-side comparison](${siteUrl}/compare)
-- [Model data feed (Atom)](${siteUrl}/feed.xml)
 
 ## Models
 

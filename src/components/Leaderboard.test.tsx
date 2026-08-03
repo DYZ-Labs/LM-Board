@@ -615,7 +615,9 @@ describe("table semantics", () => {
     await user.keyboard("{ArrowRight}{ArrowRight}{F2}");
 
     const indexHeader = screen
-      .getByRole("button", { name: /^Sort by Overall index/ })
+      .getByRole("button", {
+        name: /^Sort by LM Intelligence Index/,
+      })
       .closest("th")!;
     const actions = within(indexHeader).getAllByRole("button");
     expect(document.activeElement).toBe(actions[0]);
@@ -665,35 +667,80 @@ describe("table semantics", () => {
     expect(container.querySelector(`#${detailsId}`)).not.toBeInTheDocument();
   });
 
-  it("announces a score inspector opened from the grid and restores the grid", async () => {
+  it("keeps benchmark score cells plain and non-interactive", async () => {
     const user = userEvent.setup();
-    render(board());
+    const { container } = render(board());
     const grid = screen.getByRole("grid");
+    const firstScore = container.querySelector<HTMLElement>(
+      ".model-row .score-cell:not(.missing-value)",
+    )!;
+
+    expect(firstScore).toBeInTheDocument();
+    expect(firstScore.querySelector("a, button")).toBeNull();
 
     grid.focus();
     await user.keyboard(
       "{ArrowRight}{ArrowRight}{ArrowRight}{ArrowDown}{Enter}",
     );
 
-    const inspector = await screen.findByRole("dialog", {
-      name: /GPQA Diamond/,
-    });
-    await waitFor(() => expect(document.activeElement).toBe(inspector));
-
-    await user.keyboard("{Escape}");
-    await waitFor(() => {
-      expect(
-        screen.queryByRole("dialog", { name: /GPQA Diamond/ }),
-      ).not.toBeInTheDocument();
-      expect(document.activeElement).toBe(grid);
-    });
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(grid);
   });
 });
 
 describe("projections", () => {
+  it("shows only the Index benchmarks in their editorial priority order", () => {
+    go("/?view=table");
+    const { container } = render(board());
+
+    expect(data.benchmarks.map((benchmark) => benchmark.id)).toEqual([
+      "terminal-bench-v2-1",
+      "tau3-banking",
+      "aa-lcr",
+      "hle",
+      "gpqa-diamond",
+      "scicode",
+      "ifbench",
+      "critpt",
+    ]);
+
+    const benchmarkHeaders = [
+      ...container.querySelectorAll<HTMLTableCellElement>(
+        "thead .benchmark-column",
+      ),
+    ];
+    expect(
+      benchmarkHeaders.map((header) =>
+        header.querySelector("button")?.getAttribute("aria-label"),
+      ),
+    ).toEqual(
+      data.benchmarks.map((benchmark) =>
+        expect.stringMatching(`^Sort by ${benchmark.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`),
+      ),
+    );
+  });
+
+  it("uses the Intelligence Index name in the label and hover text", () => {
+    render(board());
+
+    const indexSort = screen.getByRole("button", {
+      name: /^Sort by LM Intelligence Index/,
+    });
+    expect(indexSort).toHaveTextContent("LM Intelligence Index");
+    expect(indexSort.querySelector("[title]")).toHaveAttribute(
+      "title",
+      "LM Intelligence Index",
+    );
+    expect(
+      screen.getByRole("button", {
+        name: "About LM Intelligence Index",
+      }),
+    ).toBeInTheDocument();
+  });
+
   it("renders every benchmark column in the table projection", () => {
     go("/?view=table");
-    render(board());
+    const { container } = render(board());
 
     for (const benchmark of data.benchmarks) {
       expect(
@@ -702,6 +749,16 @@ describe("projections", () => {
         }),
       ).toBeInTheDocument();
     }
+
+    expect(container.querySelector(".index-column")).not.toHaveClass(
+      "is-inset",
+    );
+    expect(
+      container.querySelector(".benchmark-column.is-inset .sort-button"),
+    ).toHaveAccessibleName(/^Sort by CritPt/);
+    expect(
+      container.querySelectorAll(".score-cell.is-inset"),
+    ).toHaveLength(data.rows.length);
   });
 
   it("replaces benchmark columns with a spark in the profile projection", () => {
@@ -763,21 +820,21 @@ describe("projections", () => {
     );
   });
 
-  it("keeps the board's own hint present in both projections", () => {
+  it("keeps the board's grid hint present in both projections", () => {
     // The server renders `table` and narrow viewports flip to `profile` on
     // mount, so an element in one and not the other shifts the page after
     // hydration.
     go("/?view=table");
     const table = render(board());
     expect(
-      table.container.querySelector("#board-scroll-instructions"),
+      table.container.querySelector("#board-grid-instructions"),
     ).toBeInTheDocument();
     table.unmount();
 
     go("/?view=profile");
     const profile = render(board());
     expect(
-      profile.container.querySelector("#board-scroll-instructions"),
+      profile.container.querySelector("#board-grid-instructions"),
     ).toBeInTheDocument();
   });
 
@@ -822,7 +879,7 @@ describe("projections", () => {
     expect(featured).toHaveLength(data.rows.length);
     expect(featured[0]).toHaveTextContent(codingBenchmark.name);
     expect(
-      featured.some((cell) => cell.querySelector("a.score-source")),
+      featured.every((cell) => cell.querySelector("a, button") === null),
     ).toBe(true);
 
     await user.click(screen.getByRole("button", { name: "Sort ascending" }));
@@ -848,34 +905,21 @@ describe("projections", () => {
     expect(links[0]).toHaveTextContent(/^Evidence · \d+ scores$/);
   });
 
-  it("serialises an explicit projection switch", async () => {
-    const user = userEvent.setup();
+  it("does not render projection controls in the command bar", () => {
     render(board());
 
-    await user.click(screen.getByRole("button", { name: /score spark/i }));
-    expect(currentUrl().searchParams.get("view")).toBe("profile");
-  });
-
-  it("uses a native view transition for projection changes when motion is allowed", async () => {
-    const user = userEvent.setup();
-    const startViewTransition = vi.fn((update: () => void) => {
-      update();
-      return {};
-    });
-    Object.defineProperty(document, "startViewTransition", {
-      configurable: true,
-      value: startViewTransition,
-    });
-
-    try {
-      render(board());
-      await user.click(screen.getByRole("button", { name: /score spark/i }));
-
-      expect(startViewTransition).toHaveBeenCalledTimes(1);
-      expect(currentUrl().searchParams.get("view")).toBe("profile");
-    } finally {
-      Reflect.deleteProperty(document, "startViewTransition");
-    }
+    expect(
+      screen.queryByRole("group", { name: "Projection" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Table —/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Profile —/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Plot —/ }),
+    ).not.toBeInTheDocument();
   });
 
   it("bypasses view transitions in reduced-motion mode", () => {
@@ -910,96 +954,48 @@ describe("projections", () => {
 
 });
 
-/* Wave 2 removed this control and asserted its absence here. The complaint
-   behind that — two adjacent segmented controls reading as one six-segment
-   control with two active items — was real, but row density is part of the
-   brief, so the control is back behind its own trigger instead of gone. */
 describe("row density", () => {
-  function densityGroup() {
-    return screen.getByRole("group", { name: /row density/i });
-  }
-
-  it("offers the control and marks the default", () => {
-    render(board());
-
-    expect(
-      within(densityGroup()).getByRole("button", { name: /^Default/ }),
-    ).toHaveAttribute("aria-pressed", "true");
-  });
-
-  it("applies a switch to the board and records it in the URL", async () => {
-    const user = userEvent.setup();
+  it("keeps the default density without offering a control", () => {
     const { container } = render(board());
 
-    await user.click(
-      within(densityGroup()).getByRole("button", { name: /^Dense/ }),
-    );
-
-    expect(currentUrl().searchParams.get("density")).toBe("data");
-    // The attribute the three `[data-density]` `--row-h` blocks select on.
     expect(container.querySelector(".leaderboard")).toHaveAttribute(
       "data-density",
-      "data",
+      "compact",
     );
+    expect(
+      screen.queryByRole("group", { name: /row density/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Rows$/i }),
+    ).not.toBeInTheDocument();
   });
 
-  it("restores a density from ?density", () => {
+  it("ignores and removes a legacy density parameter", () => {
     go("/?density=comfortable");
     const { container } = render(board());
 
     expect(container.querySelector(".leaderboard")).toHaveAttribute(
       "data-density",
-      "comfortable",
+      "compact",
     );
-    expect(
-      within(densityGroup()).getByRole("button", { name: /^Roomy/ }),
-    ).toHaveAttribute("aria-pressed", "true");
-  });
-
-  it("drops the parameter when the density returns to the default", async () => {
-    const user = userEvent.setup();
-    go("/?density=data");
-    render(board());
-
-    await user.click(
-      within(densityGroup()).getByRole("button", { name: /^Default/ }),
-    );
-
     expect(currentUrl().searchParams.has("density")).toBe(false);
-  });
-
-  it("keeps deterministic control markup across viewport sizes", () => {
-    Object.defineProperty(window, "innerWidth", {
-      configurable: true,
-      writable: true,
-      value: 390,
-    });
-    try {
-      render(board());
-
-      expect(
-        screen.getByRole("group", { name: /row density/i }),
-      ).toBeInTheDocument();
-    } finally {
-      Object.defineProperty(window, "innerWidth", {
-        configurable: true,
-        writable: true,
-        value: 1440,
-      });
-    }
   });
 });
 
 describe("provenance", () => {
-  it("puts a source link on every cell that has a score", () => {
+  it("keeps source links out of leaderboard score cells", () => {
     go("/?view=table");
     const { container } = render(board());
 
-    const sourceLinks = [
-      ...container.querySelectorAll<HTMLAnchorElement>("a.score-source"),
+    const measuredCells = [
+      ...container.querySelectorAll<HTMLElement>(
+        ".score-cell:not(.missing-value)",
+      ),
     ];
-    expect(sourceLinks.length).toBeGreaterThan(0);
-    expect(sourceLinks[0]).toHaveAttribute("href", expect.stringMatching(/^https?:/));
+    expect(measuredCells.length).toBeGreaterThan(0);
+    expect(
+      measuredCells.every((cell) => cell.querySelector("a, button") === null),
+    ).toBe(true);
   });
 
   it("explains an unranked model instead of showing a bare string", () => {

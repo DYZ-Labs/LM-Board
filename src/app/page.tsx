@@ -21,7 +21,7 @@ export function generateMetadata(): Metadata {
   const data = loadLeaderboardData();
 
   return pageMetadata({
-    title: "LM Board — Frontier Model Benchmark Leaderboard",
+    title: "LM Board - Benchmark Scores for Frontier AI Models",
     // Every count is read off the dataset, because "17 models" is what happens
     // when one of them is a literal.
     description: truncateDescription(

@@ -300,14 +300,140 @@
 }
 
 /* -- Compare -------------------------------------------------------------- */
-.compare-controls,
-.compare-options {
+.compare-picker {
+  position: relative;
   margin-bottom: var(--s-7);
+  overflow: visible;
+}
+
+.compare-picker-head {
+  display: flex;
+  gap: var(--s-6);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.compare-picker-head h2 {
+  font-size: var(--t-17);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--ls-13);
+}
+
+.compare-picker-head p {
+  margin-top: var(--s-2);
+  font-size: var(--t-12);
+  color: var(--fg-tertiary);
+}
+
+.compare-count {
+  flex: 0 0 auto;
+  padding: var(--s-2) var(--s-4);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-full);
+  background: var(--bg-inset);
+  font-size: var(--t-11);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-secondary);
+}
+
+.compare-controls {
+  display: flex;
+  gap: var(--s-3);
+  align-items: stretch;
+  margin-top: var(--s-5);
+}
+
+.compare-controls .field {
+  flex: 1 1 auto;
+  width: auto;
+  max-width: none;
+  padding-inline: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.compare-controls .field:hover {
+  border-bottom-color: var(--line-interactive);
+}
+
+.compare-controls .search-field:focus-within {
+  border-bottom-color: var(--signal-500);
+  outline: 0;
+  box-shadow: none;
 }
 
 .compare-options {
-  padding: 0;
+  margin-top: var(--s-3);
+  padding: var(--s-2);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-2);
+  background: var(--bg-inset);
   list-style: none;
+}
+
+.compare-options li {
+  display: flex;
+  gap: var(--s-5);
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-2);
+  font-size: var(--t-13);
+  color: var(--fg-primary);
+  cursor: pointer;
+}
+
+.compare-options li[aria-selected="true"] {
+  background: var(--bg-selected);
+}
+
+.compare-options mark {
+  background: transparent;
+  color: var(--signal-300);
+  font-weight: var(--w-strong);
+}
+
+.compare-no-results {
+  margin-top: var(--s-3);
+  padding: var(--s-4);
+  font-size: var(--t-12);
+  color: var(--fg-tertiary);
+}
+
+.compare-quick {
+  display: flex;
+  gap: var(--s-5);
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: var(--s-5);
+}
+
+.compare-quick > span {
+  font-size: var(--t-11);
+  color: var(--fg-tertiary);
+}
+
+.compare-quick > div {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+
+.compare-scroll-cue {
+  display: none;
+}
+
+.compare-results {
+  border-top: 1px solid var(--line-subtle);
+  border-radius: var(--r-3);
+}
+
+.compare-results .board-scroll {
+  border-radius: var(--r-3);
 }
 
 .compare-grid {
@@ -317,16 +443,52 @@
 
 .compare-grid th,
 .compare-grid td {
-  padding: var(--s-5) var(--s-5);
+  padding: var(--s-4) var(--s-5);
   border-bottom: 1px solid var(--line-subtle);
   text-align: right;
   vertical-align: middle;
+}
+
+.compare-grid tr:last-child > * {
+  border-bottom: 0;
 }
 
 .compare-grid thead th {
   font-size: var(--t-13);
   font-weight: var(--w-strong);
   color: var(--fg-primary);
+}
+
+.compare-grid thead th:first-child {
+  width: 19%;
+}
+
+.compare-model-heading {
+  display: inline-flex;
+  max-width: calc(100% - 38px);
+  flex-direction: column;
+  align-items: flex-end;
+  vertical-align: middle;
+}
+
+.compare-model-heading a {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--fg-primary);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.compare-model-heading a:hover {
+  color: var(--signal-300);
+}
+
+.compare-model-heading > span {
+  margin-top: var(--s-1);
+  font-size: var(--t-10);
+  font-weight: var(--w-medium);
+  color: var(--fg-tertiary);
 }
 
 /* `.btn-icon` is display:grid, which made the remove control a block box that
@@ -360,9 +522,38 @@
   color: var(--fg-primary);
 }
 
+.compare-grid .compare-benchmarks-start > * {
+  border-top: 1px solid var(--line-strong);
+}
+
+.compare-price-separator {
+  color: var(--fg-disabled);
+}
+
 .compare-empty {
-  padding: var(--s-11) var(--s-6);
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-9) var(--s-6);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-3);
   text-align: center;
+  color: var(--fg-tertiary);
+}
+
+.compare-empty strong {
+  font-size: var(--t-15);
+  font-weight: var(--w-strong);
+  color: var(--fg-primary);
+}
+
+.compare-empty span {
+  font-size: var(--t-12);
+}
+
+.compare-note {
+  margin-top: var(--s-4);
+  font-size: var(--t-11);
+  line-height: var(--lh-12);
   color: var(--fg-tertiary);
 }
 

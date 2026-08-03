@@ -57,46 +57,19 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   box-shadow: var(--e-2);
 }
 
-/* `clip` on both axes by default, and it is load-bearing rather than tidy:
-   `overflow-x: auto` makes this a scroll container, and a sticky descendant
-   resolves against its nearest scroll container. Declaring it at widths where
-   the table provably does not overflow is what made the header row inert —
-   pinned to a box that never scrolls on the block axis. `clip` still clips to
-   the radius but creates no scrolling box, so thead sticks to the viewport.
-   Sideways scrolling is restored below, at exactly the width where the table
-   stops being fluid and starts to overflow. */
+/* Clip the shell radius without creating a nested scroll surface. The page is
+   the leaderboard's only scroll container, so its sticky header and browser
+   find/navigation behavior share one coordinate space. */
 .board-scroll {
   max-width: 100%;
   overflow: clip;
   border-radius: 0 0 var(--r-4) var(--r-4);
 }
 
-@media (max-width: 1439.98px) {
-  .board-scroll:has(.board[data-view="table"]) {
-    max-height: min(72dvh, 760px);
-    overflow: auto;
-    overscroll-behavior-inline: contain;
-    overscroll-behavior-block: contain;
-    /* Only the table projection can scroll sideways, so only it reserves the
-       gutter that keeps the last column off the scrollbar. */
-    scrollbar-gutter: stable;
-  }
-
-  /* Once the table owns block-axis scrolling, sticky coordinates are local to
-     this box. The command bar is outside it, so adding `--bar-h` creates a
-     blank band and lets rows slide under the header. */
-  .board-scroll:has(.board[data-view="table"]) .board thead th {
-    top: 0;
-  }
-}
-
-.board-scroll:focus-visible {
-  box-shadow: var(--ring);
-}
-
 .board {
   width: 100%;
   table-layout: fixed;
+  line-height: 1.35;
 }
 
 .mobile-sort-controls {
@@ -144,13 +117,16 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   z-index: var(--z-sticky-header);
   top: var(--bar-h, 0px);
   height: var(--header-h);
-  background: var(--bg-raised);
-  box-shadow: 0 1px 0 var(--line-subtle);
+  background: linear-gradient(180deg, var(--bg-raised), var(--bg-inset));
+  box-shadow:
+    inset 0 1px 0 var(--spec-edge),
+    0 1px 0 var(--line);
   font-size: var(--t-12);
-  font-weight: var(--w-strong);
+  font-weight: var(--w-medium);
   font-variation-settings: "wdth" var(--wd-condensed);
   letter-spacing: var(--ls-12);
-  color: var(--fg-tertiary);
+  line-height: 1.25;
+  color: var(--fg-secondary);
   white-space: nowrap;
 }
 
@@ -191,6 +167,10 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 .board thead :is(.index-column, .benchmark-column, .price-column, .spark-column)
   :is(.column-header-controls, .sort-button) {
   flex-direction: row-reverse;
+}
+
+.board thead .index-column .sort-button {
+  text-align: right;
 }
 
 /* The caret is column state, not part of the label. Reserving 14px for it in
@@ -239,7 +219,7 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 }
 
 .sort-button:hover {
-  color: var(--fg-secondary);
+  color: var(--fg-primary);
 }
 
 .sort-button:active {
@@ -271,14 +251,28 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
    behind one header cell, with the column beneath it untinted, read as a stray
    highlight rather than as state. */
 .board th[aria-sort] {
-  color: var(--fg-primary);
+  color: var(--signal-300);
 }
 
 /* -- Rows ----------------------------------------------------------------- */
 .model-row > td,
 .model-row > th {
   height: var(--row-h);
-  transition: background-color var(--dur-instant) var(--ease-out-quart);
+  transition:
+    background-color var(--dur-snap) var(--ease-out-quart),
+    color var(--dur-instant) var(--ease-out-quart);
+}
+
+/* The podium is visible at a glance without turning the first three records
+   into banners. Five percent signal in the existing surface is enough to
+   create depth in both themes while leaving every numeral at full contrast. */
+.model-row.is-podium > td,
+.model-row.is-podium > th {
+  background-color: color-mix(
+    in srgb,
+    var(--bg-raised) 95%,
+    var(--signal-500)
+  );
 }
 
 .model-row:hover > td,
@@ -306,8 +300,9 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 2px;
+  width: 3px;
   background: var(--signal-500);
+  box-shadow: 0 0 var(--s-5) var(--signal-glow);
   transform: scaleY(0);
   transform-origin: 50% 50%;
   transition: transform var(--dur-snap) var(--ease-snap);
@@ -317,12 +312,6 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 .model-row.is-expanded .model-cell::before,
 .model-row:focus-within .model-cell::before {
   transform: scaleY(1);
-}
-
-.board-scroll.is-scrolled .model-cell,
-.board-scroll.is-scrolled .model-column {
-  box-shadow: 12px 0 16px -12px var(--shade-deep);
-  clip-path: inset(0 -20px 0 0);
 }
 
 .board thead .model-column {
@@ -349,9 +338,23 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   height: min(28px, var(--row-h));
   padding: 0;
   border: 0;
+  border-radius: var(--r-2);
   background: transparent;
   color: var(--fg-primary);
   text-align: left;
+  transition:
+    color var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-instant) var(--ease-out-quart),
+    transform var(--dur-snap) var(--ease-snap);
+}
+
+.model-trigger:hover {
+  background: var(--bg-active);
+  color: var(--signal-300);
+}
+
+.model-trigger:active {
+  transform: scale(0.94);
 }
 
 /* -- Shrink order: the decorations yield, the identity never does ---------
@@ -377,9 +380,9 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
-  font-size: var(--t-13);
+  font-size: var(--t-15);
   font-weight: var(--w-strong);
-  letter-spacing: var(--ls-13);
+  letter-spacing: 0;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--fg-primary);
@@ -394,7 +397,8 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   flex: 0 9999 auto;
   min-width: 0;
   overflow: hidden;
-  font-size: var(--t-10);
+  font-size: var(--t-11);
+  font-weight: var(--w-medium);
   color: var(--fg-tertiary);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -459,7 +463,7 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 
 .rank-cell {
   font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
-  font-size: var(--t-12);
+  font-size: var(--t-13);
   font-variant-numeric: tabular-nums;
   font-weight: var(--w-medium);
   color: var(--fg-secondary);
@@ -479,6 +483,16 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   width: var(--col-bench);
 }
 
+@media (min-width: 1024px) {
+  /* Keep the last benchmark away from the price divider without giving its
+     numerals a different alignment model: CritPt uses the same trailing rag
+     as every other score column, inset as a unit. */
+  .board[data-view="table"]
+    :is(.benchmark-column.is-inset, .score-cell.is-inset) {
+    padding-inline-end: var(--s-8);
+  }
+}
+
 .price-column,
 .price-cell {
   width: var(--col-price);
@@ -491,44 +505,24 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 
 .numeric-cell {
   font-family: var(--font-data, ui-monospace), ui-monospace, monospace;
-  font-size: var(--t-12);
-  font-variant-numeric: tabular-nums;
+  font-size: var(--t-13);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.01em;
   text-align: right;
 }
 
 .index-cell {
-  font-size: var(--t-15);
+  font-size: var(--t-17);
   font-weight: var(--w-strong);
   color: var(--fg-primary);
 }
 
-/* Reversed, so the numeral owns the rag and the qualifier falls to its left.
-   Appended after the number inside a right-aligned cell, the est. chip pushed
-   its own row's decimal point 36px in from the column's edge — a zig-zag down
-   62 rows through the board's primary sort key. */
-.index-value-line {
-  display: flex;
-  gap: var(--s-3);
-  flex-direction: row-reverse;
-  align-items: baseline;
-  min-width: 0;
+.model-row.is-podium .index-cell {
+  color: var(--signal-300);
 }
 
-/* The numeral must never be the thing that gets clipped: the badge shrinks
-   first, then wraps out of the way entirely. */
-.index-value-line > span:first-child {
-  flex: 0 0 auto;
-}
-
-/* Quieter than the default chip: it sits inside the board's largest numeral,
-   where the standard border and tracking read as a second value. */
-.index-value-line .badge {
-  min-width: 0;
-  padding: 0 var(--s-2);
-  border-color: var(--line-subtle);
-  letter-spacing: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.price-cell {
+  font-size: var(--t-12);
 }
 
 .missing-value {
@@ -543,7 +537,7 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   border: 0;
   background: transparent;
   font-family: var(--font-ui, system-ui), system-ui, sans-serif;
-  font-size: var(--t-10);
+  font-size: var(--t-11);
   font-weight: var(--w-medium);
   letter-spacing: normal;
   color: var(--fg-tertiary);
@@ -557,30 +551,11 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   text-decoration-color: var(--signal-500);
 }
 
-/* -- Score cells ----------------------------------------------------------
-   The magnitude bar that used to sit 5px off each cell floor is gone. It drew
-   a second horizontal rule under an 11px figure, 4px below the citation's
-   dotted one, and the pair read as a rendering fault at 1x. It also encoded
-   almost nothing: it was scaled by the absolute value, so a GPQA column
-   spanning 89.5-94.1 produced sixteen bars within 8px of each other. The
-   luminance ramp survives where it is legible — one bar per benchmark, at full
-   height, in the profile projection. */
+/* Score cells are deliberately plain in the table projection. Detailed
+   evidence remains in each model record rather than turning every numeral into
+   a link or painting a second rule beneath the row separator. */
 .score-cell {
   position: relative;
-  background-image:
-    linear-gradient(
-      90deg,
-      var(--signal-500) 0 var(--inline-score-fill, 0%),
-      var(--line-subtle) var(--inline-score-fill, 0%) 100%
-    ),
-    linear-gradient(var(--line-subtle), var(--line-subtle));
-  background-repeat: no-repeat, no-repeat;
-  background-position:
-    var(--s-4) calc(50% + 11px),
-    0 100%;
-  background-size:
-    calc(100% - var(--s-8)) 2px,
-    100% 1px;
 }
 
 .mobile-score-label {
@@ -625,18 +600,13 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   box-shadow: inset 0 0 0 2px var(--signal-500);
 }
 
-.board:focus-visible :is(th, td).is-grid-active,
-.board:focus-within :is(th, td).is-grid-active {
-  box-shadow: inset 0 0 0 2px var(--signal-500);
-}
-
 /* Standing in a column is carried by the numeral's own weight. A 4px dot
    appended to it was a third blue in the viewport and the only thing in the
    table that moved a value off the rag: it right-aligned the numeral *and the
    dot* as a group, so `94.1` — the one number a reader is looking for — ended
    18px left of `93.2`. Its meaning now rides in the citation link's accessible
    name, while the visible diamond is a pseudo-element with no extra box. */
-.score-cell.is-best .score-source {
+.score-cell.is-best .score-number {
   font-weight: var(--w-bold);
   color: var(--fg-primary);
 }
@@ -746,84 +716,6 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
   margin-top: var(--s-6);
 }
 
-.score-inspector {
-  position: fixed;
-  z-index: var(--z-inspector);
-  right: max(var(--s-6), env(safe-area-inset-right));
-  bottom: max(var(--s-6), env(safe-area-inset-bottom));
-  width: min(420px, calc(100vw - var(--s-8)));
-  padding: var(--s-6);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-4);
-  background: var(--bg-overlay);
-  box-shadow: var(--e-4);
-}
-
-.score-inspector-head {
-  display: flex;
-  gap: var(--s-5);
-  align-items: flex-start;
-  justify-content: space-between;
-}
-
-.score-inspector h2 {
-  margin-top: var(--s-2);
-  font-size: var(--t-17);
-  line-height: var(--lh-17);
-}
-
-.score-inspector-value {
-  display: flex;
-  gap: var(--s-3);
-  align-items: baseline;
-  margin-top: var(--s-6);
-  font-size: var(--t-27);
-  color: var(--fg-primary);
-}
-
-.score-inspector-value span {
-  font-family: var(--font-ui, system-ui), system-ui, sans-serif;
-  font-size: var(--t-12);
-  color: var(--fg-tertiary);
-}
-
-.score-inspector dl {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--s-4);
-  margin-top: var(--s-5);
-}
-
-.score-inspector dt {
-  font-size: var(--t-11);
-  color: var(--fg-tertiary);
-}
-
-.score-inspector dd {
-  margin-top: var(--s-1);
-  overflow-wrap: anywhere;
-  font-size: var(--t-12);
-  color: var(--fg-secondary);
-}
-
-.score-inspector-settings {
-  display: grid;
-  gap: var(--s-2);
-  margin-top: var(--s-5);
-  padding-top: var(--s-4);
-  border-top: 1px solid var(--line-subtle);
-  font-size: var(--t-12);
-  line-height: var(--lh-12);
-  color: var(--fg-secondary);
-}
-
-.score-inspector-actions {
-  display: flex;
-  gap: var(--s-3);
-  margin-top: var(--s-6);
-  flex-wrap: wrap;
-}
-
 /* -- Detail panel --------------------------------------------------------- */
 .detail-row > td {
   padding: 0;
@@ -922,46 +814,71 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 }
 
 /* -- Table projection width ----------------------------------------------
-   52 + 220 + 92 + n x 108 + 116. Below the point where that fits, the board
-   scrolls sideways behind the pinned model column; above it, columns go
-   fluid. Profile projection never scrolls sideways at any width. */
+   Every projection fits its shell. Benchmark tracks absorb the remaining
+   width, while sparse views keep compact fixed tracks and return the surplus
+   to the model name. */
 .board[data-view="table"] {
-  min-width: calc(
-    var(--col-rank) + var(--col-model) + var(--col-index) + var(--col-price) +
-      var(--benchmark-count) * var(--col-bench)
-  );
+  min-width: 0;
 }
 
 .board[data-view="profile"] {
   min-width: 0;
 }
 
+.board[data-view="table"] .benchmark-column {
+  width: auto;
+}
+
+.board[data-view="table"][data-sparse="true"] .benchmark-column {
+  width: var(--col-bench);
+}
+
+.board[data-view="table"][data-sparse="true"] .model-column,
+.board[data-view="table"][data-sparse="true"] .model-cell {
+  width: auto;
+}
+
+@media (max-width: 1439.98px) {
+  /* Compact benchmark headings reclaim enough room for their abbreviated
+     labels at the narrowest width that still renders the full table. */
+  .board[data-view="table"] .benchmark-column {
+    padding-inline: var(--s-2) var(--s-4);
+  }
+}
+
 @media (min-width: 1440px) {
-  .board[data-view="table"] {
-    min-width: 100%;
+  .board {
+    --col-index: 144px;
   }
 
-  /* Where the table is fluid, the slack goes to the column that identifies the
-     row rather than to eight columns already holding a four-character number
-     in 99px. At 264px, four names ellipsised — and a shrink order can only
-     choose *which* string is cut, not stop cutting. 320px is the longest name
-     in the data plus its lab and chips; the benchmark columns give up 7px each
-     and their widest header still clears its own box by 3px. */
-  .board[data-view="table"] :is(.model-column, .model-cell) {
-    width: calc(var(--col-model) + var(--s-10));
+  .board thead th {
+    font-size: var(--t-12);
+    font-variation-settings: "wdth" var(--wd-normal);
+    letter-spacing: var(--ls-12);
   }
 
   .board[data-view="table"] .benchmark-column {
-    width: auto;
+    padding-inline: var(--s-2) var(--s-4);
   }
 
-  .board[data-view="table"][data-sparse="true"] .benchmark-column {
-    width: var(--col-bench);
+  .board thead :is(.index-column, .price-column),
+  .board tbody :is(.index-cell, .price-cell) {
+    border-left: 1px solid var(--line-subtle);
   }
 
-  .board[data-view="table"][data-sparse="true"] .model-column,
-  .board[data-view="table"][data-sparse="true"] .model-cell {
-    width: auto;
+  .board .index-column .sort-button > span:first-child {
+    overflow: visible;
+    line-height: 1.15;
+    text-overflow: clip;
+    text-wrap: balance;
+    white-space: normal;
+  }
+
+  /* At full rail width the identifying column gets the useful surplus rather
+     than leaving every short numeric track needlessly loose. */
+  .board[data-view="table"]:not([data-sparse="true"])
+    :is(.model-column, .model-cell) {
+    width: calc(var(--col-model) + var(--s-8));
   }
 }
 
@@ -1018,12 +935,6 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
 
   .board thead th {
     white-space: normal;
-  }
-
-  /* "62.2" plus the est. chip has to clear 76px at this size. */
-  .index-value-line .badge {
-    font-size: 8px;
-    padding: 0 2px;
   }
 
   .rank-column,

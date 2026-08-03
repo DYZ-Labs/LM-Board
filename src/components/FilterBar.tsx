@@ -11,24 +11,7 @@ import {
 
 import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { CloseIcon, SearchIcon } from "@/components/Icon";
-import { trackEvent } from "@/lib/track";
-import type {
-  Density,
-  ProviderSelection,
-  ViewMode,
-} from "@/lib/urlState";
-
-const VIEWS: { value: ViewMode; label: string; title: string }[] = [
-  { value: "table", label: "Table", title: "All benchmark columns" },
-  { value: "profile", label: "Profile", title: "Compact profile with a score spark" },
-  { value: "plot", label: "Plot", title: "Price against Index" },
-];
-
-const DENSITIES: { value: Density; label: string; title: string }[] = [
-  { value: "comfortable", label: "Roomy", title: "46px rows" },
-  { value: "compact", label: "Default", title: "36px rows" },
-  { value: "data", label: "Dense", title: "28px rows — the whole field in one screen" },
-];
+import type { ProviderSelection, ViewMode } from "@/lib/urlState";
 
 const POPOVER_WIDTH = 320;
 const POPOVER_GUTTER = 12;
@@ -90,7 +73,6 @@ type FilterBarProps = {
   resultCount: number;
   totalCount: number;
   view: ViewMode;
-  density: Density;
   onQueryChange: (query: string) => void;
   onQueryCommit: () => void;
   onQueryCancel: () => void;
@@ -102,7 +84,6 @@ type FilterBarProps = {
   onFilterCancel: () => void;
   onClear: () => void;
   onViewChange: (view: ViewMode) => void;
-  onDensityChange: (density: Density) => void;
 };
 
 type Chip = { key: string; label: string; remove: () => void };
@@ -115,8 +96,6 @@ export const FilterBar = memo(function FilterBar({
   openWeightsOnly,
   resultCount,
   totalCount,
-  view,
-  density,
   onQueryChange,
   onQueryCommit,
   onQueryCancel,
@@ -127,13 +106,9 @@ export const FilterBar = memo(function FilterBar({
   onFilterCommit,
   onFilterCancel,
   onClear,
-  onViewChange,
-  onDensityChange,
 }: FilterBarProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [densityOpen, setDensityOpen] = useState(false);
   const filtersRef = useRef<HTMLDetailsElement>(null);
-  const densityRef = useRef<HTMLDetailsElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const filterOptionRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [activeFilterOption, setActiveFilterOption] = useState(0);
@@ -188,32 +163,19 @@ export const FilterBar = memo(function FilterBar({
     [],
   );
 
-  const closeDensity = useCallback(() => {
-    setDensityOpen(false);
-    densityRef.current?.querySelector("summary")?.focus();
-  }, []);
-
-  // One handler pair for whichever popover is open: two independent copies
-  // both fired on the same outside click and stole focus from each other.
   useEffect(() => {
-    const host = filtersOpen
-      ? filtersRef.current
-      : densityOpen
-        ? densityRef.current
-        : null;
+    const host = filtersOpen ? filtersRef.current : null;
     if (!host) return;
 
     function closeOnOutsideClick(event: PointerEvent) {
       if (event.target instanceof Node && !host?.contains(event.target)) {
-        if (filtersOpen) closeFilters("commit", false);
-        else closeDensity();
+        closeFilters("commit", false);
       }
     }
 
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
-      if (filtersOpen) closeFilters("cancel");
-      else closeDensity();
+      closeFilters("cancel");
     }
 
     document.addEventListener("pointerdown", closeOnOutsideClick);
@@ -222,13 +184,12 @@ export const FilterBar = memo(function FilterBar({
       document.removeEventListener("pointerdown", closeOnOutsideClick);
       document.removeEventListener("keydown", closeOnEscape);
     };
-  }, [closeDensity, closeFilters, densityOpen, filtersOpen]);
+  }, [closeFilters, filtersOpen]);
 
   useEffect(() => {
-    if (!filtersOpen && !densityOpen) return;
+    if (!filtersOpen) return;
 
-    const alignOpenPopover = () =>
-      clampPopover(filtersOpen ? filtersRef.current : densityRef.current);
+    const alignOpenPopover = () => clampPopover(filtersRef.current);
     alignOpenPopover();
     window.addEventListener("resize", alignOpenPopover);
     window.addEventListener("scroll", alignOpenPopover, true);
@@ -240,13 +201,12 @@ export const FilterBar = memo(function FilterBar({
       window.visualViewport?.removeEventListener("resize", alignOpenPopover);
       window.visualViewport?.removeEventListener("scroll", alignOpenPopover);
     };
-  }, [densityOpen, filtersOpen]);
+  }, [filtersOpen]);
 
   useEffect(() => {
     function closeForHistory() {
       filterCloseIntentRef.current = "history";
       setFiltersOpen(false);
-      setDensityOpen(false);
     }
 
     window.addEventListener("popstate", closeForHistory);
@@ -425,64 +385,6 @@ export const FilterBar = memo(function FilterBar({
             </div>
           </details>
 
-          {/* Behind a trigger rather than beside the projection switch: as two
-              adjacent segmented controls the pair read as one six-segment
-              control with two active items. */}
-          <details
-            className="disclosure density-disclosure"
-            ref={densityRef}
-            open={densityOpen}
-            onToggle={(event) => {
-              if (event.currentTarget.open) clampPopover(event.currentTarget);
-              setDensityOpen(event.currentTarget.open);
-            }}
-          >
-            <summary>Rows</summary>
-            <div className="popover">
-              <div className="popover-head">
-                <span className="menu-label">Row density</span>
-              </div>
-              <div className="segmented" role="group" aria-label="Row density">
-                {DENSITIES.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    aria-label={`${option.label} — ${option.title}`}
-                    aria-pressed={density === option.value}
-                    onClick={() => onDensityChange(option.value)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </details>
-
-          <div className="segmented" role="group" aria-label="Projection">
-            {VIEWS.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                // The visible word has to be inside the accessible name or voice
-                // control cannot activate it (WCAG 2.5.3): "click Table" failed
-                // against an aria-label of "All benchmark columns".
-                aria-label={`${option.label} — ${option.title}`}
-                aria-pressed={view === option.value}
-                onClick={() => {
-                  // Paired with viewport width because the open question this has to
-                  // answer is whether the narrow default is the projection people
-                  // actually want, or the one they immediately switch away from.
-                  trackEvent("projection_switch", {
-                    view: option.value,
-                    width: window.innerWidth,
-                  });
-                  onViewChange(option.value);
-                }}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
         </div>
 
         <div

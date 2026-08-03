@@ -51,7 +51,7 @@ const initializationScript = `
   try {
     if (window.location.pathname === "/") {
       var boardParams = new URLSearchParams(window.location.search);
-      var boardKeys = ["tab", "sort", "direction", "view", "density", "q", "labs", "open"];
+      var boardKeys = ["tab", "sort", "direction", "view", "q", "labs", "open"];
       var ownsBoardState = boardKeys.some(function (key) {
         return boardParams.has(key);
       });
@@ -102,25 +102,14 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  // No `canonical` here. A layout-level canonical is inherited by every route
-  // that does not set its own, which is how /compare, /methodology and out/404
-  // all shipped claiming to be the homepage. Routes declare their own through
-  // `pageMetadata`; this level only carries what is genuinely site-wide.
-  alternates: {
-    types: {
-      "application/atom+xml": [
-        { url: "/feed.xml", title: "LM Board — model data feed" },
-      ],
-    },
-  },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
-      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico?v=2", sizes: "32x32", type: "image/x-icon" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    shortcut: "/favicon.ico",
+    shortcut: "/favicon.ico?v=2",
     apple: [
       {
         url: "/apple-touch-icon.png",

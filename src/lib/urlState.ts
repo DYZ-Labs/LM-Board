@@ -14,7 +14,6 @@ const categories = new Set<RankScope>(RANK_SCOPES);
 
 /** Which projection of the dataset is on screen. */
 export type ViewMode = "table" | "profile" | "plot";
-export type Density = "comfortable" | "compact" | "data";
 /**
  * `null` is the canonical unfiltered state: every provider is included.
  * An empty array is deliberately different — the visitor explicitly selected
@@ -27,7 +26,6 @@ export type BoardUrlState = {
   sort: SortState;
   view: ViewMode;
   viewExplicit: boolean;
-  density: Density;
   query: string;
   providers: ProviderSelection;
   openWeightsOnly: boolean;
@@ -41,7 +39,6 @@ export type BoardUrlContext = {
 };
 
 const views = new Set<ViewMode>(["table", "profile", "plot"]);
-const densities = new Set<Density>(["comfortable", "compact", "data"]);
 
 /**
  * The server and client both default to `table`: it is the fullest markup, so
@@ -50,16 +47,9 @@ const densities = new Set<Density>(["comfortable", "compact", "data"]);
  * presentation; another projection appears only after an explicit choice.
  */
 export const DEFAULT_VIEW: ViewMode = "table";
-export const DEFAULT_DENSITY: Density = "compact";
 
 export function viewFromUrl(value: string | null): ViewMode | null {
   return value && views.has(value as ViewMode) ? (value as ViewMode) : null;
-}
-
-export function densityFromUrl(value: string | null): Density {
-  return value && densities.has(value as Density)
-    ? (value as Density)
-    : DEFAULT_DENSITY;
 }
 
 /* -- Filters --------------------------------------------------------------
@@ -318,7 +308,6 @@ export function parseBoardUrl(
       sort: parsedSort,
       view: requestedView ?? DEFAULT_VIEW,
       viewExplicit: requestedView !== null,
-      density: densityFromUrl(url.searchParams.get("density")),
       query: queryFromUrl(url.searchParams.get("q")),
       providers: providersFromUrl(
         url.searchParams.get("labs"),
@@ -367,11 +356,7 @@ export function serializeBoardUrl(
   if (canonical.viewExplicit) url.searchParams.set("view", canonical.view);
   else url.searchParams.delete("view");
 
-  if (canonical.density === DEFAULT_DENSITY) {
-    url.searchParams.delete("density");
-  } else {
-    url.searchParams.set("density", canonical.density);
-  }
+  url.searchParams.delete("density");
 
   const trimmedQuery = canonical.query.trim();
   if (trimmedQuery) url.searchParams.set("q", trimmedQuery);

@@ -4,9 +4,7 @@ import type { LeaderboardRow, LeaderboardScope } from "./data";
 import type { Benchmark } from "./schema";
 import { DEFAULT_SORT } from "./useSort";
 import {
-  DEFAULT_DENSITY,
   compareFromUrl,
-  densityFromUrl,
   labsFromUrl,
   modelFragment,
   openWeightsFromUrl,
@@ -148,20 +146,6 @@ describe("compareFromUrl", () => {
   });
 });
 
-describe("densityFromUrl", () => {
-  it("accepts every density the board can render", () => {
-    expect(densityFromUrl("comfortable")).toBe("comfortable");
-    expect(densityFromUrl("compact")).toBe("compact");
-    expect(densityFromUrl("data")).toBe("data");
-  });
-
-  it("fails closed to the default", () => {
-    expect(densityFromUrl(null)).toBe(DEFAULT_DENSITY);
-    expect(densityFromUrl("")).toBe(DEFAULT_DENSITY);
-    expect(densityFromUrl("tiny")).toBe(DEFAULT_DENSITY);
-  });
-});
-
 describe("model fragments", () => {
   it("normalizes a model name", () => {
     expect(modelFragment("GPT-5.2 Pro")).toBe("gpt-5-2-pro");
@@ -199,6 +183,7 @@ describe("board URL codec", () => {
     const serialized = serializeBoardUrl(source, parsed, context);
 
     expect(serialized.searchParams.get("utm_source")).toBe("x");
+    expect(serialized.searchParams.has("density")).toBe(false);
     expect(serialized.searchParams.get("labs")).toBe("Anthropic,OpenAI");
     expect(serialized.hash).toBe("#claude-opus-5");
     expect(parseBoardUrl(serialized, context)).toEqual(parsed);

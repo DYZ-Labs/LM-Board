@@ -38,8 +38,8 @@ const criticalStyles = `
     text-transform: uppercase; margin-bottom: 56px;
   }
   .mark::before {
-    content: ""; width: 9px; height: 9px; border-radius: 3px;
-    background: #4da3ff;
+    content: ""; width: 21px; height: 21px; flex: 0 0 auto;
+    background: url("/icon-64.png") center / cover no-repeat;
   }
   .kicker {
     font-size: 11px; font-weight: 600; letter-spacing: 0.05em;

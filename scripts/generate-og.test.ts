@@ -73,8 +73,8 @@ describe("OG generation plan", () => {
       .card();
 
     expect(card.alt).toContain("provider-listed input-token price");
-    expect(card.alt).toContain("Overall Index");
-    expect(card.alt).toContain("efficient frontier");
+    expect(card.alt).toContain("LM Index");
+    expect(card.alt).toContain("best-value line");
     expect(card.alt).not.toContain("side by side");
   });
 

@@ -182,7 +182,6 @@
   --z-command: 40;
   --z-popover: 70;
   --z-tooltip: 80;
-  --z-inspector: 90;
   --z-toast: 200;
   --z-palette: 300;
   --z-skip-link: 1000;
@@ -273,8 +272,8 @@
   --col-bench: 108px;
   --col-price: 116px;
   --col-spark: 152px;
-  --row-h: 36px;
-  --header-h: 40px;
+  --row-h: 40px;
+  --header-h: 46px;
 }
 
 /* The spring easings are the design; the cubic-beziers are the fallback for
@@ -298,18 +297,9 @@
   color-scheme: dark;
 }
 
-/* Density is a data attribute on the board, not a media query: it is a user
-   choice carried in the URL. */
-[data-density="comfortable"] {
-  --row-h: 46px;
-}
-
+/* The board stays at its default row density at every viewport size. */
 [data-density="compact"] {
-  --row-h: 36px;
-}
-
-[data-density="data"] {
-  --row-h: 28px;
+  --row-h: 40px;
 }
 
 }

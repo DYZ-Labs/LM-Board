@@ -21,16 +21,12 @@ export function ChangeStrip({ summary }: ChangeStripProps) {
     <div className="change-strip">
       <p>
         {oldestRetrieved === newestRetrieved
-          ? `All scores retrieved ${formatDate(newestRetrieved)}.`
-          : `All scores retrieved ${formatDate(oldestRetrieved)}–${formatDate(newestRetrieved)}.`}{" "}
+          ? `Scores retrieved ${formatDate(newestRetrieved)}`
+          : `Scores retrieved ${formatDate(oldestRetrieved)}–${formatDate(newestRetrieved)}`}{" "}
         {recentModels > 0
-          ? `${recentModels} model${recentModels === 1 ? "" : "s"} released in the last 45 days.`
+          ? `· ${recentModels} model${recentModels === 1 ? "" : "s"} released in the last 45 days`
           : null}
       </p>
-      <a className="link" href="/feed.xml">
-        Model data feed
-        <span className="sr-only"> (Atom)</span>
-      </a>
     </div>
   );
 }

@@ -18,7 +18,6 @@ export default function robots(): MetadataRoute.Robots {
         "/404.txt",
         "/compare.txt",
         "/methodology.txt",
-        "/value.txt",
         "/model/*.txt$",
       ],
     },

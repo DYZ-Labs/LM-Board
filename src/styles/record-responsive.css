@@ -2,6 +2,54 @@
 @layer responsive {
 
 @media (max-width: 640px) {
+  .compare-page .longform-intro {
+    padding-bottom: var(--s-6);
+  }
+
+  .compare-picker {
+    margin-bottom: var(--s-6);
+  }
+
+  .compare-picker-head {
+    gap: var(--s-4);
+  }
+
+  .compare-picker-head p {
+    display: none;
+  }
+
+  .compare-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .compare-controls > .btn {
+    width: 100%;
+  }
+
+  .compare-quick {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .compare-quick > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compare-quick .btn {
+    min-width: 0;
+    white-space: normal;
+  }
+
+  .compare-scroll-cue {
+    display: block;
+    margin: 0 0 var(--s-3);
+    font-size: var(--t-11);
+    text-align: right;
+    color: var(--fg-tertiary);
+  }
+
   .longform .board-scroll:has(.compare-grid) {
     max-height: none;
     overflow-x: auto;
@@ -16,15 +64,57 @@
     table-layout: auto;
   }
 
-  .compare-grid tbody th {
+  .compare-grid :is(thead th:first-child, tbody th) {
     position: sticky;
     left: 0;
+    z-index: var(--z-pinned-cell);
+    width: 112px;
+    min-width: 112px;
+    max-width: 112px;
     background: var(--bg-raised);
+    white-space: normal;
   }
 
   .compare-grid :is(thead th:not(:first-child), tbody td) {
-    min-width: 104px;
-    white-space: nowrap;
+    min-width: 132px;
+  }
+
+  .compare-grid thead th:not(:first-child) {
+    position: relative;
+    padding-right: 36px;
+    vertical-align: top;
+  }
+
+  .compare-grid thead .btn-icon {
+    position: absolute;
+    top: var(--s-3);
+    right: var(--s-2);
+    margin-left: 0;
+  }
+
+  .compare-grid th,
+  .compare-grid td {
+    padding: var(--s-4);
+  }
+
+  .compare-grid tbody td {
+    white-space: normal;
+  }
+
+  .compare-model-heading {
+    max-width: 100%;
+  }
+
+  .compare-model-heading a {
+    white-space: normal;
+  }
+
+  .compare-empty {
+    padding-block: var(--s-8);
+  }
+
+  .compare-note {
+    margin-top: var(--s-3);
   }
 
   .record-scopes > :last-child:nth-child(odd) {

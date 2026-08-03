@@ -46,6 +46,7 @@ const WIDE = new Set("MWmw@%");
 type ScatterPlotProps = {
   category: RankScope;
   syncPointToUrl?: boolean;
+  variant?: "default" | "value";
 } & (
   | { rows: readonly PlotRow[]; payload?: never }
   | { payload: PlotPayload; rows?: never }
@@ -97,7 +98,12 @@ function priceTickLabel(value: number) {
  * every plotted value.
  */
 export function ScatterPlot(props: ScatterPlotProps) {
-  const { category, syncPointToUrl = false } = props;
+  const {
+    category,
+    syncPointToUrl = false,
+    variant = "default",
+  } = props;
+  const isValueView = variant === "value";
   const payload = "payload" in props ? props.payload : undefined;
   const rows = "rows" in props ? props.rows : undefined;
   const scopedRows = useMemo(
@@ -114,6 +120,10 @@ export function ScatterPlot(props: ScatterPlotProps) {
     category === "overall"
       ? "Overall"
       : `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
+  const indexLabel =
+    isValueView && category === "overall"
+      ? "LM Index"
+      : `${scopeLabel} Index`;
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const recordLinkRef = useRef<HTMLAnchorElement | null>(null);
 
@@ -371,8 +381,8 @@ export function ScatterPlot(props: ScatterPlotProps) {
     return (
       <div className="compare-empty">
         <p>
-          No model in this view has both a listed price and a {scopeLabel}{" "}
-          Index, so there is nothing to plot.
+          No model in this view has both a listed price and a value for{" "}
+          {indexLabel}, so there is nothing to plot.
         </p>
       </div>
     );
@@ -384,7 +394,7 @@ export function ScatterPlot(props: ScatterPlotProps) {
     points.find((point) => point.row.model.id === selectedId) ??
     [...points].sort((a, b) => b.index - a.index)[0]!;
   const selectedDomId = `plot-point-${selectedPoint.row.model.id}`;
-  const pointDescription = `${selectedPoint.row.model.name}, ${selectedPoint.row.model.lab}. ${scopeLabel} Index ${formatScore(
+  const pointDescription = `${selectedPoint.row.model.name}, ${selectedPoint.row.model.lab}. ${indexLabel} ${formatScore(
     selectedPoint.index,
   )}, rank ${selectedPoint.row.scope.rank ?? "unranked"} of ${
     selectedPoint.row.scope.rankedFieldSize
@@ -462,18 +472,34 @@ export function ScatterPlot(props: ScatterPlotProps) {
   }
 
   return (
-    <div className="plot-frame">
+    <div
+      className="plot-frame"
+      data-surface={isValueView ? "value" : undefined}
+    >
       <div className="plot-head">
-        <h2>{scopeLabel} Index against input price</h2>
-        <p className="plot-sub text-tertiary">
-          {points.length} model{points.length === 1 ? "" : "s"} plotted · input
-          price in USD per million tokens · positive prices use a log scale
-          {hasFree ? " with a separate Free lane" : ""} · higher Index and lower
-          price are better
-          {excluded > 0
-            ? ` · ${excluded} not plotted, with no listed price or no ${scopeLabel} Index`
-            : ""}
-        </p>
+        <h2 className={isValueView ? "sr-only" : undefined}>
+          {indexLabel} against input price
+        </h2>
+        {isValueView ? (
+          <p className="plot-guide text-tertiary">
+            <span>↑ Higher LM Index</span>
+            <span>← Lower input price</span>
+            <span>
+              {points.length} priced model{points.length === 1 ? "" : "s"}
+            </span>
+          </p>
+        ) : (
+          <p className="plot-sub text-tertiary">
+            {points.length} model{points.length === 1 ? "" : "s"} plotted ·
+            input price in USD per million tokens · positive prices use a log
+            scale
+            {hasFree ? " with a separate Free lane" : ""} · higher Index and
+            lower price are better
+            {excluded > 0
+              ? ` · ${excluded} not plotted, with no listed price or no ${scopeLabel} Index`
+              : ""}
+          </p>
+        )}
       </div>
 
       <section className="plot-inspector" aria-labelledby="plot-selection">
@@ -486,7 +512,7 @@ export function ScatterPlot(props: ScatterPlotProps) {
         </div>
         <dl>
           <div>
-            <dt>{scopeLabel} Index</dt>
+            <dt>{indexLabel}</dt>
             <dd className="num">{formatScore(selectedPoint.index)}</dd>
           </div>
           <div>
@@ -498,29 +524,65 @@ export function ScatterPlot(props: ScatterPlotProps) {
             </dd>
           </div>
           <div>
-            <dt>Input / output</dt>
+            <dt>{isValueView ? "Input price / 1M" : "Input / output"}</dt>
             <dd className="num">
-              {selectedPoint.free
-                ? "Free"
-                : `$${formatPrice(selectedPoint.price)}`}{" "}
-              / ${formatPrice(selectedPoint.row.model.pricing!.output)}
+              {isValueView ? (
+                selectedPoint.free ? (
+                  "Free"
+                ) : (
+                  `$${formatPrice(selectedPoint.price)}`
+                )
+              ) : (
+                <>
+                  {selectedPoint.free
+                    ? "Free"
+                    : `$${formatPrice(selectedPoint.price)}`}{" "}
+                  / ${formatPrice(selectedPoint.row.model.pricing!.output)}
+                </>
+              )}
             </dd>
           </div>
           <div>
-            <dt>Position</dt>
+            <dt>{isValueView ? "Value status" : "Position"}</dt>
             <dd>
-              {selectedPoint.frontier ? "Efficient frontier" : "Inside field"}
+              {isValueView
+                ? selectedPoint.frontier
+                  ? "Best value"
+                  : "Other option"
+                : selectedPoint.frontier
+                  ? "Efficient frontier"
+                  : "Inside field"}
             </dd>
           </div>
         </dl>
-        <Link
-          ref={recordLinkRef}
-          className="btn"
-          href={`/model/${selectedPoint.row.model.id}`}
-          prefetch={false}
-        >
-          Open model record
-        </Link>
+        {isValueView ? (
+          <div className="plot-actions">
+            <Link
+              className="btn btn-primary"
+              href={`/compare?models=${encodeURIComponent(selectedPoint.row.model.id)}`}
+              prefetch={false}
+            >
+              Compare this model
+            </Link>
+            <Link
+              ref={recordLinkRef}
+              className="btn"
+              href={`/model/${selectedPoint.row.model.id}`}
+              prefetch={false}
+            >
+              View model details
+            </Link>
+          </div>
+        ) : (
+          <Link
+            ref={recordLinkRef}
+            className="btn"
+            href={`/model/${selectedPoint.row.model.id}`}
+            prefetch={false}
+          >
+            Open model record
+          </Link>
+        )}
       </section>
       <p
         className="sr-only"
@@ -536,7 +598,7 @@ export function ScatterPlot(props: ScatterPlotProps) {
           className="plot-area"
           role="listbox"
           tabIndex={0}
-          aria-label={`${scopeLabel} Index against input price. Use left and right arrows for price, up and down arrows for Index, and Enter to open the selected model.`}
+          aria-label={`${indexLabel} against input price. Use left and right arrows for price, up and down arrows for Index, and Enter to open the selected model.`}
           aria-activedescendant={selectedDomId}
           onKeyDown={onPlotKeyDown}
         >
@@ -654,7 +716,7 @@ export function ScatterPlot(props: ScatterPlotProps) {
                   point.frontier ? " is-front" : ""
                 }${selected ? " is-selected" : ""}`}
                 style={{ left: `${point.x}%`, top: `${point.y}%` }}
-                aria-label={`${point.row.model.name}: ${scopeLabel} Index ${formatScore(
+                aria-label={`${point.row.model.name}: ${indexLabel} ${formatScore(
                   point.index,
                 )}, ${
                   point.free
@@ -713,34 +775,44 @@ export function ScatterPlot(props: ScatterPlotProps) {
             </span>
           ))}
         </div>
+        {isValueView ? (
+          <p className="plot-axis-labels text-tertiary" aria-hidden="true">
+            <span>LM Index ↑</span>
+            <span>Input price / 1M →</span>
+          </p>
+        ) : null}
       </div>
 
       <p className="plot-legend text-tertiary">
         <span className="row">
-          <i aria-hidden="true" /> Closed weights
+          <i aria-hidden="true" />{" "}
+          {isValueView ? "Filled: closed weights" : "Closed weights"}
         </span>
         <span className="row">
-          <i className="is-open" aria-hidden="true" /> Open weights
+          <i className="is-open" aria-hidden="true" />{" "}
+          {isValueView ? "Ring: open weights" : "Open weights"}
         </span>
         <span className="row">
-          <i className="is-line" aria-hidden="true" /> Efficient frontier in
-          this view
+          <i className="is-line" aria-hidden="true" />{" "}
+          {isValueView ? "Blue line: best value" : "Efficient frontier in this view"}
         </span>
       </p>
 
       <details className="plot-data">
-        <summary>View plotted data</summary>
+        <summary>
+          {isValueView ? "Show all plotted models" : "View plotted data"}
+        </summary>
         <div className="table-region" tabIndex={0}>
           <table>
             <caption>
-              {scopeLabel} Index against input price for every plotted model.{" "}
+              {indexLabel} against input price for every plotted model.{" "}
               {frontier.length} models sit on the efficient frontier in this
               view.
             </caption>
             <thead>
               <tr>
                 <th scope="col">Model</th>
-                <th scope="col">{scopeLabel} Index</th>
+                <th scope="col">{indexLabel}</th>
                 <th scope="col">Input price / 1M</th>
                 <th scope="col">Weights</th>
                 <th scope="col">Efficient frontier</th>
@@ -778,7 +850,11 @@ export function ScatterPlot(props: ScatterPlotProps) {
 
       {excluded > 0 ? (
         <details className="plot-excluded">
-          <summary>Not plotted ({excluded})</summary>
+          <summary>
+            {isValueView
+              ? `Models without price or LM Index (${excluded})`
+              : `Not plotted (${excluded})`}
+          </summary>
           <ul>
             {scopedRows
               .filter(
@@ -792,7 +868,7 @@ export function ScatterPlot(props: ScatterPlotProps) {
                   {" — "}
                   {row.model.pricing == null
                     ? "no listed input price"
-                    : `no ${scopeLabel} Index`}
+                    : `no ${indexLabel}`}
                 </li>
               ))}
           </ul>

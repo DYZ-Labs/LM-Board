@@ -8,11 +8,11 @@ LM Board does not run evals — it curates published ones. Every score is stored
 
 ## What the board does
 
-The leaderboard computes a transparent, coverage-gated Index for Overall and each benchmark category, with canonical ranks precomputed per scope. Every column sorts; benchmark columns and scoped ranking switch by category; provider, search, and open-weight filters combine; and an inline source panel backs every model and score. Category, sort, direction, projection, density, and expanded-model state are all reflected in the URL, so a specific view can be shared directly.
+The leaderboard computes a transparent, coverage-gated Index for Overall and each benchmark category, with canonical ranks precomputed per scope. Every column sorts; benchmark columns and scoped ranking switch by category; provider, search, and open-weight filters combine; and an inline source panel backs every model and score. Category, sort, direction, projection, filters, and expanded-model state are reflected in the URL, so a specific view can be shared directly.
 
-The board renders in three explicit projections — `table` (every benchmark column), `profile` (compact, with a per-model score spark), and `plot` (price against Index) — at three row densities. The server always renders the full table, CSS turns that same markup into ranked cards on phones, and viewport size never changes the selected projection or URL after hydration. Every model has a citable record at `/model/<id>`, `/compare` puts up to four models side by side, and `/value` provides a shareable price-versus-performance view.
+The board renders in three explicit projections — `table` (every benchmark column), `profile` (compact, with a per-model score spark), and `plot` (price against Index). The server always renders the full table, CSS turns that same markup into ranked cards on phones, and viewport size never changes the selected projection or URL after hydration. Every model has a citable record at `/model/<id>`, and `/compare` puts up to four models side by side.
 
-The static export ships complete social/search metadata: generated site and per-model Open Graph cards, favicon, web manifest, robots rules, sitemap, an Atom model-data feed, and `llms.txt`.
+The static export ships complete social/search metadata: generated site and per-model Open Graph cards, favicons, a web manifest, robots rules, a sitemap, and `llms.txt`. A static `palette.json` powers the deferred command palette.
 
 ## Requirements
 
@@ -91,11 +91,11 @@ GitHub disables scheduled workflows after 60 days without repository activity; a
 
 - **Rollback:** If the site is down or a deploy is bad, open the LM Board project in the Vercel dashboard, go to **Deployments**, select the previous known-good deployment, and choose **Promote**. If a data commit caused the problem, `git revert <commit>` on a new branch, open and merge the resulting pull request, and let Vercel deploy it.
 - **Monitoring and alerts:** `.github/workflows/monitor-production.yml` checks
-  `/`, `/compare`, `/value`, a deterministic model record, and `/feed.xml` every 15
-  minutes. It verifies status, content type, content sentinels, redirect origin,
-  response size, and security headers with bounded requests. Failures open or
-  update one `bug` issue assigned to `@thedanielyuan`; a healthy run closes the
-  incident. Run the same probe manually with
+  `/`, `/compare`, and a deterministic model record every 15 minutes. It
+  verifies status, content type, content sentinels, redirect origin, response
+  size, and security headers with bounded requests. Failures open or update one
+  `bug` issue assigned to `@thedanielyuan`; a healthy run closes the incident.
+  Run the same probe manually with
   `npm run monitor:production -- --base-url https://www.checklmboard.xyz`.
 - **Discovery credential:** Discovery needs only `AA_API_KEY`; repository writes
   use the short-lived workflow token on a separate publishing runner, and

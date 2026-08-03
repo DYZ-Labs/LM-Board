@@ -80,18 +80,6 @@ export function buildPaletteEntries(
       },
     })),
     {
-      id: "view-value",
-      kind: "go" as const,
-      detail: "Price versus performance",
-      href: "/value",
-      rank: null,
-      target: {
-        name: "Value and efficient frontier",
-        lab: "",
-        id: "value",
-      },
-    },
-    {
       id: "view-compare",
       kind: "go" as const,
       detail: "Head to head",
