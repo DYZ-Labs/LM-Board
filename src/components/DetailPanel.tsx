@@ -99,7 +99,7 @@ export function DetailPanel({
                 <div>
                   <dt>Weights</dt>
                   <dd>
-                    {model.openWeights ? "Open weights" : "Closed weights"}
+                    {model.openWeights ? "Open weights" : "Proprietary"}
                   </dd>
                 </div>
                 <div>

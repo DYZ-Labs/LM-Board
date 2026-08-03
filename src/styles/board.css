@@ -912,9 +912,8 @@ html[data-board-pending-filters="true"] .leaderboard .command-bar::after {
     width: 5px;
   }
 
-  /* The provider and effort chips do not fit beside the name at this width,
-     and both are on the model's own record one tap away. The open-weights
-     chip stays: it is the one attribute people filter on. */
+  /* The provider and effort labels do not fit beside the name at this width,
+     and both are on the model's own record one tap away. */
   .model-lab,
   .model-primary-line .badge:not(.badge-pos) {
     display: none;

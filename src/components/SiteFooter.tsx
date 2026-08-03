@@ -71,14 +71,7 @@ export function SiteFooter({
           prefetch={false}
           aria-current={current === "choose" ? "page" : undefined}
         >
-          Choose
-        </Link>
-        <Link
-          href="/methodology"
-          prefetch={false}
-          aria-current={current === "methodology" ? "page" : undefined}
-        >
-          Methodology
+          Find
         </Link>
         <Link
           href="/compare"
@@ -86,6 +79,13 @@ export function SiteFooter({
           aria-current={current === "compare" ? "page" : undefined}
         >
           Compare
+        </Link>
+        <Link
+          href="/methodology"
+          prefetch={false}
+          aria-current={current === "methodology" ? "page" : undefined}
+        >
+          Methodology
         </Link>
         {repositoryUrl ? (
           <a

@@ -255,10 +255,7 @@
   stroke-width: 1.6;
 }
 
-/* Key caps. Stripe prints one inside its sidebar search: it is the only place
-   a shortcut can be advertised without spending a line of chrome, and it
-   yields the moment the field is in use so it never fights .field-clear. */
-.field-key,
+/* Key caps in the command palette footer. */
 .palette-foot kbd {
   flex: 0 0 auto;
   padding: 1px var(--s-2);
@@ -268,11 +265,6 @@
   font-size: var(--t-10);
   line-height: var(--lh-12);
   color: var(--fg-tertiary);
-}
-
-.field:focus-within .field-key,
-.field.has-value .field-key {
-  display: none;
 }
 
 .field-clear {

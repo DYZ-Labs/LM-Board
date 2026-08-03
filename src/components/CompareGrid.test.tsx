@@ -150,6 +150,18 @@ describe("populated comparison", () => {
     expect(screen.queryByText(/Best score in each row/)).not.toBeInTheDocument();
   });
 
+  it("labels non-open weights as proprietary", async () => {
+    go("/compare?models=alpha,beta");
+    render(comparison());
+
+    await screen.findByRole("link", { name: "Alpha" });
+    const weightsRow = screen.getByRole("rowheader", {
+      name: "Weights",
+    }).parentElement;
+    expect(weightsRow).toHaveTextContent("WeightsProprietaryOpen");
+    expect(weightsRow).not.toHaveTextContent("Closed");
+  });
+
   it("restores focus after column removal and politely announces the count", async () => {
     go("/compare?models=alpha,beta");
     const user = userEvent.setup();

@@ -9,6 +9,7 @@ import { formatScore } from "@/lib/format";
 
 const data = loadLeaderboardData();
 const leader = data.rows.find((row) => row.scopes.overall.rank === 1)!;
+const proprietary = data.rows.find((row) => !row.model.openWeights)!;
 const last = [...data.rows]
   .filter((row) => row.scopes.overall.rank !== null)
   .sort((a, b) => b.scopes.overall.rank! - a.scopes.overall.rank!)[0]!;
@@ -72,6 +73,15 @@ describe("FieldStrip", () => {
 });
 
 describe("ModelRecord standing", () => {
+  it("labels non-open weights as proprietary", () => {
+    const { container } = render(
+      <ModelRecord row={proprietary} benchmarks={data.benchmarks} />,
+    );
+
+    expect(container).toHaveTextContent("Proprietary");
+    expect(container).not.toHaveTextContent(/closed weights/i);
+  });
+
   it("prints the field a rank was measured against", () => {
     const { getAllByText } = render(
       <ModelRecord row={leader} benchmarks={data.benchmarks} />,

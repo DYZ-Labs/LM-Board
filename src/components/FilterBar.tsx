@@ -288,9 +288,6 @@ export const FilterBar = memo(function FilterBar({
             }}
             placeholder="Search models, e.g. GPT-5, Anthropic"
           />
-          <kbd className="field-key" aria-hidden="true">
-            /
-          </kbd>
           {query ? (
             <button
               type="button"

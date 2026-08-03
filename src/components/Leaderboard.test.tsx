@@ -259,6 +259,30 @@ describe("category switching", () => {
 });
 
 describe("filtering", () => {
+  it("omits open-weight badges and the visible search shortcut", () => {
+    render(board());
+
+    expect(document.querySelector(".model-primary-line .badge-pos")).toBeNull();
+    expect(document.querySelector(".search-field .field-key")).toBeNull();
+  });
+
+  it("labels proprietary model details without calling their weights closed", async () => {
+    const proprietary = data.rows.find((row) => !row.model.openWeights)!;
+    render(board());
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(`^Show details for ${proprietary.model.name}`),
+      }),
+    );
+    const panel = screen.getByRole("region", {
+      name: `${proprietary.model.name} details`,
+    });
+
+    expect(within(panel).getByText("Proprietary")).toBeInTheDocument();
+    expect(panel).not.toHaveTextContent(/closed weights/i);
+  });
+
   it("narrows rows without renumbering ranks", async () => {
     const user = userEvent.setup();
     render(board());

@@ -143,6 +143,31 @@ describe("page hierarchy and navigation", () => {
 });
 
 describe("the site footer", () => {
+  it("mirrors the masthead navigation labels and sequence", () => {
+    const { container } = render(
+      <>
+        <SiteMasthead />
+        <SiteFooter current="leaderboard" repositoryUrl={null} />
+      </>,
+    );
+    const mastheadLabels = [...container.querySelectorAll(".site-nav > a")].map(
+      (link) => link.textContent,
+    );
+    const footerLabels = [
+      ...container.querySelectorAll(".site-footer nav > a"),
+    ]
+      .slice(0, mastheadLabels.length)
+      .map((link) => link.textContent);
+
+    expect(mastheadLabels).toEqual([
+      "Leaderboard",
+      "Find",
+      "Compare",
+      "Methodology",
+    ]);
+    expect(footerLabels).toEqual(mastheadLabels);
+  });
+
   it("keeps Methodology reachable whatever a route passes as its page link", () => {
     // Every model record and /compare passed a pageLink that *replaced* the
     // Methodology link, so the page justifying every number on the board was
