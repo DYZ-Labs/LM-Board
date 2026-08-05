@@ -15,6 +15,7 @@ export type DataIntegrityResult = {
 
 export type CandidateSource = {
   sourceSlug: string;
+  sourceUrl: string;
   candidates: readonly Candidate[];
 };
 
@@ -50,6 +51,31 @@ function dateDaysBefore(date: Date, days: number): string {
 
 function compareStrings(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0;
+}
+
+export function matchesSourceHost(
+  sourceUrl: string,
+  allowEntry: string,
+): boolean {
+  const url = new URL(sourceUrl);
+  const slashIndex = allowEntry.indexOf("/");
+  const allowedHost = (
+    slashIndex === -1 ? allowEntry : allowEntry.slice(0, slashIndex)
+  ).toLowerCase();
+
+  if (url.hostname.toLowerCase() !== allowedHost) return false;
+  if (slashIndex === -1) return true;
+
+  const allowedPath = `/${allowEntry.slice(slashIndex + 1)}`.toLowerCase();
+  const sourcePath = url.pathname.toLowerCase();
+
+  return sourcePath === allowedPath || sourcePath.startsWith(`${allowedPath}/`);
+}
+
+export function getSourceUrlPinningWarning(sourceUrl: string): string | null {
+  if (/\d/.test(new URL(sourceUrl).pathname)) return null;
+
+  return `Source URL "${sourceUrl}" has no digit in its path. This is a heuristic for a generic page; check that the page is version-pinned or dated and will continue to show the recorded value.`;
 }
 
 export function validateDataIntegrity(
@@ -142,17 +168,26 @@ export function validateDataIntegrity(
         `${prefix}: unknown publisherId "${measurement.publisherId}"`,
       );
       measurementsCanResolve = false;
-    } else if (publisher.type === "vendor") {
-      const publisherHost = new URL(publisher.url).hostname;
+    } else {
       const sourceHost = new URL(measurement.source.url).hostname;
 
-      if (sourceHost !== publisherHost) {
+      if (
+        !publisher.sourceHosts.some((allowEntry) =>
+          matchesSourceHost(measurement.source.url, allowEntry),
+        )
+      ) {
+        const allowedEntries = publisher.sourceHosts
+          .map((entry) => `"${entry}"`)
+          .join(", ");
         errors.push(
-          `${prefix}.source.url: vendor publisher "${publisher.id}" must use host "${publisherHost}", not "${sourceHost}"`,
+          `${prefix}.source.url: publisher "${publisher.id}" rejected host "${sourceHost}"; allowed sourceHosts: ${allowedEntries}`,
         );
       }
 
-      if (publisher.vendorForLab === undefined) {
+      if (
+        publisher.type === "vendor" &&
+        publisher.vendorForLab === undefined
+      ) {
         errors.push(
           `${prefix}: vendor publisher "${publisher.id}" must declare vendorForLab`,
         );
@@ -192,6 +227,11 @@ export function validateDataIntegrity(
       measurementsCanResolve = false;
     }
     measurementTriples.add(triple);
+
+    const sourceWarning = getSourceUrlPinningWarning(measurement.source.url);
+    if (sourceWarning !== null) {
+      warnings.push(`${prefix}.source.url: ${sourceWarning}`);
+    }
   }
 
   for (const benchmark of benchmarkById.values()) {
@@ -292,6 +332,13 @@ export function validateDataIntegrity(
   for (const source of [...candidateSources].sort((left, right) =>
     compareStrings(left.sourceSlug, right.sourceSlug),
   )) {
+    const sourceWarning = getSourceUrlPinningWarning(source.sourceUrl);
+    if (sourceWarning !== null) {
+      warnings.push(
+        `Candidate source "${source.sourceSlug}" source.url: ${sourceWarning}`,
+      );
+    }
+
     const pendingCount = source.candidates.filter(
       ({ review }) => review === "pending",
     ).length;

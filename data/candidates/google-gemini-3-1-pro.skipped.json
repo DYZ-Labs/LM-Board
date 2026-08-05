@@ -1,6 +1,6 @@
 {
   "source": {
-    "url": "https://deepmind.google/models/gemini/pro/",
+    "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
     "retrieved": "2026-08-05"
   },
   "skipped": [
@@ -220,6 +220,116 @@
         "quote": "<tr><th rowspan=2 scope=row>MRCR v2 (8-needle) <small class=text-small>Long context performance</small></th><td><small class=text-small>128k (average)</small></td><td><strong>84.9%</strong></td><td>77.0%</td><td><strong>84.9%</strong></td><td>84.0%</td><td>83.8%</td><td>—</td></tr><tr><td><small class=text-small>1M (pointwise)</small></td><td>26.3%</td><td>26.3%</td><td><small class=text-small>Not supported</small></td><td><small class=text-small>Not supported</small></td><td><small class=text-small>Not supported</small></td><td>—</td></tr>",
         "printedBenchmarkName": "MRCR v2 (8-needle) Long context performance",
         "printedConditions": "1M (pointwise)",
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>Text to Text Safety</th><td>Automated content safety evaluation measuring safety policies</td><td>+0.10% (non-egregious)</td></tr>",
+        "printedBenchmarkName": "Text to Text Safety",
+        "printedConditions": null,
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>Multilingual Safety</th><td>Automated safety policy evaluation across multiple languages</td><td>+0.11% (non-egregious)</td></tr>",
+        "printedBenchmarkName": "Multilingual Safety",
+        "printedConditions": null,
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>Image to Text Safety</th><td>Automated content safety evaluation measuring safety policies</td><td>-0.33%</td></tr>",
+        "printedBenchmarkName": "Image to Text Safety",
+        "printedConditions": null,
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>Tone<sup>2</sup></th><td>Automated evaluation measuring objective tone of model refusal</td><td>+0.02%</td></tr>",
+        "printedBenchmarkName": "Tone 2",
+        "printedConditions": null,
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>Unjustified-refusals</th><td>Automated evaluation measuring model’s ability to respond to borderline prompts while remaining safe</td><td>-0.08%</td></tr>",
+        "printedBenchmarkName": "Unjustified-refusals",
+        "printedConditions": null,
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>CBRN</th><td>(Deep Think mode) The model can provide highly accurate and actionable information but still fails to offer novel or sufficiently complete and detailed instructions for critical stages, to significantly enhance the capabilities of low to medium resourced threat actors required for the CCL. We continue to deploy mitigations in this domain.</td><td>Uplift Level 1</td><td>CCL not reached</td></tr>",
+        "printedBenchmarkName": "CBRN",
+        "printedConditions": null,
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>Cyber</th><td>(3.1 Pro) We conducted additional testing on the model in this domain as Gemini 3 Pro had previously reached the alert threshold. The model shows an increase in cyber capabilities compared to Gemini 3 Pro. As with Gemini 3 Pro, the model has reached the alert threshold, but still does not reach the levels of uplift required for the CCL. <br><br> (Deep Think mode) Accounting for inference costs, the model with Deep Think mode performs considerably worse than without Deep Think mode. Even at high levels of inference, results for the model with Deep Think mode do not suggest higher capability than without Deep Think mode. <br><br> We continue to deploy mitigations in this domain.</td><td>Uplift Level 1</td><td>CCL not reached</td></tr>",
+        "printedBenchmarkName": "Cyber",
+        "printedConditions": null,
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>Harmful Manipulation</th><td>(Deep Think mode) Evaluations indicated that the model showed higher manipulative efficacy for belief change metrics compared to a non-AI baseline, with the maximum odds ratio of 3.6x, which is the same as Gemini 3 Pro, and did not reach the alert threshold.</td><td>Level 1 (exploratory)</td><td>CCL not reached</td></tr>",
+        "printedBenchmarkName": "Harmful Manipulation",
+        "printedConditions": null,
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>Machine Learning R&D</th><td>(Deep Think mode) The model shows gains on RE-Bench compared to Gemini 3 Pro, with a human-normalised average score of 1.27 compared to Gemini 3 Pro's score of 1.04. On one particular challenge, Optimise LLM Foundry, it scores double the human-normalised baseline score (reducing the runtime of a fine-tuning script from 300 seconds to 47 seconds, compared to the human reference solution of 94 seconds). However, the model’s average performance across all challenges remains beneath the alert threshold for the CCLs.</td><td>Acceleration level 1<br> Automation level 1</td><td>CCLs not reached</td></tr>",
+        "printedBenchmarkName": "Machine Learning R&D",
+        "printedConditions": null,
+        "printedColumnHeader": null
+      },
+      "rawValue": null
+    },
+    {
+      "outcome": "reject",
+      "reason": "Printed benchmark is not one of LM Board's curated benchmarks",
+      "evidence": {
+        "quote": "<tr><th scope=row>Misalignment (Exploratory)</th><td>(Deep Think mode) On stealth evaluations, the model performs similarly to Gemini 3 Pro. On situational awareness, the model is stronger than Gemini 3 Pro: on three challenges which no other model has been able to consistently solve, max tokens, context size mod, and oversight frequency, the model achieves a success rate of almost 100%. However, its performance on other challenges is inconsistent, and thus the model does not reach the alert threshold.</td><td>Instrumental Reasoning<br> Levels 1 + 2 (exploratory)</td><td>CCLs not reached</td></tr>",
+        "printedBenchmarkName": "Misalignment (Exploratory)",
+        "printedConditions": null,
         "printedColumnHeader": null
       },
       "rawValue": null

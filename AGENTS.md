@@ -93,7 +93,9 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
   disagreement.
 - Vendor provenance is derived, not stored: a vendor measuring its own
   `vendorForLab` is self-reported, while the same vendor measuring another lab is
-  competitor-reported. Both must cite the publishing vendor's own host.
+  competitor-reported. Every measurement source must match one of its publisher's
+  exact `sourceHosts` entries; entries containing a path pin that host to a full
+  path-segment prefix, including vendor-controlled Hugging Face namespaces.
 - Vendor-page extraction writes only pending records in `data/candidates/`.
   Every candidate needs a verbatim page quote and printed benchmark/header
   evidence. Review with `npm run review:candidates`; promote only a fully

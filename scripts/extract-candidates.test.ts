@@ -4,10 +4,12 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { Model } from "../src/lib/schema";
+import type { Model, Publisher } from "../src/lib/schema";
 import {
+  assertPublisherSourceAllowed,
   extractCandidatesFromText,
   loadExtractionSource,
+  warnIfSourceUrlMayBeUnpinned,
 } from "./extract-candidates";
 
 const models: Model[] = [
@@ -36,6 +38,16 @@ const source = {
   models,
 };
 
+const publisher: Publisher = {
+  id: "alpha",
+  name: "Alpha",
+  url: "https://alpha.example",
+  sourceHosts: ["alpha.example", "huggingface.co/alpha"],
+  type: "vendor",
+  runsOwnEvals: true,
+  vendorForLab: "Alpha",
+};
+
 const temporaryDirectories: string[] = [];
 
 afterEach(async () => {
@@ -44,6 +56,49 @@ afterEach(async () => {
       rm(directory, { recursive: true, force: true }),
     ),
   );
+});
+
+describe("assertPublisherSourceAllowed", () => {
+  it("accepts an allowlisted namespace and explains a rejection", () => {
+    expect(() =>
+      assertPublisherSourceAllowed(
+        "https://huggingface.co/alpha/Alpha-2",
+        publisher,
+      ),
+    ).not.toThrow();
+    expect(() =>
+      assertPublisherSourceAllowed(
+        "https://huggingface.co/alpha-mirror/Alpha-2",
+        publisher,
+      ),
+    ).toThrow(
+      'Publisher "alpha" rejected source host "huggingface.co"; allowed sourceHosts: "alpha.example", "huggingface.co/alpha"',
+    );
+  });
+});
+
+describe("warnIfSourceUrlMayBeUnpinned", () => {
+  it("surfaces the shared heuristic warning without blocking extraction", () => {
+    const warn = vi.fn();
+
+    warnIfSourceUrlMayBeUnpinned(
+      "https://alpha.example/models/current",
+      warn,
+    );
+    expect(warn).toHaveBeenCalledOnce();
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "This is a heuristic for a generic page; check that the page is version-pinned or dated",
+      ),
+    );
+
+    warn.mockClear();
+    warnIfSourceUrlMayBeUnpinned(
+      "https://alpha.example/models/alpha-2",
+      warn,
+    );
+    expect(warn).not.toHaveBeenCalled();
+  });
 });
 
 describe("extractCandidatesFromText", () => {

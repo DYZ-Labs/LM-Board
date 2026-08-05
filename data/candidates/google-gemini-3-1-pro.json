@@ -1,6 +1,6 @@
 {
   "source": {
-    "url": "https://deepmind.google/models/gemini/pro/",
+    "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
     "retrieved": "2026-08-05"
   },
   "candidates": [
@@ -10,7 +10,7 @@
       "publisherId": "google-deepmind",
       "value": 44.4,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -28,7 +28,7 @@
       "publisherId": "google-deepmind",
       "value": 37.5,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -46,7 +46,7 @@
       "publisherId": "google-deepmind",
       "value": 33.2,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -64,7 +64,7 @@
       "publisherId": "google-deepmind",
       "value": 40,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -82,7 +82,7 @@
       "publisherId": "google-deepmind",
       "value": 34.5,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -100,7 +100,7 @@
       "publisherId": "google-deepmind",
       "value": 51.4,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -118,7 +118,7 @@
       "publisherId": "google-deepmind",
       "value": 45.8,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -136,7 +136,7 @@
       "publisherId": "google-deepmind",
       "value": 49,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -154,7 +154,7 @@
       "publisherId": "google-deepmind",
       "value": 53.1,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -172,7 +172,7 @@
       "publisherId": "google-deepmind",
       "value": 45.5,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -190,7 +190,7 @@
       "publisherId": "google-deepmind",
       "value": 94.3,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -208,7 +208,7 @@
       "publisherId": "google-deepmind",
       "value": 91.9,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -226,7 +226,7 @@
       "publisherId": "google-deepmind",
       "value": 89.9,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -244,7 +244,7 @@
       "publisherId": "google-deepmind",
       "value": 91.3,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
@@ -262,7 +262,7 @@
       "publisherId": "google-deepmind",
       "value": 92.4,
       "source": {
-        "url": "https://deepmind.google/models/gemini/pro/",
+        "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
         "retrieved": "2026-08-05"
       },
       "evidence": {
