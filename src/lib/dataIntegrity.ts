@@ -15,6 +15,7 @@ export type DataIntegrityResult = {
 
 export type CandidateSource = {
   sourceSlug: string;
+  sourceUrl: string;
   candidates: readonly Candidate[];
 };
 
@@ -69,6 +70,12 @@ export function matchesSourceHost(
   const sourcePath = url.pathname.toLowerCase();
 
   return sourcePath === allowedPath || sourcePath.startsWith(`${allowedPath}/`);
+}
+
+export function getSourceUrlPinningWarning(sourceUrl: string): string | null {
+  if (/\d/.test(new URL(sourceUrl).pathname)) return null;
+
+  return `Source URL "${sourceUrl}" has no digit in its path. This is a heuristic for a generic page; check that the page is version-pinned or dated and will continue to show the recorded value.`;
 }
 
 export function validateDataIntegrity(
@@ -220,6 +227,11 @@ export function validateDataIntegrity(
       measurementsCanResolve = false;
     }
     measurementTriples.add(triple);
+
+    const sourceWarning = getSourceUrlPinningWarning(measurement.source.url);
+    if (sourceWarning !== null) {
+      warnings.push(`${prefix}.source.url: ${sourceWarning}`);
+    }
   }
 
   for (const benchmark of benchmarkById.values()) {
@@ -320,6 +332,13 @@ export function validateDataIntegrity(
   for (const source of [...candidateSources].sort((left, right) =>
     compareStrings(left.sourceSlug, right.sourceSlug),
   )) {
+    const sourceWarning = getSourceUrlPinningWarning(source.sourceUrl);
+    if (sourceWarning !== null) {
+      warnings.push(
+        `Candidate source "${source.sourceSlug}" source.url: ${sourceWarning}`,
+      );
+    }
+
     const pendingCount = source.candidates.filter(
       ({ review }) => review === "pending",
     ).length;

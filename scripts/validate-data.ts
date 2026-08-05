@@ -146,6 +146,7 @@ async function loadCandidateSources() {
         const file = await loadJson(relativePath, CandidateFileSchema);
         return {
           sourceSlug: name.slice(0, -".json".length),
+          sourceUrl: file.source.url,
           candidates: file.candidates,
         };
       }),

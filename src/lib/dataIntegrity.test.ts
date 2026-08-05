@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { matchesSourceHost, validateDataIntegrity } from "./dataIntegrity";
+import {
+  getSourceUrlPinningWarning,
+  matchesSourceHost,
+  validateDataIntegrity,
+} from "./dataIntegrity";
 import type { CandidateSource } from "./dataIntegrity";
 import type {
   Benchmark,
@@ -87,6 +91,21 @@ describe("matchesSourceHost", () => {
     ],
   ])("matches %s against %s as %s", (entry, url, expected) => {
     expect(matchesSourceHost(url, entry)).toBe(expected);
+  });
+});
+
+describe("getSourceUrlPinningWarning", () => {
+  it("checks path digits rather than version-looking query parameters", () => {
+    expect(
+      getSourceUrlPinningWarning(
+        "https://publisher.example/models/model-2/results",
+      ),
+    ).toBeNull();
+    expect(
+      getSourceUrlPinningWarning(
+        "https://publisher.example/models/current?version=2",
+      ),
+    ).toContain("This is a heuristic for a generic page");
   });
 });
 
@@ -385,6 +404,37 @@ describe("validateDataIntegrity errors", () => {
 });
 
 describe("validateDataIntegrity warnings", () => {
+  it("warns when a measurement source path has no version or date digit", () => {
+    const sourceUrl = "https://independent.example/models/current";
+    const result = validate([benchmark("measured")], [
+      measurement("measured", {
+        source: { url: sourceUrl, retrieved: "2026-08-05" },
+      }),
+    ]);
+
+    expect(result.errors).toEqual([]);
+    expect(result.warnings).toContain(
+      `measurements.json[0].source.url: Source URL "${sourceUrl}" has no digit in its path. This is a heuristic for a generic page; check that the page is version-pinned or dated and will continue to show the recorded value.`,
+    );
+  });
+
+  it("warns once for an unpinned staged candidate source", () => {
+    const sourceUrl = "https://vendor.example/models/current";
+    const result = validate([benchmark("measured")], [measurement("measured")], {
+      candidateSources: [
+        {
+          sourceSlug: "vendor-page",
+          sourceUrl,
+          candidates: [],
+        },
+      ],
+    });
+
+    expect(result.warnings).toContain(
+      `Candidate source "vendor-page" source.url: Source URL "${sourceUrl}" has no digit in its path. This is a heuristic for a generic page; check that the page is version-pinned or dated and will continue to show the recorded value.`,
+    );
+  });
+
   it("reports a vendor-only cell without turning it into an error", () => {
     const result = validate(
       [benchmark("measured")],
@@ -503,6 +553,7 @@ describe("validateDataIntegrity warnings", () => {
         candidateSources: [
           {
             sourceSlug: "vendor-page",
+            sourceUrl: pendingCandidate.source.url,
             candidates: [
               pendingCandidate,
               { ...pendingCandidate },

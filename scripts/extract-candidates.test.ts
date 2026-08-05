@@ -9,6 +9,7 @@ import {
   assertPublisherSourceAllowed,
   extractCandidatesFromText,
   loadExtractionSource,
+  warnIfSourceUrlMayBeUnpinned,
 } from "./extract-candidates";
 
 const models: Model[] = [
@@ -73,6 +74,30 @@ describe("assertPublisherSourceAllowed", () => {
     ).toThrow(
       'Publisher "alpha" rejected source host "huggingface.co"; allowed sourceHosts: "alpha.example", "huggingface.co/alpha"',
     );
+  });
+});
+
+describe("warnIfSourceUrlMayBeUnpinned", () => {
+  it("surfaces the shared heuristic warning without blocking extraction", () => {
+    const warn = vi.fn();
+
+    warnIfSourceUrlMayBeUnpinned(
+      "https://alpha.example/models/current",
+      warn,
+    );
+    expect(warn).toHaveBeenCalledOnce();
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "This is a heuristic for a generic page; check that the page is version-pinned or dated",
+      ),
+    );
+
+    warn.mockClear();
+    warnIfSourceUrlMayBeUnpinned(
+      "https://alpha.example/models/alpha-2",
+      warn,
+    );
+    expect(warn).not.toHaveBeenCalled();
   });
 });
 

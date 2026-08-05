@@ -3,7 +3,10 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { mapPrintedBenchmark } from "../src/lib/benchmarkMapping";
-import { matchesSourceHost } from "../src/lib/dataIntegrity";
+import {
+  getSourceUrlPinningWarning,
+  matchesSourceHost,
+} from "../src/lib/dataIntegrity";
 import {
   CandidateFileSchema,
   ModelsFileSchema,
@@ -104,6 +107,14 @@ export function assertPublisherSourceAllowed(
   throw new Error(
     `Publisher "${publisher.id}" rejected source host "${sourceHost}"; allowed sourceHosts: ${allowedEntries}`,
   );
+}
+
+export function warnIfSourceUrlMayBeUnpinned(
+  sourceUrl: string,
+  warn: (message: string) => void = console.warn,
+): void {
+  const warning = getSourceUrlPinningWarning(sourceUrl);
+  if (warning !== null) warn(`Warning: ${warning}`);
 }
 
 function searchable(value: string): string {
@@ -677,6 +688,7 @@ async function assertWritableOutput(filePath: string, overwrite: boolean) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
+  warnIfSourceUrlMayBeUnpinned(options.url);
   const [modelsInput, publishersInput, modelMap, loaded] = await Promise.all([
     readJson("data/models.json"),
     readJson("data/publishers.json"),
