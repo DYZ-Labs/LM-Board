@@ -70,6 +70,7 @@ export const PublisherSchema = z
     id: slugSchema,
     name: z.string().trim().min(1),
     url: urlSchema,
+    sourceHosts: z.array(z.string().trim().min(1)).min(1),
     type: z.enum(["independent", "benchmark-author", "vendor"]),
     runsOwnEvals: z.boolean(),
     vendorForLab: z.string().trim().min(1).optional(),

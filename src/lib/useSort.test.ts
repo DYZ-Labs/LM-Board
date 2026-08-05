@@ -19,6 +19,7 @@ const publisher: Publisher = {
   id: "publisher",
   name: "Publisher",
   url: "https://example.com",
+  sourceHosts: ["example.com"],
   type: "independent",
   runsOwnEvals: true,
 };

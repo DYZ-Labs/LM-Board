@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { validateDataIntegrity } from "./dataIntegrity";
+import { matchesSourceHost, validateDataIntegrity } from "./dataIntegrity";
 import type { CandidateSource } from "./dataIntegrity";
 import type {
   Benchmark,
@@ -23,6 +23,7 @@ const independent: Publisher = {
   id: "independent",
   name: "Independent",
   url: "https://independent.example",
+  sourceHosts: ["independent.example"],
   type: "independent",
   runsOwnEvals: true,
 };
@@ -30,6 +31,7 @@ const otherIndependent: Publisher = {
   id: "other-independent",
   name: "Other Independent",
   url: "https://other-independent.example",
+  sourceHosts: ["other-independent.example"],
   type: "independent",
   runsOwnEvals: true,
 };
@@ -37,11 +39,56 @@ const vendor: Publisher = {
   id: "vendor",
   name: "Vendor",
   url: "https://vendor.example",
+  sourceHosts: ["vendor.example"],
   type: "vendor",
   runsOwnEvals: true,
   vendorForLab: model.lab,
 };
 const publishers = [independent, otherIndependent, vendor];
+
+describe("matchesSourceHost", () => {
+  it.each([
+    ["openai.com", "https://openai.com/index/gpt-5-6/", true],
+    [
+      "openai.com",
+      "https://deploymentsafety.openai.com/gpt-5-6",
+      false,
+    ],
+    ["openai.com", "https://evil-openai.com/index/x", false],
+    [
+      "huggingface.co/moonshotai",
+      "https://huggingface.co/moonshotai/Kimi-K3",
+      true,
+    ],
+    [
+      "huggingface.co/moonshotai",
+      "https://huggingface.co/moonshotai",
+      true,
+    ],
+    [
+      "huggingface.co/moonshotai",
+      "https://huggingface.co/moonshotai-mirror/Kimi-K3",
+      false,
+    ],
+    [
+      "huggingface.co/moonshotai",
+      "https://huggingface.co/deepseek-ai/X",
+      false,
+    ],
+    [
+      "huggingface.co/Qwen",
+      "https://huggingface.co/qwen/Qwen3.5-397B-A17B",
+      true,
+    ],
+    [
+      "storage.googleapis.com/deepmind-media",
+      "https://storage.googleapis.com/deepmind-media/gemini/x.pdf",
+      true,
+    ],
+  ])("matches %s against %s as %s", (entry, url, expected) => {
+    expect(matchesSourceHost(url, entry)).toBe(expected);
+  });
+});
 
 function benchmark(id: string): Benchmark {
   return {
@@ -185,9 +232,8 @@ describe("validateDataIntegrity errors", () => {
     ).toContain('measurements.json[0]: unknown publisherId "missing"');
   });
 
-  it("requires vendor measurements to use the publisher host", () => {
-    const vendorMeasurement = measurement("measured", {
-      publisherId: vendor.id,
+  it("requires every publisher type to use an allowed source host", () => {
+    const independentMeasurement = measurement("measured", {
       source: {
         url: "https://results.example/measured",
         retrieved: "2026-08-05",
@@ -195,9 +241,31 @@ describe("validateDataIntegrity errors", () => {
     });
 
     expect(
-      validate([benchmark("measured")], [vendorMeasurement]).errors,
+      validate([benchmark("measured")], [independentMeasurement]).errors,
     ).toContain(
-      'measurements.json[0].source.url: vendor publisher "vendor" must use host "vendor.example", not "results.example"',
+      'measurements.json[0].source.url: publisher "independent" rejected host "results.example"; allowed sourceHosts: "independent.example"',
+    );
+  });
+
+  it("names every allowed entry when rejecting a publisher source", () => {
+    const publisher = {
+      ...vendor,
+      sourceHosts: ["vendor.example", "huggingface.co/vendor"],
+    };
+    const vendorMeasurement = measurement("measured", {
+      publisherId: vendor.id,
+      source: {
+        url: "https://huggingface.co/vendor-mirror/model-2",
+        retrieved: "2026-08-05",
+      },
+    });
+
+    expect(
+      validate([benchmark("measured")], [vendorMeasurement], {
+        publishers: [independent, otherIndependent, publisher],
+      }).errors,
+    ).toContain(
+      'measurements.json[0].source.url: publisher "vendor" rejected host "huggingface.co"; allowed sourceHosts: "vendor.example", "huggingface.co/vendor"',
     );
   });
 

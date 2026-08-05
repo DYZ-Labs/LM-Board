@@ -75,6 +75,7 @@ describe("publisher and measurement schemas", () => {
     id: "independent-publisher",
     name: "Independent Publisher",
     url: "https://publisher.example",
+    sourceHosts: ["publisher.example"],
     type: "independent",
     runsOwnEvals: true,
   };
@@ -103,6 +104,16 @@ describe("publisher and measurement schemas", () => {
     expect(PublisherSchema.safeParse({ ...publisher, rank: 1 }).success).toBe(
       false,
     );
+  });
+
+  it("requires at least one non-empty source host entry", () => {
+    expect(
+      PublisherSchema.safeParse({ ...publisher, sourceHosts: [] }).success,
+    ).toBe(false);
+    expect(
+      PublisherSchema.safeParse({ ...publisher, sourceHosts: ["   "] })
+        .success,
+    ).toBe(false);
   });
 });
 

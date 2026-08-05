@@ -4,8 +4,9 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { Model } from "../src/lib/schema";
+import type { Model, Publisher } from "../src/lib/schema";
 import {
+  assertPublisherSourceAllowed,
   extractCandidatesFromText,
   loadExtractionSource,
 } from "./extract-candidates";
@@ -36,6 +37,16 @@ const source = {
   models,
 };
 
+const publisher: Publisher = {
+  id: "alpha",
+  name: "Alpha",
+  url: "https://alpha.example",
+  sourceHosts: ["alpha.example", "huggingface.co/alpha"],
+  type: "vendor",
+  runsOwnEvals: true,
+  vendorForLab: "Alpha",
+};
+
 const temporaryDirectories: string[] = [];
 
 afterEach(async () => {
@@ -44,6 +55,25 @@ afterEach(async () => {
       rm(directory, { recursive: true, force: true }),
     ),
   );
+});
+
+describe("assertPublisherSourceAllowed", () => {
+  it("accepts an allowlisted namespace and explains a rejection", () => {
+    expect(() =>
+      assertPublisherSourceAllowed(
+        "https://huggingface.co/alpha/Alpha-2",
+        publisher,
+      ),
+    ).not.toThrow();
+    expect(() =>
+      assertPublisherSourceAllowed(
+        "https://huggingface.co/alpha-mirror/Alpha-2",
+        publisher,
+      ),
+    ).toThrow(
+      'Publisher "alpha" rejected source host "huggingface.co"; allowed sourceHosts: "alpha.example", "huggingface.co/alpha"',
+    );
+  });
 });
 
 describe("extractCandidatesFromText", () => {

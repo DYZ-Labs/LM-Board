@@ -52,6 +52,25 @@ function compareStrings(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
+export function matchesSourceHost(
+  sourceUrl: string,
+  allowEntry: string,
+): boolean {
+  const url = new URL(sourceUrl);
+  const slashIndex = allowEntry.indexOf("/");
+  const allowedHost = (
+    slashIndex === -1 ? allowEntry : allowEntry.slice(0, slashIndex)
+  ).toLowerCase();
+
+  if (url.hostname.toLowerCase() !== allowedHost) return false;
+  if (slashIndex === -1) return true;
+
+  const allowedPath = `/${allowEntry.slice(slashIndex + 1)}`.toLowerCase();
+  const sourcePath = url.pathname.toLowerCase();
+
+  return sourcePath === allowedPath || sourcePath.startsWith(`${allowedPath}/`);
+}
+
 export function validateDataIntegrity(
   models: readonly Model[],
   benchmarks: readonly Benchmark[],
@@ -142,17 +161,26 @@ export function validateDataIntegrity(
         `${prefix}: unknown publisherId "${measurement.publisherId}"`,
       );
       measurementsCanResolve = false;
-    } else if (publisher.type === "vendor") {
-      const publisherHost = new URL(publisher.url).hostname;
+    } else {
       const sourceHost = new URL(measurement.source.url).hostname;
 
-      if (sourceHost !== publisherHost) {
+      if (
+        !publisher.sourceHosts.some((allowEntry) =>
+          matchesSourceHost(measurement.source.url, allowEntry),
+        )
+      ) {
+        const allowedEntries = publisher.sourceHosts
+          .map((entry) => `"${entry}"`)
+          .join(", ");
         errors.push(
-          `${prefix}.source.url: vendor publisher "${publisher.id}" must use host "${publisherHost}", not "${sourceHost}"`,
+          `${prefix}.source.url: publisher "${publisher.id}" rejected host "${sourceHost}"; allowed sourceHosts: ${allowedEntries}`,
         );
       }
 
-      if (publisher.vendorForLab === undefined) {
+      if (
+        publisher.type === "vendor" &&
+        publisher.vendorForLab === undefined
+      ) {
         errors.push(
           `${prefix}: vendor publisher "${publisher.id}" must declare vendorForLab`,
         );

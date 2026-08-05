@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { mapPrintedBenchmark } from "../src/lib/benchmarkMapping";
+import { matchesSourceHost } from "../src/lib/dataIntegrity";
 import {
   CandidateFileSchema,
   ModelsFileSchema,
@@ -10,6 +11,7 @@ import {
   type Candidate,
   type CandidateFile,
   type Model,
+  type Publisher,
 } from "../src/lib/schema";
 
 const projectRoot = path.resolve(
@@ -81,6 +83,28 @@ type CliOptions = {
   modelMapPath: string | null;
   overwrite: boolean;
 };
+
+export function assertPublisherSourceAllowed(
+  sourceUrl: string,
+  publisher: Publisher,
+): void {
+  if (
+    publisher.sourceHosts.some((allowEntry) =>
+      matchesSourceHost(sourceUrl, allowEntry),
+    )
+  ) {
+    return;
+  }
+
+  const sourceHost = new URL(sourceUrl).hostname;
+  const allowedEntries = publisher.sourceHosts
+    .map((entry) => `"${entry}"`)
+    .join(", ");
+
+  throw new Error(
+    `Publisher "${publisher.id}" rejected source host "${sourceHost}"; allowed sourceHosts: ${allowedEntries}`,
+  );
+}
 
 function searchable(value: string): string {
   return value
@@ -666,9 +690,11 @@ async function main() {
   const models = ModelsFileSchema.parse(modelsInput);
   const publishers = PublishersFileSchema.parse(publishersInput);
 
-  if (!publishers.some(({ id }) => id === options.publisherId)) {
+  const publisher = publishers.find(({ id }) => id === options.publisherId);
+  if (publisher === undefined) {
     throw new Error(`Unknown publisher id: ${options.publisherId}`);
   }
+  assertPublisherSourceAllowed(options.url, publisher);
 
   const result = extractCandidatesFromText({
     text: loaded.text,
