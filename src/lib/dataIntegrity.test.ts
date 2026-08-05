@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { validateDataIntegrity } from "./dataIntegrity";
+import type { CandidateSource } from "./dataIntegrity";
 import type {
   Benchmark,
+  Candidate,
   Measurement,
   Model,
   Publisher,
@@ -81,6 +83,7 @@ function validate(
   options: {
     models?: Model[];
     publishers?: Publisher[];
+    candidateSources?: CandidateSource[];
   } = {},
 ) {
   return validateDataIntegrity(
@@ -89,6 +92,7 @@ function validate(
     measurements,
     options.publishers ?? publishers,
     TODAY,
+    options.candidateSources ?? [],
   );
 }
 
@@ -197,7 +201,7 @@ describe("validateDataIntegrity errors", () => {
     );
   });
 
-  it("requires a vendor publisher to match the model lab", () => {
+  it("allows a vendor publisher to report a rival model", () => {
     const otherLabModel = { ...model, lab: "Other Lab" };
 
     expect(
@@ -206,9 +210,82 @@ describe("validateDataIntegrity errors", () => {
         [measurement("measured", { publisherId: vendor.id })],
         { models: [otherLabModel] },
       ).errors,
+    ).toEqual([]);
+  });
+
+  it("requires vendor publishers to identify their own lab", () => {
+    const incompleteVendor = { ...vendor, vendorForLab: undefined };
+
+    expect(
+      validate(
+        [benchmark("measured")],
+        [measurement("measured", { publisherId: vendor.id })],
+        { publishers: [independent, otherIndependent, incompleteVendor] },
+      ).errors,
     ).toContain(
-      'measurements.json[0]: vendor publisher "vendor" is for lab "Lab", not model "model" lab "Other Lab"',
+      'measurements.json[0]: vendor publisher "vendor" must declare vendorForLab',
     );
+  });
+
+  it("requires evidence everywhere after evidence-backed measurements begin", () => {
+    const evidence = {
+      quote: "| IFBench | 80 |",
+      printedBenchmarkName: "IFBench",
+      printedConditions: null,
+      printedColumnHeader: "Model",
+    };
+    const result = validate(
+      [benchmark("ifbench"), benchmark("other")],
+      [measurement("ifbench", { evidence }), measurement("other")],
+    );
+
+    expect(result.errors).toContain(
+      "measurements.json[1].evidence: required because measurements.json contains evidence-backed records",
+    );
+  });
+
+  it("applies benchmark mapping rules retroactively to stored evidence", () => {
+    const result = validate(
+      [benchmark("ifbench")],
+      [
+        measurement("ifbench", {
+          evidence: {
+            quote: "| Terminal-Bench 2.1 | 80 |",
+            printedBenchmarkName: "Terminal-Bench 2.1",
+            printedConditions: null,
+            printedColumnHeader: "Model",
+          },
+        }),
+      ],
+    );
+
+    expect(result.errors).toContain(
+      'measurements.json[0].evidence: printed benchmark maps to "terminal-bench-v2-1", not "ifbench"',
+    );
+  });
+
+  it("rejects evidence whose printed benchmark is no longer accepted", () => {
+    const result = validate(
+      [benchmark("gpqa-diamond")],
+      [
+        measurement("gpqa-diamond", {
+          evidence: {
+            quote: "| GPQA | 80 |",
+            printedBenchmarkName: "GPQA",
+            printedConditions: null,
+            printedColumnHeader: "Model",
+          },
+        }),
+      ],
+    );
+
+    expect(
+      result.errors.some((error) =>
+        error.startsWith(
+          "measurements.json[0].evidence: printed benchmark maps to reject",
+        ),
+      ),
+    ).toBe(true);
   });
 
   it("checks reasoning effort across canonical scores only", () => {
@@ -307,7 +384,69 @@ describe("validateDataIntegrity warnings", () => {
 
     expect(result.errors).toEqual([]);
     expect(result.warnings).toContain(
-      "High-spread cell (model, measured): publisher measurements span 6 points (80 to 86)",
+      'High-spread cell (model, measured): "independent" (80) and "other-independent" (86) differ by 6 points',
+    );
+  });
+
+  it("sorts publisher disagreement warnings by largest spread first", () => {
+    const result = validate(
+      [benchmark("smaller"), benchmark("larger")],
+      [
+        measurement("smaller", { value: 80 }),
+        measurement("smaller", {
+          publisherId: otherIndependent.id,
+          value: 86,
+        }),
+        measurement("larger", { value: 60 }),
+        measurement("larger", {
+          publisherId: otherIndependent.id,
+          value: 80,
+        }),
+      ],
+    );
+    const disagreements = result.warnings.filter((warning) =>
+      warning.startsWith("High-spread cell"),
+    );
+
+    expect(disagreements[0]).toContain("(model, larger)");
+    expect(disagreements[1]).toContain("(model, smaller)");
+  });
+
+  it("reports pending candidate counts per source", () => {
+    const pendingCandidate: Candidate = {
+      ...measurement("measured"),
+      evidence: {
+        quote: "| IFBench | 80 |",
+        printedBenchmarkName: "IFBench",
+        printedConditions: null,
+        printedColumnHeader: "Model",
+      },
+      extractedBy: "agent",
+      review: "pending",
+    };
+    const acceptedCandidate = {
+      ...pendingCandidate,
+      review: "accepted" as const,
+    };
+    const result = validate(
+      [benchmark("measured")],
+      [measurement("measured")],
+      {
+        candidateSources: [
+          {
+            sourceSlug: "vendor-page",
+            candidates: [
+              pendingCandidate,
+              { ...pendingCandidate },
+              acceptedCandidate,
+            ],
+          },
+        ],
+      },
+    );
+
+    expect(result.warnings).toContain(
+      'Pending candidates for source "vendor-page": 2',
     );
   });
 });

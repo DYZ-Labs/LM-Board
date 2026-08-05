@@ -1,9 +1,17 @@
-import type { Measurement, Publisher } from "@/lib/schema";
+import type { Measurement, Model, Publisher } from "@/lib/schema";
 
-export type PublishedMeasurement = Measurement & { publisher: Publisher };
+export type Provenance =
+  | "independent"
+  | "benchmark-author"
+  | "competitor-reported"
+  | "self-reported";
 
-export type ResolvedScore = Measurement & {
+export type PublishedMeasurement = Measurement & {
   publisher: Publisher;
+  provenance: Provenance;
+};
+
+export type ResolvedScore = PublishedMeasurement & {
   /** Every other measurement of this cell, in precedence order. */
   alternates: PublishedMeasurement[];
   /** max − min across all measurements of this cell; null when only one exists. */
@@ -12,11 +20,26 @@ export type ResolvedScore = Measurement & {
   unverified: boolean;
 };
 
-const PUBLISHER_PRECEDENCE: Record<Publisher["type"], number> = {
+const PROVENANCE_PRECEDENCE: Record<Provenance, number> = {
   independent: 0,
   "benchmark-author": 1,
-  vendor: 2,
+  "competitor-reported": 2,
+  "self-reported": 3,
 };
+
+export function deriveProvenance(
+  publisher: Publisher,
+  model: Model,
+): Provenance {
+  if (publisher.type !== "vendor") return publisher.type;
+  if (publisher.vendorForLab === undefined) {
+    throw new Error(`Vendor publisher "${publisher.id}" has no vendorForLab`);
+  }
+
+  return publisher.vendorForLab === model.lab
+    ? "self-reported"
+    : "competitor-reported";
+}
 
 function compareStrings(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0;
@@ -27,8 +50,8 @@ function comparePublishedMeasurements(
   right: PublishedMeasurement,
 ): number {
   return (
-    PUBLISHER_PRECEDENCE[left.publisher.type] -
-      PUBLISHER_PRECEDENCE[right.publisher.type] ||
+    PROVENANCE_PRECEDENCE[left.provenance] -
+      PROVENANCE_PRECEDENCE[right.provenance] ||
     compareStrings(right.source.retrieved, left.source.retrieved) ||
     compareStrings(left.publisherId, right.publisherId)
   );
@@ -37,8 +60,10 @@ function comparePublishedMeasurements(
 export function resolveMeasurements(
   measurements: readonly Measurement[],
   publishers: readonly Publisher[],
+  models: readonly Model[],
 ): ResolvedScore[] {
   const publisherById = new Map<string, Publisher>();
+  const modelById = new Map<string, Model>();
 
   for (const publisher of publishers) {
     if (publisherById.has(publisher.id)) {
@@ -46,6 +71,14 @@ export function resolveMeasurements(
     }
 
     publisherById.set(publisher.id, publisher);
+  }
+
+  for (const model of models) {
+    if (modelById.has(model.id)) {
+      throw new Error(`Duplicate model id: ${model.id}`);
+    }
+
+    modelById.set(model.id, model);
   }
 
   const groups = new Map<string, PublishedMeasurement[]>();
@@ -59,6 +92,13 @@ export function resolveMeasurements(
       );
     }
 
+    const model = modelById.get(measurement.modelId);
+    if (model === undefined) {
+      throw new Error(
+        `Unknown modelId "${measurement.modelId}" for (${measurement.modelId}, ${measurement.benchmarkId})`,
+      );
+    }
+
     const key = `${measurement.modelId}\0${measurement.benchmarkId}`;
     const group = groups.get(key) ?? [];
 
@@ -68,7 +108,11 @@ export function resolveMeasurements(
       );
     }
 
-    group.push({ ...measurement, publisher });
+    group.push({
+      ...measurement,
+      publisher,
+      provenance: deriveProvenance(publisher, model),
+    });
     groups.set(key, group);
   }
 
@@ -82,8 +126,8 @@ export function resolveMeasurements(
       alternates,
       spread:
         values.length === 1 ? null : Math.max(...values) - Math.min(...values),
-      unverified: ordered.every(
-        ({ publisher }) => publisher.type === "vendor",
+      unverified: ordered.every(({ provenance }) =>
+        ["competitor-reported", "self-reported"].includes(provenance),
       ),
     };
   });

@@ -1,6 +1,8 @@
+import { mapPrintedBenchmark } from "@/lib/benchmarkMapping";
 import { resolveMeasurements } from "@/lib/provenance";
 import type {
   Benchmark,
+  Candidate,
   Measurement,
   Model,
   Publisher,
@@ -9,6 +11,11 @@ import type {
 export type DataIntegrityResult = {
   errors: string[];
   warnings: string[];
+};
+
+export type CandidateSource = {
+  sourceSlug: string;
+  candidates: readonly Candidate[];
 };
 
 const STALE_AFTER_DAYS = 90;
@@ -51,11 +58,14 @@ export function validateDataIntegrity(
   measurements: readonly Measurement[],
   publishers: readonly Publisher[],
   today = new Date(),
+  candidateSources: readonly CandidateSource[] = [],
 ): DataIntegrityResult {
+  const duplicateModelErrors = findDuplicateIds(models, "model");
+  const duplicatePublisherErrors = findDuplicateIds(publishers, "publisher");
   const errors = [
-    ...findDuplicateIds(models, "model"),
+    ...duplicateModelErrors,
     ...findDuplicateIds(benchmarks, "benchmark"),
-    ...findDuplicateIds(publishers, "publisher"),
+    ...duplicatePublisherErrors,
   ];
   const warnings: string[] = [];
   const modelById = new Map(models.map((model) => [model.id, model]));
@@ -69,7 +79,10 @@ export function validateDataIntegrity(
   const measurementTriples = new Set<string>();
   const cells = new Map<string, Measurement[]>();
   let measurementsCanResolve =
-    findDuplicateIds(publishers, "publisher").length === 0;
+    duplicateModelErrors.length === 0 && duplicatePublisherErrors.length === 0;
+  const evidenceRequired = measurements.some(
+    ({ evidence }) => evidence !== undefined,
+  );
 
   for (const [index, model] of models.entries()) {
     if (!model.pricing) continue;
@@ -102,6 +115,7 @@ export function validateDataIntegrity(
     const model = modelById.get(measurement.modelId);
     if (model === undefined) {
       errors.push(`${prefix}: unknown modelId "${measurement.modelId}"`);
+      measurementsCanResolve = false;
     }
 
     const benchmark = benchmarkById.get(measurement.benchmarkId);
@@ -138,9 +152,35 @@ export function validateDataIntegrity(
         );
       }
 
-      if (model !== undefined && model.lab !== publisher.vendorForLab) {
+      if (publisher.vendorForLab === undefined) {
         errors.push(
-          `${prefix}: vendor publisher "${publisher.id}" is for lab "${publisher.vendorForLab ?? "unspecified"}", not model "${model.id}" lab "${model.lab}"`,
+          `${prefix}: vendor publisher "${publisher.id}" must declare vendorForLab`,
+        );
+        measurementsCanResolve = false;
+      }
+    }
+
+    if (evidenceRequired && measurement.evidence === undefined) {
+      errors.push(
+        `${prefix}.evidence: required because measurements.json contains evidence-backed records`,
+      );
+    }
+
+    if (measurement.evidence !== undefined) {
+      const mapping = mapPrintedBenchmark(
+        measurement.evidence.printedBenchmarkName,
+        measurement.evidence.printedConditions,
+      );
+
+      if (mapping.kind !== "accept") {
+        const detail =
+          mapping.kind === "reject" ? mapping.reason : mapping.question;
+        errors.push(
+          `${prefix}.evidence: printed benchmark maps to ${mapping.kind} (${detail}), not "${measurement.benchmarkId}"`,
+        );
+      } else if (mapping.benchmarkId !== measurement.benchmarkId) {
+        errors.push(
+          `${prefix}.evidence: printed benchmark maps to "${mapping.benchmarkId}", not "${measurement.benchmarkId}"`,
         );
       }
     }
@@ -163,7 +203,7 @@ export function validateDataIntegrity(
   if (measurementsCanResolve) {
     const reasoningEffortsByModel = new Map<string, Set<string | null>>();
 
-    for (const score of resolveMeasurements(measurements, publishers)) {
+    for (const score of resolveMeasurements(measurements, publishers, models)) {
       const reasoningEfforts =
         reasoningEffortsByModel.get(score.modelId) ?? new Set();
       reasoningEfforts.add(score.reasoningEffort ?? null);
@@ -180,6 +220,11 @@ export function validateDataIntegrity(
   }
 
   const staleCutoff = dateDaysBefore(today, STALE_AFTER_DAYS);
+  const spreadWarnings: Array<{
+    cellKey: string;
+    spread: number;
+    message: string;
+  }> = [];
 
   for (const [cellKey, cell] of [...cells].sort(([left], [right]) =>
     compareStrings(left, right),
@@ -215,16 +260,45 @@ export function validateDataIntegrity(
     }
 
     if (cell.length > 1) {
-      const values = cell.map(({ value }) => value);
-      const min = Math.min(...values);
-      const max = Math.max(...values);
-      const spread = max - min;
+      const orderedByValue = [...cell].sort(
+        (left, right) =>
+          left.value - right.value ||
+          compareStrings(left.publisherId, right.publisherId),
+      );
+      const lowest = orderedByValue[0];
+      const highest = orderedByValue[orderedByValue.length - 1];
+      const spread = Number((highest.value - lowest.value).toFixed(10));
 
       if (spread > HIGH_SPREAD_THRESHOLD) {
-        warnings.push(
-          `High-spread cell ${cellLabel}: publisher measurements span ${spread} points (${min} to ${max})`,
-        );
+        spreadWarnings.push({
+          cellKey,
+          spread,
+          message: `High-spread cell ${cellLabel}: "${lowest.publisherId}" (${lowest.value}) and "${highest.publisherId}" (${highest.value}) differ by ${spread} points`,
+        });
       }
+    }
+  }
+
+  warnings.push(
+    ...spreadWarnings
+      .sort(
+        (left, right) =>
+          right.spread - left.spread ||
+          compareStrings(left.cellKey, right.cellKey),
+      )
+      .map(({ message }) => message),
+  );
+
+  for (const source of [...candidateSources].sort((left, right) =>
+    compareStrings(left.sourceSlug, right.sourceSlug),
+  )) {
+    const pendingCount = source.candidates.filter(
+      ({ review }) => review === "pending",
+    ).length;
+    if (pendingCount > 0) {
+      warnings.push(
+        `Pending candidates for source "${source.sourceSlug}": ${pendingCount}`,
+      );
     }
   }
 
