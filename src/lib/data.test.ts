@@ -337,6 +337,7 @@ describe("loadLeaderboardData", () => {
     expect(data.latestPricingRetrieved).toBe("2026-07-27");
     expect(data.scoreCount).toBe(13);
     expect(data.measurementCount).toBe(13);
+    expect(data.legacyMeasurementCount).toBe(13);
     expect(data.publisherCount).toBe(2);
     expect(data.selfReportedCount).toBe(1);
     expect(data.unverifiedCount).toBe(1);

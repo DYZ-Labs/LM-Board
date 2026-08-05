@@ -26,7 +26,8 @@
     "name": "Terminal-Bench",
     "url": "https://www.tbench.ai/",
     "sourceHosts": [
-      "www.tbench.ai"
+      "www.tbench.ai",
+      "tbench.ai"
     ],
     "type": "benchmark-author",
     "runsOwnEvals": true
@@ -47,6 +48,7 @@
     "url": "https://sierra.ai/blog/tau-bench-shaping-development-evaluation-agents",
     "sourceHosts": [
       "sierra.ai",
+      "taubench.com",
       "github.com/sierra-research"
     ],
     "type": "benchmark-author",
@@ -58,6 +60,7 @@
     "url": "https://openai.com",
     "sourceHosts": [
       "openai.com",
+      "cdn.openai.com",
       "deploymentsafety.openai.com"
     ],
     "type": "vendor",
@@ -107,6 +110,7 @@
     "url": "https://ai.meta.com/",
     "sourceHosts": [
       "ai.meta.com",
+      "llama.com",
       "huggingface.co/meta-llama"
     ],
     "type": "vendor",
@@ -144,6 +148,7 @@
     "url": "https://www.kimi.com/",
     "sourceHosts": [
       "www.kimi.com",
+      "kimi.com",
       "huggingface.co/moonshotai"
     ],
     "type": "vendor",
@@ -156,6 +161,7 @@
     "url": "https://www.nvidia.com/",
     "sourceHosts": [
       "build.nvidia.com",
+      "developer.nvidia.com",
       "research.nvidia.com",
       "huggingface.co/nvidia"
     ],

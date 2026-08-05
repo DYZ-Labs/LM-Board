@@ -101,6 +101,10 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
   evidence. Review with `npm run review:candidates`; promote only a fully
   reviewed source with `npm run promote:candidates -- --source <slug> --write`.
   Never hand-edit `data/measurements.json`.
+- Permanent evidence is ratcheted per publisher: once one of a publisher's
+  measurements carries a source quote, all of that publisher's measurements
+  must carry one. Publishers with no evidence-backed records remain valid as
+  disclosed legacy sources.
 - Every printed benchmark name must pass `mapPrintedBenchmark`. Reject and
   ambiguous results remain in the source's `.skipped.json`; do not override a
   conservative mapping by changing only the candidate's `benchmarkId`.

@@ -106,9 +106,19 @@ export function validateDataIntegrity(
   const cells = new Map<string, Measurement[]>();
   let measurementsCanResolve =
     duplicateModelErrors.length === 0 && duplicatePublisherErrors.length === 0;
-  const evidenceRequired = measurements.some(
-    ({ evidence }) => evidence !== undefined,
-  );
+  const evidenceCoverageByPublisher = new Map<
+    string,
+    { total: number; withEvidence: number }
+  >();
+
+  for (const measurement of measurements) {
+    const coverage = evidenceCoverageByPublisher.get(
+      measurement.publisherId,
+    ) ?? { total: 0, withEvidence: 0 };
+    coverage.total += 1;
+    if (measurement.evidence !== undefined) coverage.withEvidence += 1;
+    evidenceCoverageByPublisher.set(measurement.publisherId, coverage);
+  }
 
   for (const [index, model] of models.entries()) {
     if (!model.pricing) continue;
@@ -195,12 +205,6 @@ export function validateDataIntegrity(
       }
     }
 
-    if (evidenceRequired && measurement.evidence === undefined) {
-      errors.push(
-        `${prefix}.evidence: required because measurements.json contains evidence-backed records`,
-      );
-    }
-
     if (measurement.evidence !== undefined) {
       const mapping = mapPrintedBenchmark(
         measurement.evidence.printedBenchmarkName,
@@ -232,6 +236,19 @@ export function validateDataIntegrity(
     if (sourceWarning !== null) {
       warnings.push(`${prefix}.source.url: ${sourceWarning}`);
     }
+  }
+
+  for (const [publisherId, coverage] of [
+    ...evidenceCoverageByPublisher,
+  ].sort(([left], [right]) => compareStrings(left, right))) {
+    const missing = coverage.total - coverage.withEvidence;
+    if (missing === 0 || coverage.withEvidence === 0) continue;
+
+    const evidenceVerb = coverage.withEvidence === 1 ? "has" : "have";
+    const recordSuffix = coverage.withEvidence === 1 ? "" : "s";
+    errors.push(
+      `publisher "${publisherId}": ${missing} of ${coverage.total} measurements lack evidence, but ${coverage.withEvidence} ${evidenceVerb} it. A publisher's records must all carry source quotes or none may. Either complete the backfill or revert the evidence-backed record${recordSuffix}.`,
+    );
   }
 
   for (const benchmark of benchmarkById.values()) {
