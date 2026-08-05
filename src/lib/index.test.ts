@@ -39,6 +39,7 @@ const score = (
   value,
   source: { url: "https://example.com", retrieved: "2026-07-22" },
   publisher,
+  provenance: "independent",
   alternates: [],
   spread: null,
   unverified: false,

@@ -77,6 +77,15 @@ export const PublisherSchema = z
   })
   .strict();
 
+export const EvidenceSchema = z
+  .object({
+    quote: z.string().trim().min(1),
+    printedBenchmarkName: z.string().trim().min(1),
+    printedConditions: z.string().trim().min(1).nullable(),
+    printedColumnHeader: z.string().trim().min(1).nullable(),
+  })
+  .strict();
+
 export const MeasurementSchema = z
   .object({
     modelId: slugSchema,
@@ -87,8 +96,38 @@ export const MeasurementSchema = z
     settings: z.string().trim().min(1).optional(),
     harness: z.string().trim().min(1).optional(),
     reasoningEffort: z.string().trim().min(1).max(40).optional(),
+    evidence: EvidenceSchema.optional(),
   })
   .strict();
+
+export const CandidateSchema = MeasurementSchema.extend({
+  evidence: EvidenceSchema,
+  extractedBy: z.enum(["agent", "human"]),
+  review: z.enum(["pending", "accepted", "rejected"]),
+  reviewNote: z.string().trim().min(1).optional(),
+}).strict();
+
+export const CandidateFileSchema = z
+  .object({
+    source: SourceSchema,
+    note: z.string().trim().min(1).optional(),
+    candidates: z.array(CandidateSchema),
+  })
+  .strict()
+  .superRefine((file, context) => {
+    for (const [index, candidate] of file.candidates.entries()) {
+      if (
+        candidate.source.url !== file.source.url ||
+        candidate.source.retrieved !== file.source.retrieved
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["candidates", index, "source"],
+          message: "Must match the candidate page source and retrieval date",
+        });
+      }
+    }
+  });
 
 export const ModelsFileSchema = z.array(ModelSchema).min(1);
 export const BenchmarksFileSchema = z.array(BenchmarkSchema).min(1);
@@ -99,4 +138,6 @@ export type Model = z.infer<typeof ModelSchema>;
 export type Benchmark = z.infer<typeof BenchmarkSchema>;
 export type Publisher = z.infer<typeof PublisherSchema>;
 export type Measurement = z.infer<typeof MeasurementSchema>;
+export type Candidate = z.infer<typeof CandidateSchema>;
+export type CandidateFile = z.infer<typeof CandidateFileSchema>;
 export type Score = ResolvedScore;

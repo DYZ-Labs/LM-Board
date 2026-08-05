@@ -1,7 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveMeasurements } from "./provenance";
-import type { Measurement, Publisher } from "./schema";
+import { deriveProvenance, resolveMeasurements } from "./provenance";
+import type { Measurement, Model, Publisher } from "./schema";
+
+const models: Model[] = ["model", "z-model", "a-model"].map((id) => ({
+  id,
+  name: id,
+  lab: "Vendor Lab",
+  releaseDate: "2026-08-01",
+  openWeights: false,
+  url: `https://vendor.example/${id}`,
+}));
 
 const publishers: Publisher[] = [
   {
@@ -40,6 +49,14 @@ const publishers: Publisher[] = [
     runsOwnEvals: true,
     vendorForLab: "Vendor Lab",
   },
+  {
+    id: "rival-vendor",
+    name: "Rival Vendor",
+    url: "https://rival-vendor.example",
+    type: "vendor",
+    runsOwnEvals: true,
+    vendorForLab: "Rival Lab",
+  },
 ];
 
 function measurement(
@@ -64,6 +81,7 @@ describe("resolveMeasurements", () => {
     const [score] = resolveMeasurements(
       [measurement("independent-a", 80)],
       publishers,
+      models,
     );
 
     expect(score).toMatchObject({
@@ -83,6 +101,7 @@ describe("resolveMeasurements", () => {
         measurement("independent-a", 85, "2026-07-01"),
       ],
       publishers,
+      models,
     );
 
     expect(score.publisherId).toBe("independent-a");
@@ -90,20 +109,36 @@ describe("resolveMeasurements", () => {
     expect(score.spread).toBe(10);
   });
 
-  it("orders every publisher type by the published precedence", () => {
+  it("orders all four provenance classes by the published precedence", () => {
     const [score] = resolveMeasurements(
       [
         measurement("vendor", 95),
+        measurement("rival-vendor", 92),
         measurement("benchmark-author", 90),
         measurement("independent-a", 85),
       ],
       publishers,
+      models,
     );
 
     expect([
       score.publisherId,
       ...score.alternates.map(({ publisherId }) => publisherId),
-    ]).toEqual(["independent-a", "benchmark-author", "vendor"]);
+    ]).toEqual([
+      "independent-a",
+      "benchmark-author",
+      "rival-vendor",
+      "vendor",
+    ]);
+    expect([
+      score.provenance,
+      ...score.alternates.map(({ provenance }) => provenance),
+    ]).toEqual([
+      "independent",
+      "benchmark-author",
+      "competitor-reported",
+      "self-reported",
+    ]);
   });
 
   it("prefers the newest measurement when publisher types match", () => {
@@ -113,6 +148,7 @@ describe("resolveMeasurements", () => {
         measurement("independent-b", 82, "2026-08-02"),
       ],
       publishers,
+      models,
     );
 
     expect(score.publisherId).toBe("independent-b");
@@ -127,6 +163,7 @@ describe("resolveMeasurements", () => {
         measurement("independent-a", 80),
       ],
       publishers,
+      models,
     );
 
     expect(score.publisherId).toBe("independent-a");
@@ -140,11 +177,20 @@ describe("resolveMeasurements", () => {
     const [score] = resolveMeasurements(
       [measurement("vendor", 95)],
       publishers,
+      models,
     );
 
     expect(score.unverified).toBe(true);
     expect(score.publisher.type).toBe("vendor");
+    expect(score.provenance).toBe("self-reported");
     expect(score.spread).toBeNull();
+  });
+
+  it("derives competitor reporting from the publisher and model labs", () => {
+    expect(deriveProvenance(publishers[4]!, models[0]!)).toBe("self-reported");
+    expect(deriveProvenance(publishers[5]!, models[0]!)).toBe(
+      "competitor-reported",
+    );
   });
 
   it("preserves first-seen cell traversal while resolving within each cell", () => {
@@ -158,9 +204,11 @@ describe("resolveMeasurements", () => {
     };
 
     expect(
-      resolveMeasurements([laterIdFirst, earlierIdSecond], publishers).map(
-        ({ modelId }) => modelId,
-      ),
+      resolveMeasurements(
+        [laterIdFirst, earlierIdSecond],
+        publishers,
+        models,
+      ).map(({ modelId }) => modelId),
     ).toEqual(["z-model", "a-model"]);
   });
 });

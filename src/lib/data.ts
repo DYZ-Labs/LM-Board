@@ -54,7 +54,7 @@ export type LeaderboardLeader = {
 };
 
 export type LeaderboardScore = Score & {
-  /** UI compatibility view; publisher.type remains the sole stored truth. */
+  /** UI compatibility view derived from the publisher/model relationship. */
   readonly selfReported: boolean;
 };
 
@@ -191,7 +191,7 @@ export function loadLeaderboardData(): LeaderboardData {
     );
   }
 
-  const scores = resolveMeasurements(measurements, publishers);
+  const scores = resolveMeasurements(measurements, publishers, models);
 
   const scoresByModel = new Map<string, Score[]>();
   const benchmarkDomains: Record<string, BenchmarkDomain> = {};
@@ -220,7 +220,7 @@ export function loadLeaderboardData(): LeaderboardData {
       oldestRetrieved = score.source.retrieved;
     }
 
-    if (score.publisher.type === "vendor") selfReportedCount += 1;
+    if (score.provenance === "self-reported") selfReportedCount += 1;
     if (score.unverified) unverifiedCount += 1;
   }
 
@@ -287,7 +287,7 @@ export function loadLeaderboardData(): LeaderboardData {
               ? null
               : {
                   ...score,
-                  selfReported: score.publisher.type === "vendor",
+                  selfReported: score.provenance === "self-reported",
                 },
           ];
         }),

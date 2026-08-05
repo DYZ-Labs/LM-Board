@@ -15,6 +15,9 @@
     "pricing:audit": "tsx scripts/audit-pricing.ts",
     "validate:data": "tsx scripts/validate-data.ts",
     "discover:models": "tsx scripts/discover-models.ts",
+    "extract:candidates": "tsx scripts/extract-candidates.ts",
+    "review:candidates": "tsx scripts/review-candidates.ts",
+    "promote:candidates": "tsx scripts/promote-candidates.ts",
     "og": "tsx scripts/generate-og.ts",
     "og:verify": "tsx scripts/og/verify.ts",
     "icons": "tsx scripts/generate-icons.ts"

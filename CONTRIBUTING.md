@@ -51,14 +51,36 @@ shape:
 
 ## Adding or updating measurements
 
-1. Add one record per model/benchmark/publisher triple in `data/measurements.json`.
-2. Use IDs that already exist in `data/models.json`, `data/benchmarks.json`, and `data/publishers.json`.
-3. Record the measured value, direct source URL, and the date you retrieved it in ISO `YYYY-MM-DD` format.
-4. Record the eval scaffold or agent framework in `harness`; use `"undisclosed"` when the source does not state it. Put sample count, tools, pass rate, and other material run details in `settings`.
-5. Do not encode vendor status on the measurement. It is derived from the publisher's `type`; vendor measurements must live on that vendor's own host and the publisher's `vendorForLab` must exactly match the model's `lab`.
-6. If a run uses a named reasoning effort or budget, set `reasoningEffort`. Different publishers may use different effort levels, but every canonical score for a model must use the same value or all canonical scores must omit it.
+1. Ensure the model and publisher already exist in `data/models.json` and
+   `data/publishers.json`.
+2. Run `npm run extract:candidates -- --url <page> --source <slug> --publisher
+   <publisher-id>`. For a saved page, add `--from-file <path> --retrieved
+   YYYY-MM-DD`; the date must be when the page was saved. Supply `--model-map`
+   `<json-path>` when a printed column header cannot resolve uniquely to a
+   curated model.
+3. Inspect the source's candidate and `.skipped.json` files. Extraction records
+   every scalar table cell it can prove, but never turns ambiguous or rejected
+   benchmark names into candidates and never infers from prose.
+4. Run `npm run review:candidates -- --source <slug>` and check each verbatim
+   quote, printed condition, column header, and value against the live page.
+5. Run `npm run promote:candidates -- --source <slug>` first. Only after the dry
+   run succeeds, rerun with `--write`. Promotion refuses a source with any
+   pending record and is the only supported writer for `data/measurements.json`.
 
-Canonical selection is deterministic: independent publishers outrank benchmark authors, which outrank vendors; ties use newest retrieval and then ascending publisher id. Do not delete, average, or overwrite a conflicting publisher measurement. A spread above five points is intentionally a validator warning for investigation, not a build error.
+Do not hand-edit benchmark values into `data/measurements.json`. Record a named
+eval scaffold in `harness` and material run details in `settings` when the source
+states them; omit details the source does not publish. If a run uses a named
+reasoning effort or budget, set `reasoningEffort`. Different publishers may use
+different effort levels, but every canonical score for a model must use the same
+value or all canonical scores must omit it.
+
+Canonical selection is deterministic: independent publishers outrank benchmark
+authors, competitor reports outrank self-reports, and ties use newest retrieval
+then ascending publisher id. A vendor report is self-reported only when the
+publisher's `vendorForLab` matches the measured model's lab; reporting a rival is
+competitor-reported. Do not delete, average, or overwrite a conflicting
+publisher measurement. A spread above five points is intentionally a validator
+warning for investigation, not a build error.
 
 Missing results are omitted. Never add a zero or placeholder record to represent missing data.
 
@@ -94,7 +116,7 @@ navigation.
 
 ## Pull-request checklist
 
-- [ ] Every measurement has a publisher, direct source URL, retrieval date, and harness.
+- [ ] Every new measurement was promoted from a fully reviewed candidate with a verbatim source quote.
 - [ ] Every listed price has a first-party source URL and retrieval date no more than 30 days old.
 - [ ] Model, benchmark, and publisher IDs are valid and no triple is duplicated.
 - [ ] Evaluation settings and publisher metadata are accurate.

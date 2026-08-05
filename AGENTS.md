@@ -32,6 +32,9 @@ npm run lint                           # ESLint, zero warnings allowed
 npm run typecheck                      # tsc --noEmit
 npm run validate:data                  # Zod + cross-file integrity on data/*.json
 npm run pricing:audit                  # fail on future or >30-day-old listed prices
+npm run extract:candidates -- --url <url> --source <slug> --publisher <id>
+npm run review:candidates -- --resume  # human acceptance/rejection, persisted per decision
+npm run promote:candidates -- --source <slug>  # dry-run accepted candidates
 npm run build                          # validate:data + static export to out/
 npm run measure -- --check             # payload budgets; reads out/, so build first
 npm run check                          # full gate: lint, typecheck, test, build, budgets
@@ -60,8 +63,8 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
 ## Layout
 
 - `data/` — the dataset: `models.json`, `benchmarks.json`, `publishers.json`,
-  `measurements.json`, and the discovery ledger `upstream-seen.json`. Licensed
-  CC BY 4.0 (`data/LICENSE`).
+  `measurements.json`, source-page staging in `candidates/`, and the discovery
+  ledger `upstream-seen.json`. Licensed CC BY 4.0 (`data/LICENSE`).
 - `src/lib/` — all logic, tests colocated. `schema.ts` is the Zod source of truth
   for the data files (types inferred from it). `index.ts` is the ranking/Index
   math, not a barrel export.
@@ -84,12 +87,21 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
   source does not identify one. Missing measurements are omitted — never zero,
   never a placeholder.
 - Measurements are unique by `(modelId, benchmarkId, publisherId)`. Canonical
-  scores resolve by publisher type (`independent`, `benchmark-author`, `vendor`),
-  then newest retrieval, then ascending publisher id. Conflicting measurements
-  remain as alternates; never average or drop publisher disagreement.
-- Vendor status is derived from `publisher.type`, not stored on a measurement.
-  Vendor claims must cite the vendor's own host and may only measure models whose
-  `lab` exactly matches the publisher's `vendorForLab`.
+  scores resolve as `independent`, `benchmark-author`, `competitor-reported`,
+  then `self-reported`, followed by newest retrieval and ascending publisher id.
+  Conflicting measurements remain as alternates; never average or drop publisher
+  disagreement.
+- Vendor provenance is derived, not stored: a vendor measuring its own
+  `vendorForLab` is self-reported, while the same vendor measuring another lab is
+  competitor-reported. Both must cite the publishing vendor's own host.
+- Vendor-page extraction writes only pending records in `data/candidates/`.
+  Every candidate needs a verbatim page quote and printed benchmark/header
+  evidence. Review with `npm run review:candidates`; promote only a fully
+  reviewed source with `npm run promote:candidates -- --source <slug> --write`.
+  Never hand-edit `data/measurements.json`.
+- Every printed benchmark name must pass `mapPrintedBenchmark`. Reject and
+  ambiguous results remain in the source's `.skipped.json`; do not override a
+  conservative mapping by changing only the candidate's `benchmarkId`.
 - Every optional price needs first-party `source.url` and `source.retrieved`.
   Validation rejects Artificial Analysis pricing URLs; the weekly audit flags
   prices older than 30 days without removing them.
@@ -146,5 +158,8 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
   dashboard → promote a previous deployment).
 - `npm run discover:models -- --write` (and `--seed --write`) mutate the ledger;
   discovery normally runs via the scheduled workflow. Dry-run is the default.
+- Candidate acceptance is a human source-check. `promote:candidates --write`
+  mutates `data/measurements.json` and must run only after every record for that
+  source has an explicit review decision.
 - Anything involving repo secrets (`AA_API_KEY`), GitHub labels, or workflow
   permission settings.

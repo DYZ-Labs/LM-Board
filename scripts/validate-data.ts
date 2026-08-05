@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -7,6 +7,7 @@ import type { ZodType } from "zod";
 import { validateDataIntegrity } from "../src/lib/dataIntegrity";
 import {
   BenchmarksFileSchema,
+  CandidateFileSchema,
   MeasurementsFileSchema,
   ModelsFileSchema,
   PublishersFileSchema,
@@ -17,6 +18,7 @@ import { LedgerFileSchema, validateLedgerConsistency } from "./discovery/core";
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const LEDGER_PATH = "data/upstream-seen.json";
+const CANDIDATE_DIRECTORY = "data/candidates";
 const UPSTREAM_PLACEHOLDER_HOST = "artificialanalysis.ai";
 
 /**
@@ -117,20 +119,60 @@ async function loadJson<T>(relativePath: string, schema: ZodType<T>): Promise<T>
   return result.data;
 }
 
+async function loadCandidateSources() {
+  let names: string[];
+
+  try {
+    names = await readdir(path.join(projectRoot, CANDIDATE_DIRECTORY));
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      error.code === "ENOENT"
+    ) {
+      return [];
+    }
+    throw error;
+  }
+
+  return Promise.all(
+    names
+      .filter(
+        (name) => name.endsWith(".json") && !name.endsWith(".skipped.json"),
+      )
+      .sort()
+      .map(async (name) => {
+        const relativePath = path.join(CANDIDATE_DIRECTORY, name);
+        const file = await loadJson(relativePath, CandidateFileSchema);
+        return {
+          sourceSlug: name.slice(0, -".json".length),
+          candidates: file.candidates,
+        };
+      }),
+  );
+}
+
 async function main() {
-  const [modelsResult, benchmarksResult, measurementsResult, publishersResult] =
-    await Promise.allSettled([
-      loadJson("data/models.json", ModelsFileSchema),
-      loadJson("data/benchmarks.json", BenchmarksFileSchema),
-      loadJson("data/measurements.json", MeasurementsFileSchema),
-      loadJson("data/publishers.json", PublishersFileSchema),
-    ]);
+  const [
+    modelsResult,
+    benchmarksResult,
+    measurementsResult,
+    publishersResult,
+    candidateSourcesResult,
+  ] = await Promise.allSettled([
+    loadJson("data/models.json", ModelsFileSchema),
+    loadJson("data/benchmarks.json", BenchmarksFileSchema),
+    loadJson("data/measurements.json", MeasurementsFileSchema),
+    loadJson("data/publishers.json", PublishersFileSchema),
+    loadCandidateSources(),
+  ]);
 
   const fileErrors = [
     modelsResult,
     benchmarksResult,
     measurementsResult,
     publishersResult,
+    candidateSourcesResult,
   ].flatMap((result) =>
     result.status === "rejected"
       ? [
@@ -149,7 +191,8 @@ async function main() {
     modelsResult.status !== "fulfilled" ||
     benchmarksResult.status !== "fulfilled" ||
     measurementsResult.status !== "fulfilled" ||
-    publishersResult.status !== "fulfilled"
+    publishersResult.status !== "fulfilled" ||
+    candidateSourcesResult.status !== "fulfilled"
   ) {
     throw new Error("Data file validation failed unexpectedly");
   }
@@ -165,6 +208,8 @@ async function main() {
     benchmarks,
     measurements,
     publishers,
+    new Date(),
+    candidateSourcesResult.value,
   );
   const errors = [
     ...integrity.errors,
