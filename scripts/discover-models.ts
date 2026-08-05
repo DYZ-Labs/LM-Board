@@ -144,13 +144,18 @@ async function runSeed(write: boolean, fromPath: string | undefined): Promise<vo
     );
   }
 
-  const [models, scores, aaModels] = await Promise.all([
+  const [models, measurements, aaModels] = await Promise.all([
     loadJson(MODELS_PATH, ModelsFileSchema),
     loadJson("data/measurements.json", MeasurementsFileSchema),
     fetchAaModels(fromPath),
   ]);
 
-  const seed = buildSeedLedger(aaModels, models.parsed, scores.parsed, today());
+  const seed = buildSeedLedger(
+    aaModels,
+    models.parsed,
+    measurements.parsed,
+    today(),
+  );
 
   LedgerFileSchema.parse(seed.ledger);
   console.log(renderSeedReport(seed));

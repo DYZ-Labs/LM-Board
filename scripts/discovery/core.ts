@@ -157,7 +157,7 @@ export function validateLedgerConsistency(
 const AA_MODEL_PAGE_PATTERN =
   /^https?:\/\/(?:www\.)?artificialanalysis\.ai\/models\/([A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*)(?:[/#?]|$)/;
 
-/** Extracts the AA model slug from a score's source URL, if it is an AA model page. */
+/** Extracts the AA model slug from a measurement source, if it is an AA model page. */
 export function extractAaSlug(url: string): string | null {
   const match = AA_MODEL_PAGE_PATTERN.exec(url);
 
@@ -174,7 +174,7 @@ export interface SeedResult {
 
 /**
  * Builds the initial ledger. Every current model's AA slug is recovered from
- * its score source URLs; matching upstream entries become "added", everything
+ * its measurement source URLs; matching upstream entries become "added", everything
  * else upstream becomes "ignored" (pre-automation backlog).
  */
 export function buildSeedLedger(

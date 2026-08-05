@@ -239,7 +239,7 @@ Every surface is a flat fill separated by 1px hairlines. This is a deliberate pr
 
 **F1 — There is no value proposition above the board.** `app/page.tsx:21-53` renders masthead → leaderboard → footer. The differentiator — every number carries a source — appears only in the footer (`SiteFooter.tsx:16-27`) and on `/methodology`. A first-time visitor cannot distinguish this from any other leaderboard in the first screen.
 
-**F2 — Provenance, the entire product thesis, is 100% hidden behind a click.** 456 scores each carry `source.url`, `source.retrieved`, and often `settings` (`schema.ts:57-72`). None of it renders on the table. The only in-table provenance signal is the `Vendor` badge on `selfReported` scores (`ScoreCell.tsx:36-41`) — and since every current score is independently measured by Artificial Analysis (`Methodology.tsx:110-113`), that badge is effectively never shown. *The board looks exactly like a board with no citations.*
+**F2 — Provenance, the entire product thesis, is 100% hidden behind a click.** 456 scores each carry `source.url`, `source.retrieved`, and often `settings` (`schema.ts:57-72`). None of it renders on the table. The only in-table provenance signal is the `Vendor` badge derived from a score publisher's vendor type (`ScoreCell.tsx:36-41`) — and since every current score is independently measured by Artificial Analysis (`Methodology.tsx:110-113`), that badge is effectively never shown. *The board looks exactly like a board with no citations.*
 
 **F3 — The Index is undefended at the point of use.** `Tooltip` is attached only to benchmark columns (`LeaderboardTable.tsx:201-208`). The Rank, Model, **Index**, and Price headers have none. A visitor sees `87.8` under a header that says `Index` with no unit, no scale, and no explanation without navigating to `/methodology`.
 
@@ -841,7 +841,7 @@ This is the conversion action itself. Today: nothing (F5).
 ### Flow 5 — Come back
 
 - **Freshness chip** in the command bar on every route (Flow 1.3).
-- **"What changed"** — a diff strip on `/`, computed at build time from git history of `data/scores.json`: *3 models added · 24 scores updated since 2026-07-19.* No new data model, no runtime cost.
+- **"What changed"** — a diff strip on `/`, computed at build time from git history of `data/measurements.json`: *3 models added · 24 scores updated since 2026-07-19.* No new data model, no runtime cost.
 - **`/feed.xml`** — a static feed emitted at build from the same diff. The lowest-effort return mechanism that needs no email capture and no CSP change.
 
 **H5** — Visible change-since-last-visit increases return rate. *Measure:* returning-visitor share.
@@ -898,7 +898,7 @@ No email capture, no modal, no cookie banner (nothing is set), no engagement gam
 | `src/app/feed.xml/route.ts` | `force-static` change feed |
 | `src/lib/urlState.ts` | Extend with `view`, `density`, `compare` — keep the existing default-omission behavior so canonical URLs stay clean |
 | `src/lib/percentile.ts` | Export the ramp-step function; reuse `percentileOf` logic already in `index.ts:64-74` rather than reimplementing |
-| `src/lib/changes.ts` | Build-time diff of `data/scores.json` against the previous commit |
+| `src/lib/changes.ts` | Build-time diff of `data/measurements.json` against the previous commit |
 | `scripts/generate-og.ts` | Build-time OG images (devDependency — needs sign-off) |
 | `src/styles/*.css` | The six-file layered system (§4.1) |
 
@@ -1048,7 +1048,7 @@ axe-core gate in CI; contrast unit test; font/gzip/content budgets in CI; VoiceO
 
 **Measured, not assumed:** all contrast ratios (computed from hex via the WCAG relative-luminance formula); all `out/` file sizes and gzip figures (`wc -c`, `gzip -c`); font file count and preload count (`ls`, `grep` over `out/index.html`); the motion inventory (`grep` counts for `gradient`, `backdrop-filter`, `mix-blend`, `@keyframes`, `!important`, `@layer`, `clamp(`, durations, easings — all reported as returned); the table's 1,676px min-width (arithmetic from the width tokens at `globals.css:29-33`); typeface availability and axes (queried from `node_modules/next/dist/compiled/@next/font/dist/google/font-data.json`); all four spring curves (solved numerically, then compiled to `linear()`); the grain data URI (generated and byte-counted).
 
-**Not read, and therefore not claimed:** `scripts/discovery/core.ts` and its tests (~1,900 lines — irrelevant to UI; characterized only via `audit-lmboard.md`); `data/models.json` beyond the first 80 lines plus computed aggregates; `data/scores.json` beyond its record count; `PRODUCTION_READINESS.md` beyond targeted greps; `src/lib/*.test.ts`.
+**Not read, and therefore not claimed:** `scripts/discovery/core.ts` and its tests (~1,900 lines — irrelevant to UI; characterized only via `audit-lmboard.md`); `data/models.json` beyond the first 80 lines plus computed aggregates; `data/measurements.json` beyond its record count; `PRODUCTION_READINESS.md` beyond targeted greps; `src/lib/*.test.ts`.
 
 **Stated as hypothesis, not fact:** every claim in §2.7 and §4.5 about visitor behavior. Production is unmonitored (`README.md:71`); there is no analytics, session recording, or field CWV data in this repository. Structural facts about what the code does are stated as facts and cited by line.
 

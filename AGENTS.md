@@ -59,8 +59,9 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
 
 ## Layout
 
-- `data/` — the dataset: `models.json`, `benchmarks.json`, `scores.json`, and the
-  discovery ledger `upstream-seen.json`. Licensed CC BY 4.0 (`data/LICENSE`).
+- `data/` — the dataset: `models.json`, `benchmarks.json`, `publishers.json`,
+  `measurements.json`, and the discovery ledger `upstream-seen.json`. Licensed
+  CC BY 4.0 (`data/LICENSE`).
 - `src/lib/` — all logic, tests colocated. `schema.ts` is the Zod source of truth
   for the data files (types inferred from it). `index.ts` is the ranking/Index
   math, not a barrel export.
@@ -78,13 +79,22 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
 
 - Schemas are `.strict()` — unknown keys fail validation. IDs are kebab-case
   slugs; dates are `YYYY-MM-DD`.
-- Every score needs `source.url`, `source.retrieved`, and a truthful
-  `selfReported`. Missing scores are omitted — never zero, never a placeholder.
+- Every measurement needs `publisherId`, `source.url`, and `source.retrieved`.
+  Record the named eval scaffold in `harness`, using `"undisclosed"` when the
+  source does not identify one. Missing measurements are omitted — never zero,
+  never a placeholder.
+- Measurements are unique by `(modelId, benchmarkId, publisherId)`. Canonical
+  scores resolve by publisher type (`independent`, `benchmark-author`, `vendor`),
+  then newest retrieval, then ascending publisher id. Conflicting measurements
+  remain as alternates; never average or drop publisher disagreement.
+- Vendor status is derived from `publisher.type`, not stored on a measurement.
+  Vendor claims must cite the vendor's own host and may only measure models whose
+  `lab` exactly matches the publisher's `vendorForLab`.
 - Every optional price needs first-party `source.url` and `source.retrieved`.
   Validation rejects Artificial Analysis pricing URLs; the weekly audit flags
   prices older than 30 days without removing them.
-- `reasoningEffort` must be identical across all of a model's scores, or absent
-  from all of them.
+- `reasoningEffort` must be identical across a model's canonical scores, or
+  absent from all of them. Alternates may legitimately use different efforts.
 - `model.url` must be the official vendor announcement or model card. Validation
   rejects `artificialanalysis.ai` URLs (the discovery scaffold placeholder);
   that is what keeps CI red on uncurated discovery PRs.

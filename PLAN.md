@@ -23,7 +23,7 @@ A fast, trustworthy, single-page leaderboard: ~15–20 frontier language models 
 
 ## 4. Data model
 
-Three flat JSON files in `data/`, validated by shared Zod schemas in `src/lib/schema.ts`. TypeScript types are inferred from the Zod schemas (single definition).
+Four primary JSON files in `data/`, validated by shared Zod schemas in `src/lib/schema.ts`. TypeScript types are inferred from the Zod schemas (single definition).
 
 ```ts
 type Model = {
@@ -50,24 +50,47 @@ type Benchmark = {
   sourceUrl: string;             // the benchmark's canonical home
 };
 
-type Score = {
+type Publisher = {
+  id: string;
+  name: string;
+  url: string;
+  type: "independent" | "benchmark-author" | "vendor";
+  runsOwnEvals: boolean;
+  vendorForLab?: string;
+  note?: string;
+};
+
+type Measurement = {
   modelId: string;               // must reference an existing Model.id
   benchmarkId: string;           // must reference an existing Benchmark.id
+  publisherId: string;           // must reference an existing Publisher.id
   value: number;
   source: { url: string; retrieved: string };   // REQUIRED — provenance is the product
   settings?: string;             // e.g. "pass@1, extended thinking", "no tools"
-  selfReported: boolean;         // vendor-reported vs third-party measurement
+  harness?: string;              // named scaffold/framework, or "undisclosed"
+  reasoningEffort?: string;
 };
 ```
 
 **Rules:**
 
-- `source` is mandatory on every score. No citation → no score.
+- `publisherId` and `source` are mandatory on every measurement. No publisher
+  or citation → no measurement.
 - `pricing.source` is mandatory whenever pricing is present. It points to
   first-party documentation and records the date that listing was checked;
   Artificial Analysis and other aggregators are not pricing sources.
-- Where a benchmark has a canonical third-party leaderboard (e.g. SWE-bench Verified), prefer that number over the vendor's. `selfReported: true` renders as a small visible marker.
-- At most one score per (model, benchmark) pair. If a lab reports multiple configurations, record the flagship configuration and note it in `settings`.
+- At most one measurement per `(model, benchmark, publisher)` triple. Different
+  publishers' results remain side by side; disagreement is never averaged,
+  overwritten, or discarded.
+- Canonical score precedence is independent publisher, benchmark author, then
+  vendor. Equal types use newest `source.retrieved`, then ascending
+  `publisherId`, so file and insertion order can never affect ranks.
+- Vendor status is derived from `publisher.type`; it is not stored separately.
+  Vendor measurements must cite the publisher's own host and match the model's
+  lab through `vendorForLab`.
+- Record the named scaffold in `harness`, using `"undisclosed"` when the source
+  does not identify it. Different publishers may use different
+  `reasoningEffort` values, but a model's canonical scores must agree.
 - Missing scores render as a muted "—" and sort to the bottom of that column.
 - The site-wide "last updated" stamp is derived from the max `source.retrieved` date (no manual stamp to forget).
 
@@ -146,7 +169,8 @@ lmboard/
   data/
     models.json
     benchmarks.json
-    scores.json
+    publishers.json
+    measurements.json
   scripts/
     validate-data.ts            # zod check + referential integrity; run in build & CI
   src/
@@ -161,8 +185,8 @@ lmboard/
 ### M1 — Foundation
 - [x] Scaffold Next.js 15 + TS, `output: 'export'`, repo hygiene (README, .gitignore, git init)
 - [x] Zod schemas + inferred types in `src/lib/schema.ts`
-- [x] `scripts/validate-data.ts`: schema check + referential integrity (every score's modelId/benchmarkId exists; no duplicate (model, benchmark) pairs); wire into `npm run build` and CI
-- [x] Seed data curated **from live sources** (see §5 warning): `benchmarks.json`, `models.json`, `scores.json`
+- [x] `scripts/validate-data.ts`: schema check + referential integrity (every measurement's modelId/benchmarkId/publisherId exists; no duplicate triples); wire into `npm run build` and CI
+- [x] Seed data curated **from live sources** (see §5 warning): `benchmarks.json`, `models.json`, `publishers.json`, `measurements.json`
 
 ### M2 — Core table (MVP line: M1+M2 = shippable)
 - [x] Data loading + join layer; Index computation with coverage rule
@@ -189,9 +213,9 @@ Arena-style ELO/voting · running our own evals · historical score trends · pe
 
 ## 10. Risks & mitigations
 
-- **Comparability:** the same benchmark yields different numbers under different harnesses/settings (thinking budgets, tools, pass@k). → per-score `settings`, prefer one canonical source per benchmark, say so in methodology.
-- **Staleness:** a month-old leaderboard is dead. → one-file data PRs, per-score `retrieved` dates, derived "last updated" stamp.
-- **Vendor bias:** self-reported numbers skew favorable. → `selfReported` marker, prefer third-party sources where they exist.
+- **Comparability:** the same benchmark yields different numbers under different harnesses/settings (thinking budgets, tools, pass@k). → per-measurement `harness` and `settings`, preserve every publisher result, and warn on spreads above five points.
+- **Staleness:** a month-old leaderboard is dead. → focused data PRs, per-measurement `retrieved` dates, derived "last updated" stamp, and warnings when a cell's newest retrieval is older than 90 days.
+- **Vendor bias:** vendor-published numbers skew favorable. → derive the visible Vendor marker from publisher type, rank third-party measurements first, and warn when a cell has only vendor evidence.
 - **Page weight:** the 61-model homepage export is about 425 KB uncompressed. → CI enforces a 1 MiB HTML budget; revisit payload separation or pagination before the catalog grows several-fold.
 - **Upstream concentration:** all current scores come from Artificial Analysis by deliberate curation choice. → the static snapshot survives upstream downtime or delisting, but updates stall if access or terms change; diversify only when a comparably consistent source is available.
 
@@ -243,3 +267,4 @@ Arena-style ELO/voting · running our own evals · historical score trends · pe
 - **2026-08-03 — Proprietary access filters and streamlined page chrome (owner request; amends the guided chooser entry):** Find now offers `proprietary` beside open weights, the leaderboard Weights filter exposes the same closed-weight selection with canonical URL state, and both filters classify models from the curated `openWeights` field. The Find browser title and introductory/action chrome and the Compare kicker use the requested shorter copy without changing their routes or data payloads.
 - **2026-08-03 — Leaderboard estimate badges removed (owner request):** Index cells render only their numeric value; the per-row `est.` count badge is removed without changing measured scores, estimate calculations, category ranks, or the methodology disclosure.
 - **2026-08-05 — Full benchmark and pricing audit (supersedes the price claims in both August 3 audit entries):** all 63 checkpoint-specific Artificial Analysis model pages were fetched directly and every one of the 463 stored values was compared with the live raw result at the board's two-decimal precision; the 41 omitted model/benchmark pairs were also checked and remain unpublished. Every numeric value matches exactly and advances to the new retrieval date. Artificial Analysis now exposes the April DeepSeek V4 Flash checkpoint under the archival `deepseek-v4-flash-0420` slug, which reproduces its eight stored results exactly, so those records move off the repointed July 31 URL onto the correct checkpoint-specific citation. The audit also restores `reasoningEffort: "reasoning"` to 100 score records across the 14 evaluated variants whose source names explicitly end in “(Reasoning),” metadata that the prior refresh had dropped. A first-party review of all 51 listed prices and all 12 omissions corrects GPT-5.6 Terra to $2/$12 and GPT-5.6 Luna to $0.20/$1.20 using OpenAI's standard short-context rates, removes Devstral 2 pricing because Mistral's current deprecated model card no longer publishes a rate, and advances the 50 remaining price checks; every other rate and intentional omission is unchanged.
+- **2026-08-05 — Multi-publisher measurement model (supersedes the one-score-per-cell rule and the 2026-07-18 all-scores reasoning-effort rule):** `data/measurements.json` now permits one sourced result per `(model, benchmark, publisher)`, with publisher identity and role defined in `data/publishers.json`; conflicting publisher values are preserved as evidence rather than averaged or overwritten. The canonical score used by every Index, distribution, domain, and rank follows a fixed auditable order: independent publisher before benchmark author before vendor, then newer retrieval within the same role, then ascending publisher id as the deterministic final tie-break. This order puts evaluators without a stake in the model first while retaining benchmark-author and vendor claims as alternates. Vendor status is derived from publisher type, so the stored `selfReported` flag is removed and cannot disagree with provenance; vendor claims must be first-party and match the model's lab. Reasoning effort is checked across canonical scores only because alternate publishers may legitimately evaluate different effort levels. Validation fails on broken publisher provenance and reports vendor-only, older-than-90-day, and greater-than-five-point-spread cells as non-fatal review warnings. The 463-record Artificial Analysis migration assigns the Stirrup harness without changing any value, source, settings, or reasoning effort, so it still resolves to the same 463 canonical cells.

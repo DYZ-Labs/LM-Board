@@ -4,7 +4,7 @@ A static, hand-curated leaderboard of frontier language-model benchmark scores w
 
 **Live at [www.checklmboard.xyz](https://www.checklmboard.xyz).**
 
-LM Board does not run evals — it curates published ones. Every score is stored with its source URL, retrieval date, reporting provenance (vendor-published vs. third-party), and evaluation settings when the source provides them. Missing measurements stay missing; they are never stored as zero or padded with placeholders. Index-only estimates are derived from measured percentile standing, documented in the methodology, and never become score records. Build-time validation fails on malformed records, duplicate IDs, dangling score references, duplicate model/benchmark pairs, or out-of-range values, so invalid data cannot ship.
+LM Board does not run evals — it curates published ones. Every measurement is stored with its publisher, source URL, retrieval date, harness, and evaluation settings when the source provides them. A model and benchmark may have one measurement per publisher; LM Board deterministically selects one canonical score while preserving every conflicting publisher result as an alternate. Missing measurements stay missing; they are never stored as zero or padded with placeholders. Index-only estimates are derived from measured percentile standing, documented in the methodology, and never become measurement records. Build-time validation fails on malformed records, duplicate IDs, dangling references, duplicate model/benchmark/publisher triples, or out-of-range values, so invalid data cannot ship; vendor-only, stale, and high-spread cells are reported as warnings for human review.
 
 ## What the board does
 
@@ -60,10 +60,11 @@ The byte gate measures static HTML, Flight, directly linked CSS/executable JS, f
 
 - `data/models.json` — model identity, release metadata, context, pricing, and official URL
 - `data/benchmarks.json` — benchmark metadata and canonical sources
-- `data/scores.json` — one sourced score per model/benchmark pair
+- `data/publishers.json` — publisher identity, role, and vendor-to-model-lab mapping
+- `data/measurements.json` — one sourced measurement per model/benchmark/publisher triple
 - `data/upstream-seen.json` — append-only ledger of every upstream model id discovery has ever seen
 
-The TypeScript source of truth for all formats is `src/lib/schema.ts`. Missing scores are omitted; they are never guessed or represented with placeholder values.
+The TypeScript source of truth for all formats is `src/lib/schema.ts`. Within each model/benchmark cell, canonical precedence is fixed: independent publishers first, benchmark authors second, and model vendors third; equal publisher types break ties by newest retrieval and then ascending publisher id. Missing scores are omitted; they are never guessed or represented with placeholder values, and disagreeing measurements are never averaged or discarded.
 
 Where present, pricing is the current uncached base or short-context API rate in USD per million tokens. Every listed price carries a first-party pricing URL and the date it was checked; `npm run pricing:audit` flags checks older than 30 days. Provider pricing may be tiered by context length or promotional period, so the linked official pricing documentation remains authoritative.
 
@@ -123,7 +124,7 @@ GitHub disables scheduled workflows after 60 days without repository activity; a
 
 ## Seed snapshot
 
-The current snapshot contains 63 models, 8 benchmarks, and 463 scores. The original 2026-07-17 seed, the subsequent model refresh, the 2025 back-catalog addition, the 2026 catch-up batch, and the curated discovery pull requests are documented in the decision log in `PLAN.md`.
+The current snapshot contains 63 models, 8 benchmarks, 6 registered publishers, 463 measurements, and 463 resolved score cells. The original 2026-07-17 seed, the subsequent model refresh, the 2025 back-catalog addition, the 2026 catch-up batch, and the curated discovery pull requests are documented in the decision log in `PLAN.md`.
 
 ## License
 
