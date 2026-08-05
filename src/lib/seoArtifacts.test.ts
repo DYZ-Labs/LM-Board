@@ -23,7 +23,6 @@ describe("robots.txt contract", () => {
       "/index.txt",
       "/404.txt",
       "/compare.txt",
-      "/choose.txt",
       "/methodology.txt",
       "/model/*.txt$",
     ]);
@@ -36,7 +35,6 @@ describe("sitemap contract", () => {
     const urls = sitemap().map((entry) => entry.url);
 
     expect(urls).toContain(`${siteUrl}/compare`);
-    expect(urls).toContain(`${siteUrl}/choose`);
     expect(urls).toContain(`${siteUrl}/methodology`);
     expect(urls).not.toContain(`${siteUrl}/value`);
   });
@@ -59,7 +57,7 @@ describe("sitemap contract", () => {
   it("uses catalog freshness for routes that display sourced pricing", () => {
     const entries = sitemap();
 
-    for (const path of ["", "/compare", "/choose"]) {
+    for (const path of ["", "/compare"]) {
       expect(
         entries.find((entry) => entry.url === `${siteUrl}${path}`)?.lastModified,
       ).toBe(catalogFreshness(data));
@@ -113,6 +111,5 @@ describe("llms.txt artifact", () => {
       expect(text).toContain(`${siteUrl}/model/${row.model.id}`);
     }
     expect(text).not.toContain(`${siteUrl}/value`);
-    expect(text).toContain(`${siteUrl}/choose`);
   });
 });

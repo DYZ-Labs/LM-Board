@@ -161,7 +161,6 @@ describe("the site footer", () => {
 
     expect(mastheadLabels).toEqual([
       "Leaderboard",
-      "Find",
       "Compare",
       "Methodology",
     ]);

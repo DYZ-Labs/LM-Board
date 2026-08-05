@@ -50,7 +50,7 @@ in `vitest.setup.ts`).
 Occasional:
 
 ```bash
-npm run og -- --only <model-id>    # one OG card (`home`, `choose`, etc. also work)
+npm run og -- --only <model-id>    # one OG card (`home`, `compare`, etc. also work)
 npm run og:verify                  # pixel checks on the generated cards
 npm run icons                      # rebuild derived icons from committed source PNGs
 npm run discover:models -- --help  # AA discovery CLI; dry-run by default, needs AA_API_KEY
@@ -65,7 +65,7 @@ npm run monitor:production -- --base-url https://www.checklmboard.xyz
   for the data files (types inferred from it). `index.ts` is the ranking/Index
   math, not a barrel export.
 - `src/components/` — React components, colocated `*.test.tsx`.
-- `src/app/` — routes: `/`, `/model/[id]`, `/compare`, `/choose`, `/methodology`, plus
+- `src/app/` — routes: `/`, `/model/[id]`, `/compare`, `/methodology`, plus
   `llms.txt`, `palette.json`, sitemap, robots, manifest.
 - `src/styles/` — hand-authored CSS cascade layers; design tokens in `tokens.css`.
 - `scripts/` — tsx CLIs: data validation, OG cards, icons, payload budgets,

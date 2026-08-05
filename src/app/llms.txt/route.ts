@@ -70,7 +70,6 @@ ${benchmarks}
 ## Pages
 
 - [Leaderboard](${siteUrl}/)
-- [Guided model chooser](${siteUrl}/choose)
 - [Methodology, in full](${siteUrl}/methodology)
 - [Side-by-side comparison](${siteUrl}/compare)
 
