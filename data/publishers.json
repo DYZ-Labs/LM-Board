@@ -1,0 +1,49 @@
+[
+  {
+    "id": "artificial-analysis",
+    "name": "Artificial Analysis",
+    "url": "https://artificialanalysis.ai",
+    "type": "independent",
+    "runsOwnEvals": true,
+    "note": "Independent runs under a mystery-shopper policy; maintains private copies of eval sets."
+  },
+  {
+    "id": "epoch-ai",
+    "name": "Epoch AI",
+    "url": "https://epoch.ai/benchmarks",
+    "type": "independent",
+    "runsOwnEvals": true,
+    "note": "Nonprofit. Publishes eval code, interaction logs, and CSVs under CC-BY-4.0."
+  },
+  {
+    "id": "terminal-bench",
+    "name": "Terminal-Bench",
+    "url": "https://www.tbench.ai/",
+    "type": "benchmark-author",
+    "runsOwnEvals": true
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "url": "https://openai.com",
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "OpenAI"
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "url": "https://www.anthropic.com",
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "Anthropic"
+  },
+  {
+    "id": "google-deepmind",
+    "name": "Google DeepMind",
+    "url": "https://deepmind.google",
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "Google"
+  }
+]

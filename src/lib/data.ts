@@ -1,6 +1,7 @@
 import benchmarksJson from "../../data/benchmarks.json";
+import measurementsJson from "../../data/measurements.json";
 import modelsJson from "../../data/models.json";
-import scoresJson from "../../data/scores.json";
+import publishersJson from "../../data/publishers.json";
 
 import { validateDataIntegrity } from "@/lib/dataIntegrity";
 import {
@@ -12,10 +13,12 @@ import {
   type RankScope,
 } from "@/lib/index";
 import { rampStep, type RampStep } from "@/lib/ramp";
+import { resolveMeasurements } from "@/lib/provenance";
 import {
   BenchmarksFileSchema,
+  MeasurementsFileSchema,
   ModelsFileSchema,
-  ScoresFileSchema,
+  PublishersFileSchema,
   type Benchmark,
   type Model,
   type Score,
@@ -72,6 +75,10 @@ export type LeaderboardData = {
   lastUpdated: string;
   /** Latest first-party pricing retrieval represented in the model catalog. */
   latestPricingRetrieved: string | null;
+  /** Raw measurements before canonical publisher precedence is applied. */
+  measurementCount: number;
+  /** Publishers available to measurement records. */
+  publisherCount: number;
   scoreCount: number;
   /**
    * Keyed by benchmark id, over every score in the dataset. A bar that encodes
@@ -83,6 +90,8 @@ export type LeaderboardData = {
   /** Earliest retrieval date in the dataset; `lastUpdated` is the latest. */
   oldestRetrieved: string;
   selfReportedCount: number;
+  /** Canonical cells supported only by vendor-published measurements. */
+  unverifiedCount: number;
 };
 
 /**
@@ -157,7 +166,9 @@ export function loadLeaderboardData(): LeaderboardData {
 
   const models = ModelsFileSchema.parse(modelsJson);
   const benchmarks = BenchmarksFileSchema.parse(benchmarksJson);
-  const scores = ScoresFileSchema.parse(scoresJson);
+  const measurements = MeasurementsFileSchema.parse(measurementsJson);
+  const publishers = PublishersFileSchema.parse(publishersJson);
+  const scores = resolveMeasurements(measurements, publishers);
   const integrityErrors = validateDataIntegrity(models, benchmarks, scores);
 
   if (integrityErrors.length > 0) {
@@ -172,6 +183,7 @@ export function loadLeaderboardData(): LeaderboardData {
   const benchmarkDomains: Record<string, BenchmarkDomain> = {};
   let oldestRetrieved = "";
   let selfReportedCount = 0;
+  let unverifiedCount = 0;
 
   for (const score of scores) {
     const modelScores = scoresByModel.get(score.modelId) ?? [];
@@ -194,13 +206,16 @@ export function loadLeaderboardData(): LeaderboardData {
       oldestRetrieved = score.source.retrieved;
     }
 
-    if (score.selfReported) selfReportedCount += 1;
+    if (score.publisher.type === "vendor") selfReportedCount += 1;
+    if (score.unverified) unverifiedCount += 1;
   }
 
   const distributions = buildBenchmarkDistributions(scores, benchmarks);
   const rowsWithoutRanks: LeaderboardRow[] = models.map((model) => {
     const modelScores = scoresByModel.get(model.id) ?? [];
-    const reasoningEffort = modelScores[0]?.reasoningEffort ?? null;
+    const reasoningEffort =
+      modelScores.find((score) => score.reasoningEffort !== undefined)
+        ?.reasoningEffort ?? null;
     const scoreLookup = new Map(
       modelScores.map((score) => [score.benchmarkId, score]),
     );
@@ -339,10 +354,13 @@ export function loadLeaderboardData(): LeaderboardData {
     labs,
     lastUpdated,
     latestPricingRetrieved,
+    measurementCount: measurements.length,
+    publisherCount: publishers.length,
     scoreCount: scores.length,
     benchmarkDomains,
     oldestRetrieved,
     selfReportedCount,
+    unverifiedCount,
   };
 
   return cachedLeaderboardData;

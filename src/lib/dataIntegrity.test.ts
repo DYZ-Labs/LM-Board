@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 
 import { validateDataIntegrity } from "./dataIntegrity";
-import type { Benchmark, Model, Score } from "./schema";
+import type { Benchmark, Model, Publisher, Score } from "./schema";
+
+const publisher: Publisher = {
+  id: "publisher",
+  name: "Publisher",
+  url: "https://example.com",
+  type: "independent",
+  runsOwnEvals: true,
+};
 
 const model: Model = {
   id: "model",
@@ -27,11 +35,16 @@ function score(benchmarkId: string): Score {
   return {
     modelId: model.id,
     benchmarkId,
+    publisherId: publisher.id,
     value: 80,
     source: {
       url: `https://example.com/${benchmarkId}/score`,
       retrieved: "2026-07-28",
     },
+    publisher,
+    alternates: [],
+    spread: null,
+    unverified: false,
     selfReported: false,
   };
 }

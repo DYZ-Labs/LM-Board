@@ -5,10 +5,12 @@ import path from "node:path";
 import type { ZodType } from "zod";
 
 import { validateDataIntegrity } from "../src/lib/dataIntegrity";
+import { resolveMeasurements } from "../src/lib/provenance";
 import {
   BenchmarksFileSchema,
+  MeasurementsFileSchema,
   ModelsFileSchema,
-  ScoresFileSchema,
+  PublishersFileSchema,
   type Model,
 } from "../src/lib/schema";
 import { LedgerFileSchema, validateLedgerConsistency } from "./discovery/core";
@@ -117,17 +119,27 @@ async function loadJson<T>(relativePath: string, schema: ZodType<T>): Promise<T>
 }
 
 async function main() {
-  const [modelsResult, benchmarksResult, scoresResult] = await Promise.allSettled([
-    loadJson("data/models.json", ModelsFileSchema),
-    loadJson("data/benchmarks.json", BenchmarksFileSchema),
-    loadJson("data/scores.json", ScoresFileSchema),
-  ]);
+  const [modelsResult, benchmarksResult, measurementsResult, publishersResult] =
+    await Promise.allSettled([
+      loadJson("data/models.json", ModelsFileSchema),
+      loadJson("data/benchmarks.json", BenchmarksFileSchema),
+      loadJson("data/measurements.json", MeasurementsFileSchema),
+      loadJson("data/publishers.json", PublishersFileSchema),
+    ]);
 
-  const fileErrors = [modelsResult, benchmarksResult, scoresResult].flatMap(
-    (result) =>
-      result.status === "rejected"
-        ? [result.reason instanceof Error ? result.reason.message : String(result.reason)]
-        : [],
+  const fileErrors = [
+    modelsResult,
+    benchmarksResult,
+    measurementsResult,
+    publishersResult,
+  ].flatMap((result) =>
+    result.status === "rejected"
+      ? [
+          result.reason instanceof Error
+            ? result.reason.message
+            : String(result.reason),
+        ]
+      : [],
   );
 
   if (fileErrors.length > 0) {
@@ -137,14 +149,17 @@ async function main() {
   if (
     modelsResult.status !== "fulfilled" ||
     benchmarksResult.status !== "fulfilled" ||
-    scoresResult.status !== "fulfilled"
+    measurementsResult.status !== "fulfilled" ||
+    publishersResult.status !== "fulfilled"
   ) {
     throw new Error("Data file validation failed unexpectedly");
   }
 
   const models = modelsResult.value;
   const benchmarks = benchmarksResult.value;
-  const scores = scoresResult.value;
+  const measurements = measurementsResult.value;
+  const publishers = publishersResult.value;
+  const scores = resolveMeasurements(measurements, publishers);
 
   const ledger = await validateLedger(models);
   const errors = [
@@ -165,7 +180,7 @@ async function main() {
     ledger.entryCount === null ? "" : ` Upstream ledger: ${ledger.entryCount} entries.`;
 
   console.log(
-    `Validated ${models.length} models, ${benchmarks.length} benchmarks, and ${scores.length} scores.${ledgerNote}`,
+    `Validated ${models.length} models, ${benchmarks.length} benchmarks, ${measurements.length} measurements, and ${publishers.length} publishers.${ledgerNote}`,
   );
 }
 

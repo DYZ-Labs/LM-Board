@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { BENCHMARK_CATEGORIES } from "@/lib/categories";
+import type { ResolvedScore } from "@/lib/provenance";
 
 const slugSchema = z
   .string()
@@ -89,26 +90,13 @@ export const MeasurementSchema = z
   })
   .strict();
 
-export const ScoreSchema = z
-  .object({
-    modelId: slugSchema,
-    benchmarkId: slugSchema,
-    value: z.number().finite(),
-    source: SourceSchema,
-    settings: z.string().trim().min(1).optional(),
-    reasoningEffort: z.string().trim().min(1).max(40).optional(),
-    selfReported: z.boolean(),
-  })
-  .strict();
-
 export const ModelsFileSchema = z.array(ModelSchema).min(1);
 export const BenchmarksFileSchema = z.array(BenchmarkSchema).min(1);
 export const PublishersFileSchema = z.array(PublisherSchema).min(1);
 export const MeasurementsFileSchema = z.array(MeasurementSchema).min(1);
-export const ScoresFileSchema = z.array(ScoreSchema).min(1);
 
 export type Model = z.infer<typeof ModelSchema>;
 export type Benchmark = z.infer<typeof BenchmarkSchema>;
 export type Publisher = z.infer<typeof PublisherSchema>;
 export type Measurement = z.infer<typeof MeasurementSchema>;
-export type Score = z.infer<typeof ScoreSchema>;
+export type Score = ResolvedScore;

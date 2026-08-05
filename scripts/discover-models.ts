@@ -9,7 +9,7 @@ import type { ZodType } from "zod";
 import {
   BenchmarksFileSchema,
   ModelsFileSchema,
-  ScoresFileSchema,
+  MeasurementsFileSchema,
 } from "../src/lib/schema";
 import {
   AA_MODELS_ENDPOINT,
@@ -146,7 +146,7 @@ async function runSeed(write: boolean, fromPath: string | undefined): Promise<vo
 
   const [models, scores, aaModels] = await Promise.all([
     loadJson(MODELS_PATH, ModelsFileSchema),
-    loadJson("data/scores.json", ScoresFileSchema),
+    loadJson("data/measurements.json", MeasurementsFileSchema),
     fetchAaModels(fromPath),
   ]);
 

@@ -3,8 +3,8 @@ import { z } from "zod";
 import {
   ModelSchema,
   type Benchmark,
+  type Measurement,
   type Model,
-  type Score,
 } from "../../src/lib/schema";
 
 export const AA_MODELS_ENDPOINT =
@@ -180,16 +180,16 @@ export interface SeedResult {
 export function buildSeedLedger(
   aaModels: AaModel[],
   models: Model[],
-  scores: Score[],
+  measurements: Measurement[],
   today: string,
 ): SeedResult {
   const slugByModelId = new Map<string, string>();
 
-  for (const score of scores) {
-    const slug = extractAaSlug(score.source.url);
+  for (const measurement of measurements) {
+    const slug = extractAaSlug(measurement.source.url);
 
-    if (slug !== null && !slugByModelId.has(score.modelId)) {
-      slugByModelId.set(score.modelId, slug);
+    if (slug !== null && !slugByModelId.has(measurement.modelId)) {
+      slugByModelId.set(measurement.modelId, slug);
     }
   }
 
