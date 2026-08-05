@@ -248,22 +248,41 @@ describe("category switching", () => {
     expect(currentUrl().searchParams.get("sort")).toBe(codingBenchmark.id);
   });
 
-  it("labels every estimated Index on the active category", async () => {
+  it("shows estimated category Indexes without an estimate badge", async () => {
     const user = userEvent.setup();
     render(board());
 
     await user.click(screen.getByRole("tab", { name: "Agentic" }));
 
-    const estimatedModels = data.rows.filter(
-      (row) => row.scopes.agentic.estimatedCount > 0,
-    );
-    expect(
-      screen.getAllByTitle(/benchmark values estimated in this Index$/),
-    ).toHaveLength(estimatedModels.length);
+    expect(screen.queryByText(/^\d+ est\.$/)).not.toBeInTheDocument();
   });
 });
 
 describe("filtering", () => {
+  it("omits open-weight badges and the visible search shortcut", () => {
+    render(board());
+
+    expect(document.querySelector(".model-primary-line .badge-pos")).toBeNull();
+    expect(document.querySelector(".search-field .field-key")).toBeNull();
+  });
+
+  it("labels proprietary model details without calling their weights closed", async () => {
+    const proprietary = data.rows.find((row) => !row.model.openWeights)!;
+    render(board());
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(`^Show details for ${proprietary.model.name}`),
+      }),
+    );
+    const panel = screen.getByRole("region", {
+      name: `${proprietary.model.name} details`,
+    });
+
+    expect(within(panel).getByText("Proprietary")).toBeInTheDocument();
+    expect(panel).not.toHaveTextContent(/closed weights/i);
+  });
+
   it("narrows rows without renumbering ranks", async () => {
     const user = userEvent.setup();
     render(board());

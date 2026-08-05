@@ -514,7 +514,7 @@ export function CompareGrid({ payload }: CompareGridProps) {
                   <th scope="row">Weights</th>
                   {selected.map((row) => (
                     <td key={row.id}>
-                      {row.openWeights ? "Open" : "Closed"}
+                      {row.openWeights ? "Open" : "Proprietary"}
                     </td>
                   ))}
                 </tr>

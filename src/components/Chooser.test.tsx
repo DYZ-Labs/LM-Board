@@ -95,6 +95,10 @@ describe("chooser initial state", () => {
     expect(markup).toContain("chooser-results-live");
     expect(markup).toContain("chooser-initial-skeleton");
     expect(markup).toContain("Most capable");
+    expect(markup).toContain(">Models<");
+    expect(markup).not.toContain("API or open weights");
+    expect(markup).toContain("Proprietary weights");
+    expect(markup).not.toContain("Closed weights");
     expect(css).toMatch(
       /html\[data-choose-pending="true"\]\s+\.chooser-results-live\s*{\s*display:\s*none;/,
     );
@@ -127,7 +131,7 @@ describe("chooser application", () => {
     expect(screen.getAllByRole("link", { name: "Open model record" })).toHaveLength(4);
 
     await user.click(screen.getByRole("button", { name: "Find" }));
-    const heading = screen.getByRole("heading", { name: "Recommendations" });
+    const heading = screen.getByRole("heading", { name: "Models" });
     expect(heading).toHaveFocus();
     expect(screen.getByRole("heading", { name: /No ranked models/ })).toBeInTheDocument();
     const url = new URL(window.location.href);
