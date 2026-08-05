@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { MeasurementSchema, ModelSchema, PublisherSchema } from "./schema";
+import {
+  CandidateFileSchema,
+  CandidateSchema,
+  MeasurementSchema,
+  ModelSchema,
+  PublisherSchema,
+} from "./schema";
 
 const pricedModel = {
   id: "priced-model",
@@ -97,5 +103,101 @@ describe("publisher and measurement schemas", () => {
     expect(PublisherSchema.safeParse({ ...publisher, rank: 1 }).success).toBe(
       false,
     );
+  });
+});
+
+describe("CandidateSchema", () => {
+  const candidate = {
+    modelId: "moonshot-kimi-k3",
+    benchmarkId: "terminal-bench-v2-1",
+    publisherId: "moonshot",
+    value: 88.3,
+    source: {
+      url: "https://huggingface.co/moonshotai/Kimi-K3",
+      retrieved: "2026-08-05",
+    },
+    harness: "Kimi Code",
+    reasoningEffort: "max",
+    evidence: {
+      quote:
+        "| Terminal-Bench 2.1 | 88.3 | 88.0 | 88.8 | 84.6 | 83.4 | 82.7 |",
+      printedBenchmarkName: "Terminal-Bench 2.1",
+      printedConditions:
+        "reasoning effort max, temperature = 1.0, top-p = 1.0",
+      printedColumnHeader: "Kimi K3 (max)",
+    },
+    extractedBy: "agent",
+    review: "pending",
+  } as const;
+
+  it("accepts a strict candidate with verbatim evidence", () => {
+    expect(CandidateSchema.parse(candidate)).toEqual(candidate);
+  });
+
+  it("requires evidence on candidates while allowing legacy measurements", () => {
+    const withoutEvidence = Object.fromEntries(
+      Object.entries(candidate).filter(([key]) => key !== "evidence"),
+    );
+
+    expect(CandidateSchema.safeParse(withoutEvidence).success).toBe(false);
+    expect(MeasurementSchema.safeParse(withoutEvidence).success).toBe(false);
+    expect(
+      MeasurementSchema.safeParse({
+        modelId: candidate.modelId,
+        benchmarkId: candidate.benchmarkId,
+        publisherId: candidate.publisherId,
+        value: candidate.value,
+        source: candidate.source,
+      }).success,
+    ).toBe(true);
+  });
+
+  it("rejects empty or structurally altered evidence", () => {
+    expect(
+      CandidateSchema.safeParse({
+        ...candidate,
+        evidence: { ...candidate.evidence, quote: "   " },
+      }).success,
+    ).toBe(false);
+    expect(
+      CandidateSchema.safeParse({
+        ...candidate,
+        evidence: { ...candidate.evidence, normalizedQuote: "tidied" },
+      }).success,
+    ).toBe(false);
+  });
+
+  it("accepts a review decision and rejects unknown workflow fields", () => {
+    expect(
+      CandidateSchema.safeParse({
+        ...candidate,
+        review: "rejected",
+        reviewNote: "Column header does not identify a curated model",
+      }).success,
+    ).toBe(true);
+    expect(
+      CandidateSchema.safeParse({ ...candidate, approved: true }).success,
+    ).toBe(false);
+  });
+
+  it("allows a noted empty page and requires every record to match its source", () => {
+    expect(
+      CandidateFileSchema.safeParse({
+        source: candidate.source,
+        note: "No parseable comparison table was found; no values were inferred.",
+        candidates: [],
+      }).success,
+    ).toBe(true);
+    expect(
+      CandidateFileSchema.safeParse({
+        source: candidate.source,
+        candidates: [
+          {
+            ...candidate,
+            source: { ...candidate.source, retrieved: "2026-08-04" },
+          },
+        ],
+      }).success,
+    ).toBe(false);
   });
 });
