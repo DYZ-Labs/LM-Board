@@ -20,7 +20,7 @@ type ProvenanceRibbonProps = {
  * the part the old copy gave away for nothing.
  *
  * The qualifying facts are read back out of the dataset rather than written
- * down, so a self-reported score arriving in data/scores.json rewrites the
+ * down, so a vendor measurement arriving in data/measurements.json rewrites the
  * sentence instead of falsifying it.
  *
  * The closing clause exists because the claim was still only demonstrable at

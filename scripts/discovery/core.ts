@@ -3,8 +3,8 @@ import { z } from "zod";
 import {
   ModelSchema,
   type Benchmark,
+  type Measurement,
   type Model,
-  type Score,
 } from "../../src/lib/schema";
 
 export const AA_MODELS_ENDPOINT =
@@ -157,7 +157,7 @@ export function validateLedgerConsistency(
 const AA_MODEL_PAGE_PATTERN =
   /^https?:\/\/(?:www\.)?artificialanalysis\.ai\/models\/([A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*)(?:[/#?]|$)/;
 
-/** Extracts the AA model slug from a score's source URL, if it is an AA model page. */
+/** Extracts the AA model slug from a measurement source, if it is an AA model page. */
 export function extractAaSlug(url: string): string | null {
   const match = AA_MODEL_PAGE_PATTERN.exec(url);
 
@@ -174,22 +174,22 @@ export interface SeedResult {
 
 /**
  * Builds the initial ledger. Every current model's AA slug is recovered from
- * its score source URLs; matching upstream entries become "added", everything
+ * its measurement source URLs; matching upstream entries become "added", everything
  * else upstream becomes "ignored" (pre-automation backlog).
  */
 export function buildSeedLedger(
   aaModels: AaModel[],
   models: Model[],
-  scores: Score[],
+  measurements: Measurement[],
   today: string,
 ): SeedResult {
   const slugByModelId = new Map<string, string>();
 
-  for (const score of scores) {
-    const slug = extractAaSlug(score.source.url);
+  for (const measurement of measurements) {
+    const slug = extractAaSlug(measurement.source.url);
 
-    if (slug !== null && !slugByModelId.has(score.modelId)) {
-      slugByModelId.set(score.modelId, slug);
+    if (slug !== null && !slugByModelId.has(measurement.modelId)) {
+      slugByModelId.set(measurement.modelId, slug);
     }
   }
 

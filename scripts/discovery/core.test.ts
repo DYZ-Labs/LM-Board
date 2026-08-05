@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import type { Benchmark, Model, Score } from "../../src/lib/schema";
+import type {
+  Benchmark,
+  Measurement,
+  Model,
+} from "../../src/lib/schema";
 import {
   buildScaffolds,
   buildSeedLedger,
@@ -33,16 +37,16 @@ function makeModel(overrides: Partial<Model> & Pick<Model, "id" | "lab">): Model
   };
 }
 
-function makeScore(modelId: string, aaSlug: string): Score {
+function makeMeasurement(modelId: string, aaSlug: string): Measurement {
   return {
     modelId,
     benchmarkId: "gpqa-diamond",
+    publisherId: "artificial-analysis",
     value: 90,
     source: {
       url: `https://artificialanalysis.ai/models/${aaSlug}#intelligence-breakdown`,
       retrieved: "2026-07-17",
     },
-    selfReported: false,
   };
 }
 
@@ -54,11 +58,11 @@ const MODELS: Model[] = [
   makeModel({ id: "mistral-large-3", name: "Mistral Large 3", lab: "Mistral AI" }),
 ];
 
-const SCORES: Score[] = [
-  makeScore("openai-gpt-5-6-sol", "gpt-5-6-sol"),
-  makeScore("anthropic-claude-fable-5", "claude-fable-5"),
-  makeScore("kimi-k3", "kimi-k3"),
-  makeScore("xai-grok-4-5", "grok-4-5"),
+const MEASUREMENTS: Measurement[] = [
+  makeMeasurement("openai-gpt-5-6-sol", "gpt-5-6-sol"),
+  makeMeasurement("anthropic-claude-fable-5", "claude-fable-5"),
+  makeMeasurement("kimi-k3", "kimi-k3"),
+  makeMeasurement("xai-grok-4-5", "grok-4-5"),
 ];
 
 const BENCHMARKS: Benchmark[] = [
@@ -84,7 +88,7 @@ const AA_ALL = parseAaModels(fixture);
 const AA_KNOWN = AA_ALL.slice(0, 4);
 
 function seededLedger(): LedgerFile {
-  return buildSeedLedger(AA_KNOWN, MODELS, SCORES, TODAY).ledger;
+  return buildSeedLedger(AA_KNOWN, MODELS, MEASUREMENTS, TODAY).ledger;
 }
 
 describe("parseAaModels", () => {
@@ -154,7 +158,7 @@ describe("extractAaSlug", () => {
 
 describe("buildSeedLedger", () => {
   it("matches existing models by AA slug and marks the rest as backlog", () => {
-    const seed = buildSeedLedger(AA_ALL, MODELS, SCORES, TODAY);
+    const seed = buildSeedLedger(AA_ALL, MODELS, MEASUREMENTS, TODAY);
 
     expect(seed.matched).toHaveLength(4);
     expect(seed.backlogCount).toBe(4);
@@ -176,19 +180,22 @@ describe("buildSeedLedger", () => {
   });
 
   it("reports local models with no live upstream entry", () => {
-    const seed = buildSeedLedger(AA_ALL, MODELS, SCORES, TODAY);
+    const seed = buildSeedLedger(AA_ALL, MODELS, MEASUREMENTS, TODAY);
 
     expect(seed.unmatchedModelIds).toEqual(["mistral-large-3"]);
   });
 
   it("throws when two models claim the same AA slug", () => {
-    const conflicting = [...SCORES, makeScore("mistral-large-3", "gpt-5-6-sol")];
+    const conflicting = [
+      ...MEASUREMENTS,
+      makeMeasurement("mistral-large-3", "gpt-5-6-sol"),
+    ];
 
     expect(() => buildSeedLedger(AA_ALL, MODELS, conflicting, TODAY)).toThrow(/Seed conflict/);
   });
 
   it("produces a ledger that passes the file schema", () => {
-    const seed = buildSeedLedger(AA_ALL, MODELS, SCORES, TODAY);
+    const seed = buildSeedLedger(AA_ALL, MODELS, MEASUREMENTS, TODAY);
 
     expect(() => LedgerFileSchema.parse(seed.ledger)).not.toThrow();
   });
@@ -207,7 +214,12 @@ describe("diffAgainstLedger", () => {
   });
 
   it("returns nothing when everything has been seen", () => {
-    const fullLedger = buildSeedLedger(AA_ALL, MODELS, SCORES, TODAY).ledger;
+    const fullLedger = buildSeedLedger(
+      AA_ALL,
+      MODELS,
+      MEASUREMENTS,
+      TODAY,
+    ).ledger;
 
     expect(diffAgainstLedger(AA_ALL, fullLedger)).toHaveLength(0);
   });

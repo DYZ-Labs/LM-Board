@@ -77,50 +77,79 @@ const fixtures = vi.hoisted(() => {
       sourceUrl: "https://example.com/benchmarks/agentic",
     },
   ];
-  const score = (
+  const publishers = [
+    {
+      id: "independent-publisher",
+      name: "Independent Publisher",
+      url: "https://independent.example",
+      type: "independent",
+      runsOwnEvals: true,
+    },
+    {
+      id: "partial-lab",
+      name: "Partial Lab",
+      url: "https://partial.example",
+      type: "vendor",
+      runsOwnEvals: true,
+      vendorForLab: "Partial Lab",
+    },
+  ];
+  const measurement = (
     modelId: string,
     benchmarkId: string,
     value: number,
-    // Retrieval spread and self-reporting are fixture variables so the
+    // Retrieval spread and publishing source are fixture variables so the
     // dataset-window and provenance counts have something to be wrong about.
-    { retrieved = "2026-07-22", selfReported = false } = {},
+    {
+      retrieved = "2026-07-22",
+      publisherId = "independent-publisher",
+    } = {},
   ) => ({
     modelId,
     benchmarkId,
+    publisherId,
     value,
     source: {
-      url: `https://example.com/scores/${modelId}/${benchmarkId}`,
+      url: `${
+        publisherId === "partial-lab"
+          ? "https://partial.example"
+          : "https://independent.example"
+      }/measurements/${modelId}/${benchmarkId}`,
       retrieved,
     },
-    selfReported,
   });
-  const scores = [
+  const measurements = [
     ...benchmarks.map((benchmark) =>
-      score("model-ten", benchmark.id, 80),
+      measurement("model-ten", benchmark.id, 80),
     ),
     ...benchmarks.map((benchmark) =>
-      score("model-two", benchmark.id, 80),
+      measurement("model-two", benchmark.id, 80),
     ),
-    score("sparse-model", "reasoning-benchmark", 99, {
+    measurement("sparse-model", "reasoning-benchmark", 99, {
       retrieved: "2026-07-15",
     }),
-    score("sparse-model", "coding-benchmark", 99),
-    score("partial-model", "reasoning-benchmark", 60),
-    score("partial-model", "coding-benchmark", 60),
-    score("partial-model", "math-benchmark", 60, {
+    measurement("sparse-model", "coding-benchmark", 99),
+    measurement("partial-model", "reasoning-benchmark", 60),
+    measurement("partial-model", "coding-benchmark", 60),
+    measurement("partial-model", "math-benchmark", 60, {
       retrieved: "2026-07-26",
-      selfReported: true,
+      publisherId: "partial-lab",
     }),
   ];
 
-  return { models, benchmarks, scores };
+  return { models, benchmarks, measurements, publishers };
 });
 
 vi.mock("../../data/models.json", () => ({ default: fixtures.models }));
 vi.mock("../../data/benchmarks.json", () => ({
   default: fixtures.benchmarks,
 }));
-vi.mock("../../data/scores.json", () => ({ default: fixtures.scores }));
+vi.mock("../../data/measurements.json", () => ({
+  default: fixtures.measurements,
+}));
+vi.mock("../../data/publishers.json", () => ({
+  default: fixtures.publishers,
+}));
 
 import { RANK_SCOPES } from "./categories";
 import { summarizeChanges } from "./changes";
@@ -304,7 +333,11 @@ describe("loadLeaderboardData", () => {
     expect(data.oldestRetrieved).toBe("2026-07-15");
     expect(data.lastUpdated).toBe("2026-07-26");
     expect(data.latestPricingRetrieved).toBe("2026-07-27");
+    expect(data.scoreCount).toBe(13);
+    expect(data.measurementCount).toBe(13);
+    expect(data.publisherCount).toBe(2);
     expect(data.selfReportedCount).toBe(1);
+    expect(data.unverifiedCount).toBe(1);
   });
 });
 

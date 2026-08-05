@@ -24,7 +24,7 @@ const RECENT_RELEASE_DAYS = 45;
 
 /**
  * Derived from the dataset rather than from git history: Vercel builds from a
- * shallow clone, so `git log` on data/scores.json is not reliably available,
+ * shallow clone, so `git log` on data/measurements.json is not reliably available,
  * and a summary that silently degrades to "0 changes" is worse than none.
  */
 export function summarizeChanges(data: LeaderboardData): ChangeSummary {

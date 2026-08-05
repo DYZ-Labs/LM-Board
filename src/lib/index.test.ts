@@ -6,7 +6,15 @@ import {
   estimateMissingScores,
   percentileOf,
 } from "./index";
-import type { Benchmark, Score } from "./schema";
+import type { Benchmark, Publisher, Score } from "./schema";
+
+const publisher: Publisher = {
+  id: "publisher",
+  name: "Publisher",
+  url: "https://example.com",
+  type: "independent",
+  runsOwnEvals: true,
+};
 
 const bench = (
   id: string,
@@ -27,9 +35,13 @@ const score = (
 ): Score => ({
   modelId,
   benchmarkId,
+  publisherId: publisher.id,
   value,
   source: { url: "https://example.com", retrieved: "2026-07-22" },
-  selfReported: false,
+  publisher,
+  alternates: [],
+  spread: null,
+  unverified: false,
 });
 
 const noEstimates = new Map<string, number>();

@@ -1,6 +1,7 @@
 import benchmarksJson from "../../data/benchmarks.json";
+import measurementsJson from "../../data/measurements.json";
 import modelsJson from "../../data/models.json";
-import scoresJson from "../../data/scores.json";
+import publishersJson from "../../data/publishers.json";
 
 import { validateDataIntegrity } from "@/lib/dataIntegrity";
 import {
@@ -12,10 +13,12 @@ import {
   type RankScope,
 } from "@/lib/index";
 import { rampStep, type RampStep } from "@/lib/ramp";
+import { resolveMeasurements } from "@/lib/provenance";
 import {
   BenchmarksFileSchema,
+  MeasurementsFileSchema,
   ModelsFileSchema,
-  ScoresFileSchema,
+  PublishersFileSchema,
   type Benchmark,
   type Model,
   type Score,
@@ -50,11 +53,16 @@ export type LeaderboardLeader = {
   rankedFieldSize: number;
 };
 
+export type LeaderboardScore = Score & {
+  /** UI compatibility view; publisher.type remains the sole stored truth. */
+  readonly selfReported: boolean;
+};
+
 export type LeaderboardRow = {
   model: Model;
   reasoningEffort: string | null;
   reasoningEffortLabel: ReasoningEffortLabel | null;
-  scoresByBenchmark: Record<string, Score | null>;
+  scoresByBenchmark: Record<string, LeaderboardScore | null>;
   /**
    * Luminance step per benchmark, precomputed at build time from that
    * benchmark's own distribution. Derived data, so it lives with the row
@@ -72,6 +80,10 @@ export type LeaderboardData = {
   lastUpdated: string;
   /** Latest first-party pricing retrieval represented in the model catalog. */
   latestPricingRetrieved: string | null;
+  /** Raw measurements before canonical publisher precedence is applied. */
+  measurementCount: number;
+  /** Publishers available to measurement records. */
+  publisherCount: number;
   scoreCount: number;
   /**
    * Keyed by benchmark id, over every score in the dataset. A bar that encodes
@@ -83,6 +95,8 @@ export type LeaderboardData = {
   /** Earliest retrieval date in the dataset; `lastUpdated` is the latest. */
   oldestRetrieved: string;
   selfReportedCount: number;
+  /** Canonical cells supported only by vendor-published measurements. */
+  unverifiedCount: number;
 };
 
 /**
@@ -91,7 +105,10 @@ export type LeaderboardData = {
  * pages; sending them for every homepage score cell would duplicate evidence the
  * non-interactive table cannot expose.
  */
-export type LeaderboardClientScore = Pick<Score, "value" | "selfReported">;
+export type LeaderboardClientScore = Pick<
+  LeaderboardScore,
+  "value" | "selfReported"
+>;
 
 export type LeaderboardClientModel = Omit<Model, "pricing"> & {
   pricing?: Pick<NonNullable<Model["pricing"]>, "input" | "output">;
@@ -157,21 +174,30 @@ export function loadLeaderboardData(): LeaderboardData {
 
   const models = ModelsFileSchema.parse(modelsJson);
   const benchmarks = BenchmarksFileSchema.parse(benchmarksJson);
-  const scores = ScoresFileSchema.parse(scoresJson);
-  const integrityErrors = validateDataIntegrity(models, benchmarks, scores);
+  const measurements = MeasurementsFileSchema.parse(measurementsJson);
+  const publishers = PublishersFileSchema.parse(publishersJson);
+  const integrity = validateDataIntegrity(
+    models,
+    benchmarks,
+    measurements,
+    publishers,
+  );
 
-  if (integrityErrors.length > 0) {
+  if (integrity.errors.length > 0) {
     throw new Error(
-      `Data integrity validation failed\n${integrityErrors
+      `Data integrity validation failed\n${integrity.errors
         .map((error) => `  - ${error}`)
         .join("\n")}`,
     );
   }
 
+  const scores = resolveMeasurements(measurements, publishers);
+
   const scoresByModel = new Map<string, Score[]>();
   const benchmarkDomains: Record<string, BenchmarkDomain> = {};
   let oldestRetrieved = "";
   let selfReportedCount = 0;
+  let unverifiedCount = 0;
 
   for (const score of scores) {
     const modelScores = scoresByModel.get(score.modelId) ?? [];
@@ -194,13 +220,16 @@ export function loadLeaderboardData(): LeaderboardData {
       oldestRetrieved = score.source.retrieved;
     }
 
-    if (score.selfReported) selfReportedCount += 1;
+    if (score.publisher.type === "vendor") selfReportedCount += 1;
+    if (score.unverified) unverifiedCount += 1;
   }
 
   const distributions = buildBenchmarkDistributions(scores, benchmarks);
   const rowsWithoutRanks: LeaderboardRow[] = models.map((model) => {
     const modelScores = scoresByModel.get(model.id) ?? [];
-    const reasoningEffort = modelScores[0]?.reasoningEffort ?? null;
+    const reasoningEffort =
+      modelScores.find((score) => score.reasoningEffort !== undefined)
+        ?.reasoningEffort ?? null;
     const scoreLookup = new Map(
       modelScores.map((score) => [score.benchmarkId, score]),
     );
@@ -249,10 +278,19 @@ export function loadLeaderboardData(): LeaderboardData {
       reasoningEffort,
       reasoningEffortLabel: summarizeReasoningEffort(reasoningEffort),
       scoresByBenchmark: Object.fromEntries(
-        benchmarks.map((benchmark) => [
-          benchmark.id,
-          scoreLookup.get(benchmark.id) ?? null,
-        ]),
+        benchmarks.map((benchmark) => {
+          const score = scoreLookup.get(benchmark.id);
+
+          return [
+            benchmark.id,
+            score === undefined
+              ? null
+              : {
+                  ...score,
+                  selfReported: score.publisher.type === "vendor",
+                },
+          ];
+        }),
       ),
       rampByBenchmark: Object.fromEntries(
         benchmarks.map((benchmark) => {
@@ -339,10 +377,13 @@ export function loadLeaderboardData(): LeaderboardData {
     labs,
     lastUpdated,
     latestPricingRetrieved,
+    measurementCount: measurements.length,
+    publisherCount: publishers.length,
     scoreCount: scores.length,
     benchmarkDomains,
     oldestRetrieved,
     selfReportedCount,
+    unverifiedCount,
   };
 
   return cachedLeaderboardData;

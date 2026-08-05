@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ModelSchema } from "./schema";
+import { MeasurementSchema, ModelSchema, PublisherSchema } from "./schema";
 
 const pricedModel = {
   id: "priced-model",
@@ -61,5 +61,41 @@ describe("ModelSchema pricing provenance", () => {
         },
       }).success,
     ).toBe(false);
+  });
+});
+
+describe("publisher and measurement schemas", () => {
+  const publisher = {
+    id: "independent-publisher",
+    name: "Independent Publisher",
+    url: "https://publisher.example",
+    type: "independent",
+    runsOwnEvals: true,
+  };
+  const measurement = {
+    modelId: "model",
+    benchmarkId: "benchmark",
+    publisherId: publisher.id,
+    value: 82.5,
+    source: {
+      url: "https://publisher.example/results/model",
+      retrieved: "2026-08-05",
+    },
+    harness: "Example harness",
+  };
+
+  it("accepts strict publisher and measurement records", () => {
+    expect(PublisherSchema.parse(publisher)).toEqual(publisher);
+    expect(MeasurementSchema.parse(measurement)).toEqual(measurement);
+  });
+
+  it("rejects selfReported and unknown publisher fields", () => {
+    expect(
+      MeasurementSchema.safeParse({ ...measurement, selfReported: false })
+        .success,
+    ).toBe(false);
+    expect(PublisherSchema.safeParse({ ...publisher, rank: 1 }).success).toBe(
+      false,
+    );
   });
 });

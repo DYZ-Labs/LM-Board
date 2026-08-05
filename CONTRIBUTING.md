@@ -49,14 +49,16 @@ shape:
   with its checked date until a human verifies it; do not silently delete or
   replace a stale value.
 
-## Adding or updating scores
+## Adding or updating measurements
 
-1. Add one record per model/benchmark pair in `data/scores.json`.
-2. Use IDs that already exist in `data/models.json` and `data/benchmarks.json`.
+1. Add one record per model/benchmark/publisher triple in `data/measurements.json`.
+2. Use IDs that already exist in `data/models.json`, `data/benchmarks.json`, and `data/publishers.json`.
 3. Record the measured value, direct source URL, and the date you retrieved it in ISO `YYYY-MM-DD` format.
-4. Describe the harness, sample count, tools, pass rate, or other material evaluation settings in `settings` when the source provides them.
-5. Set `selfReported` truthfully. Prefer a canonical third-party measurement over a vendor-reported result when both exist.
-6. If a run uses a named reasoning effort or budget, set `reasoningEffort`. Every score for the same model must use the same reasoning-effort value, or all of that model's scores must omit it.
+4. Record the eval scaffold or agent framework in `harness`; use `"undisclosed"` when the source does not state it. Put sample count, tools, pass rate, and other material run details in `settings`.
+5. Do not encode vendor status on the measurement. It is derived from the publisher's `type`; vendor measurements must live on that vendor's own host and the publisher's `vendorForLab` must exactly match the model's `lab`.
+6. If a run uses a named reasoning effort or budget, set `reasoningEffort`. Different publishers may use different effort levels, but every canonical score for a model must use the same value or all canonical scores must omit it.
+
+Canonical selection is deterministic: independent publishers outrank benchmark authors, which outrank vendors; ties use newest retrieval and then ascending publisher id. Do not delete, average, or overwrite a conflicting publisher measurement. A spread above five points is intentionally a validator warning for investigation, not a build error.
 
 Missing results are omitted. Never add a zero or placeholder record to represent missing data.
 
@@ -69,7 +71,7 @@ Add its metadata to `data/benchmarks.json`, including a concise description, cat
 The scheduled discovery workflow opens pull requests labeled `aa-discovery` containing scaffolded `data/models.json` entries and `data/upstream-seen.json` ledger rows. Curation happens on the pull-request branch:
 
 1. Verify every scaffolded field against the vendor page and replace the placeholder `url` with the official announcement or model card. Validation keeps CI red while any model URL points at artificialanalysis.ai.
-2. Curate scores on the branch following the rules above; the workflow never adds scores.
+2. Curate measurements on the branch following the rules above; the workflow never adds measurements.
 3. To reject a scaffold, delete its `models.json` entry **and** flip its ledger row(s) to `"ignored"`, removing the `modelId`. The validator enforces this consistency, and rejected models never resurface in later runs.
 4. Update the README seed-snapshot counts and add a `PLAN.md` decision-log entry before marking the pull request ready.
 
@@ -92,10 +94,10 @@ navigation.
 
 ## Pull-request checklist
 
-- [ ] Every score has a direct source URL and retrieval date.
+- [ ] Every measurement has a publisher, direct source URL, retrieval date, and harness.
 - [ ] Every listed price has a first-party source URL and retrieval date no more than 30 days old.
-- [ ] Model and benchmark IDs are valid and no pair is duplicated.
-- [ ] Evaluation settings and self-reported status are accurate.
-- [ ] Reasoning-effort labels are consistent across each affected model.
+- [ ] Model, benchmark, and publisher IDs are valid and no triple is duplicated.
+- [ ] Evaluation settings and publisher metadata are accurate.
+- [ ] Reasoning-effort labels are consistent across canonical scores for each affected model.
 - [ ] `npm run check` passes.
 - [ ] The change is focused; unrelated formatting or data churn is excluded.
