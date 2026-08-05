@@ -5,7 +5,6 @@ import path from "node:path";
 import type { ZodType } from "zod";
 
 import { validateDataIntegrity } from "../src/lib/dataIntegrity";
-import { resolveMeasurements } from "../src/lib/provenance";
 import {
   BenchmarksFileSchema,
   MeasurementsFileSchema,
@@ -159,11 +158,16 @@ async function main() {
   const benchmarks = benchmarksResult.value;
   const measurements = measurementsResult.value;
   const publishers = publishersResult.value;
-  const scores = resolveMeasurements(measurements, publishers);
 
   const ledger = await validateLedger(models);
+  const integrity = validateDataIntegrity(
+    models,
+    benchmarks,
+    measurements,
+    publishers,
+  );
   const errors = [
-    ...validateDataIntegrity(models, benchmarks, scores),
+    ...integrity.errors,
     ...findPlaceholderUrlErrors(models),
     ...ledger.errors,
   ];
@@ -174,6 +178,10 @@ async function main() {
         .map((error) => `  - ${error}`)
         .join("\n")}`,
     );
+  }
+
+  for (const warning of integrity.warnings) {
+    console.warn(`Warning: ${warning}`);
   }
 
   const ledgerNote =

@@ -168,16 +168,22 @@ export function loadLeaderboardData(): LeaderboardData {
   const benchmarks = BenchmarksFileSchema.parse(benchmarksJson);
   const measurements = MeasurementsFileSchema.parse(measurementsJson);
   const publishers = PublishersFileSchema.parse(publishersJson);
-  const scores = resolveMeasurements(measurements, publishers);
-  const integrityErrors = validateDataIntegrity(models, benchmarks, scores);
+  const integrity = validateDataIntegrity(
+    models,
+    benchmarks,
+    measurements,
+    publishers,
+  );
 
-  if (integrityErrors.length > 0) {
+  if (integrity.errors.length > 0) {
     throw new Error(
-      `Data integrity validation failed\n${integrityErrors
+      `Data integrity validation failed\n${integrity.errors
         .map((error) => `  - ${error}`)
         .join("\n")}`,
     );
   }
+
+  const scores = resolveMeasurements(measurements, publishers);
 
   const scoresByModel = new Map<string, Score[]>();
   const benchmarkDomains: Record<string, BenchmarkDomain> = {};
