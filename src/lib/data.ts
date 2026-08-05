@@ -82,6 +82,8 @@ export type LeaderboardData = {
   latestPricingRetrieved: string | null;
   /** Raw measurements before canonical publisher precedence is applied. */
   measurementCount: number;
+  /** Raw measurements that predate source-quote evidence. */
+  legacyMeasurementCount: number;
   /** Publishers available to measurement records. */
   publisherCount: number;
   scoreCount: number;
@@ -378,6 +380,9 @@ export function loadLeaderboardData(): LeaderboardData {
     lastUpdated,
     latestPricingRetrieved,
     measurementCount: measurements.length,
+    legacyMeasurementCount: measurements.filter(
+      ({ evidence }) => evidence === undefined,
+    ).length,
     publisherCount: publishers.length,
     scoreCount: scores.length,
     benchmarkDomains,
