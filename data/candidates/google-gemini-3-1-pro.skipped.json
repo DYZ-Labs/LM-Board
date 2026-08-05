@@ -5,6 +5,50 @@
   },
   "skipped": [
     {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Gemini 3.1 Pro Thinking (High)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th rowspan=2 scope=row>Humanity's Last Exam <small class=text-small> Academic reasoning (full set, text + MM) </small></th><td><small class=text-small>No tools</small></td><td><strong>44.4%</strong></td><td>37.5%</td><td>33.2%</td><td>40.0%</td><td>34.5%</td><td>—</td></tr>",
+        "printedBenchmarkName": "Humanity's Last Exam Academic reasoning (full set, text + MM)",
+        "printedConditions": "No tools",
+        "printedColumnHeader": "Gemini 3.1 Pro Thinking (High)"
+      },
+      "rawValue": "44.4%"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Gemini 3 Pro Thinking (High)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th rowspan=2 scope=row>Humanity's Last Exam <small class=text-small> Academic reasoning (full set, text + MM) </small></th><td><small class=text-small>No tools</small></td><td><strong>44.4%</strong></td><td>37.5%</td><td>33.2%</td><td>40.0%</td><td>34.5%</td><td>—</td></tr>",
+        "printedBenchmarkName": "Humanity's Last Exam Academic reasoning (full set, text + MM)",
+        "printedConditions": "No tools",
+        "printedColumnHeader": "Gemini 3 Pro Thinking (High)"
+      },
+      "rawValue": "37.5%"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Sonnet 4.6 Thinking (Max)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th rowspan=2 scope=row>Humanity's Last Exam <small class=text-small> Academic reasoning (full set, text + MM) </small></th><td><small class=text-small>No tools</small></td><td><strong>44.4%</strong></td><td>37.5%</td><td>33.2%</td><td>40.0%</td><td>34.5%</td><td>—</td></tr>",
+        "printedBenchmarkName": "Humanity's Last Exam Academic reasoning (full set, text + MM)",
+        "printedConditions": "No tools",
+        "printedColumnHeader": "Sonnet 4.6 Thinking (Max)"
+      },
+      "rawValue": "33.2%"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Opus 4.6 Thinking (Max)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th rowspan=2 scope=row>Humanity's Last Exam <small class=text-small> Academic reasoning (full set, text + MM) </small></th><td><small class=text-small>No tools</small></td><td><strong>44.4%</strong></td><td>37.5%</td><td>33.2%</td><td>40.0%</td><td>34.5%</td><td>—</td></tr>",
+        "printedBenchmarkName": "Humanity's Last Exam Academic reasoning (full set, text + MM)",
+        "printedConditions": "No tools",
+        "printedColumnHeader": "Opus 4.6 Thinking (Max)"
+      },
+      "rawValue": "40.0%"
+    },
+    {
       "outcome": "unparseable-value",
       "reason": "Cell \"—\" is not a single printed numeric value",
       "evidence": {
@@ -14,6 +58,50 @@
         "printedColumnHeader": "GPT-5.3-Codex Thinking (xhigh)"
       },
       "rawValue": "—"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Gemini 3.1 Pro Thinking (High)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th rowspan=2 scope=row>Humanity's Last Exam <small class=text-small> Academic reasoning (full set, text + MM) </small></th><td><small class=text-small>No tools</small></td><td><strong>44.4%</strong></td><td>37.5%</td><td>33.2%</td><td>40.0%</td><td>34.5%</td><td>—</td></tr><tr><td><small class=text-small> Search (blocklist) + Code </small></td><td>51.4%</td><td>45.8%</td><td>49.0%</td><td><strong>53.1%</strong></td><td>45.5%</td><td>—</td></tr>",
+        "printedBenchmarkName": "Humanity's Last Exam Academic reasoning (full set, text + MM)",
+        "printedConditions": "Search (blocklist) + Code",
+        "printedColumnHeader": "Gemini 3.1 Pro Thinking (High)"
+      },
+      "rawValue": "51.4%"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Gemini 3 Pro Thinking (High)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th rowspan=2 scope=row>Humanity's Last Exam <small class=text-small> Academic reasoning (full set, text + MM) </small></th><td><small class=text-small>No tools</small></td><td><strong>44.4%</strong></td><td>37.5%</td><td>33.2%</td><td>40.0%</td><td>34.5%</td><td>—</td></tr><tr><td><small class=text-small> Search (blocklist) + Code </small></td><td>51.4%</td><td>45.8%</td><td>49.0%</td><td><strong>53.1%</strong></td><td>45.5%</td><td>—</td></tr>",
+        "printedBenchmarkName": "Humanity's Last Exam Academic reasoning (full set, text + MM)",
+        "printedConditions": "Search (blocklist) + Code",
+        "printedColumnHeader": "Gemini 3 Pro Thinking (High)"
+      },
+      "rawValue": "45.8%"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Sonnet 4.6 Thinking (Max)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th rowspan=2 scope=row>Humanity's Last Exam <small class=text-small> Academic reasoning (full set, text + MM) </small></th><td><small class=text-small>No tools</small></td><td><strong>44.4%</strong></td><td>37.5%</td><td>33.2%</td><td>40.0%</td><td>34.5%</td><td>—</td></tr><tr><td><small class=text-small> Search (blocklist) + Code </small></td><td>51.4%</td><td>45.8%</td><td>49.0%</td><td><strong>53.1%</strong></td><td>45.5%</td><td>—</td></tr>",
+        "printedBenchmarkName": "Humanity's Last Exam Academic reasoning (full set, text + MM)",
+        "printedConditions": "Search (blocklist) + Code",
+        "printedColumnHeader": "Sonnet 4.6 Thinking (Max)"
+      },
+      "rawValue": "49.0%"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Opus 4.6 Thinking (Max)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th rowspan=2 scope=row>Humanity's Last Exam <small class=text-small> Academic reasoning (full set, text + MM) </small></th><td><small class=text-small>No tools</small></td><td><strong>44.4%</strong></td><td>37.5%</td><td>33.2%</td><td>40.0%</td><td>34.5%</td><td>—</td></tr><tr><td><small class=text-small> Search (blocklist) + Code </small></td><td>51.4%</td><td>45.8%</td><td>49.0%</td><td><strong>53.1%</strong></td><td>45.5%</td><td>—</td></tr>",
+        "printedBenchmarkName": "Humanity's Last Exam Academic reasoning (full set, text + MM)",
+        "printedConditions": "Search (blocklist) + Code",
+        "printedColumnHeader": "Opus 4.6 Thinking (Max)"
+      },
+      "rawValue": "53.1%"
     },
     {
       "outcome": "unparseable-value",
@@ -36,6 +124,50 @@
         "printedColumnHeader": null
       },
       "rawValue": null
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Gemini 3.1 Pro Thinking (High)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th scope=row>GPQA Diamond <small class=text-small>Scientific knowledge</small></th><td><small class=text-small>No tools</small></td><td><strong>94.3%</strong></td><td>91.9%</td><td>89.9%</td><td>91.3%</td><td>92.4%</td><td>—</td></tr>",
+        "printedBenchmarkName": "GPQA Diamond Scientific knowledge",
+        "printedConditions": "No tools",
+        "printedColumnHeader": "Gemini 3.1 Pro Thinking (High)"
+      },
+      "rawValue": "94.3%"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Gemini 3 Pro Thinking (High)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th scope=row>GPQA Diamond <small class=text-small>Scientific knowledge</small></th><td><small class=text-small>No tools</small></td><td><strong>94.3%</strong></td><td>91.9%</td><td>89.9%</td><td>91.3%</td><td>92.4%</td><td>—</td></tr>",
+        "printedBenchmarkName": "GPQA Diamond Scientific knowledge",
+        "printedConditions": "No tools",
+        "printedColumnHeader": "Gemini 3 Pro Thinking (High)"
+      },
+      "rawValue": "91.9%"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Sonnet 4.6 Thinking (Max)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th scope=row>GPQA Diamond <small class=text-small>Scientific knowledge</small></th><td><small class=text-small>No tools</small></td><td><strong>94.3%</strong></td><td>91.9%</td><td>89.9%</td><td>91.3%</td><td>92.4%</td><td>—</td></tr>",
+        "printedBenchmarkName": "GPQA Diamond Scientific knowledge",
+        "printedConditions": "No tools",
+        "printedColumnHeader": "Sonnet 4.6 Thinking (Max)"
+      },
+      "rawValue": "89.9%"
+    },
+    {
+      "outcome": "unresolved-model",
+      "reason": "Column header \"Opus 4.6 Thinking (Max)\" does not resolve uniquely to a curated model",
+      "evidence": {
+        "quote": "<tr><th scope=row>GPQA Diamond <small class=text-small>Scientific knowledge</small></th><td><small class=text-small>No tools</small></td><td><strong>94.3%</strong></td><td>91.9%</td><td>89.9%</td><td>91.3%</td><td>92.4%</td><td>—</td></tr>",
+        "printedBenchmarkName": "GPQA Diamond Scientific knowledge",
+        "printedConditions": "No tools",
+        "printedColumnHeader": "Opus 4.6 Thinking (Max)"
+      },
+      "rawValue": "91.3%"
     },
     {
       "outcome": "unparseable-value",
