@@ -5,7 +5,7 @@
     "value": 94.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-sol#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -17,7 +17,7 @@
     "value": 47.17,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-sol#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "max effort",
@@ -29,7 +29,7 @@
     "value": 73.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-sol#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -41,7 +41,7 @@
     "value": 72.65,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-sol#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "max effort",
@@ -53,7 +53,7 @@
     "value": 32.29,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-sol#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -65,7 +65,7 @@
     "value": 88.01,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-sol#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "max effort",
@@ -77,7 +77,7 @@
     "value": 56.13,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-sol#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "max effort",
@@ -89,7 +89,7 @@
     "value": 32.99,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-sol#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "max effort",
@@ -101,7 +101,7 @@
     "value": 92.53,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-terra#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -113,7 +113,7 @@
     "value": 41.8,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-terra#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "max effort",
@@ -125,7 +125,7 @@
     "value": 74,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-terra#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -137,7 +137,7 @@
     "value": 71.22,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-terra#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "max effort",
@@ -149,7 +149,7 @@
     "value": 30,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-terra#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -161,7 +161,7 @@
     "value": 88.01,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-terra#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "max effort",
@@ -173,7 +173,7 @@
     "value": 53.94,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-terra#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "max effort",
@@ -185,7 +185,7 @@
     "value": 31.75,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-terra#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "max effort",
@@ -197,7 +197,7 @@
     "value": 91.11,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-luna#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -209,7 +209,7 @@
     "value": 37.21,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-luna#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "max effort",
@@ -221,7 +221,7 @@
     "value": 74,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-luna#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -233,7 +233,7 @@
     "value": 20.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-luna#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -245,7 +245,7 @@
     "value": 80.9,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-luna#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "max effort",
@@ -257,7 +257,7 @@
     "value": 52.55,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-luna#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "max effort",
@@ -269,7 +269,7 @@
     "value": 27.22,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-6-luna#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "max effort",
@@ -281,7 +281,7 @@
     "value": 93.54,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -293,7 +293,7 @@
     "value": 44.3,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "xhigh effort",
@@ -305,7 +305,7 @@
     "value": 74.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -317,7 +317,7 @@
     "value": 75.85,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "xhigh effort",
@@ -329,7 +329,7 @@
     "value": 27.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -341,7 +341,7 @@
     "value": 84.27,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "xhigh effort",
@@ -353,7 +353,7 @@
     "value": 56.13,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "xhigh effort",
@@ -365,7 +365,7 @@
     "value": 31.34,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "xhigh effort",
@@ -377,7 +377,7 @@
     "value": 78.18,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-oss-120b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -389,7 +389,7 @@
     "value": 18.49,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-oss-120b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "high reasoning",
@@ -401,7 +401,7 @@
     "value": 50.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-oss-120b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -413,7 +413,7 @@
     "value": 68.98,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-oss-120b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "high reasoning",
@@ -425,7 +425,7 @@
     "value": 1.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-oss-120b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -437,7 +437,7 @@
     "value": 26.22,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-oss-120b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "high reasoning",
@@ -449,7 +449,7 @@
     "value": 38.89,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-oss-120b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "high reasoning",
@@ -461,7 +461,7 @@
     "value": 12.03,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-oss-120b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "high reasoning",
@@ -473,7 +473,7 @@
     "value": 87.27,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -485,7 +485,7 @@
     "value": 26.46,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "high reasoning",
@@ -497,7 +497,7 @@
     "value": 75,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -509,7 +509,7 @@
     "value": 72.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "high reasoning",
@@ -521,7 +521,7 @@
     "value": 4.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -533,7 +533,7 @@
     "value": 52.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "high reasoning",
@@ -545,7 +545,7 @@
     "value": 43.29,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "high reasoning",
@@ -557,7 +557,7 @@
     "value": 14.02,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "high reasoning",
@@ -569,7 +569,7 @@
     "value": 85.35,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -581,7 +581,7 @@
     "value": 26.51,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "high reasoning",
@@ -593,7 +593,7 @@
     "value": 75.6,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -605,7 +605,7 @@
     "value": 73.06,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "high reasoning",
@@ -617,7 +617,7 @@
     "value": 5.71,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -629,7 +629,7 @@
     "value": 35.21,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "high reasoning",
@@ -641,7 +641,7 @@
     "value": 42.94,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "high reasoning",
@@ -653,7 +653,7 @@
     "value": 19.59,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "high reasoning",
@@ -665,7 +665,7 @@
     "value": 82.73,
     "source": {
       "url": "https://artificialanalysis.ai/models/o3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -676,7 +676,7 @@
     "value": 20.04,
     "source": {
       "url": "https://artificialanalysis.ai/models/o3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -687,7 +687,7 @@
     "value": 69.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/o3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -698,7 +698,7 @@
     "value": 71.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/o3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -709,7 +709,7 @@
     "value": 1.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/o3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -720,7 +720,7 @@
     "value": 40.97,
     "source": {
       "url": "https://artificialanalysis.ai/models/o3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -731,9 +731,10 @@
     "value": 67.17,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -742,9 +743,10 @@
     "value": 9.68,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -753,9 +755,10 @@
     "value": 70.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -764,9 +767,10 @@
     "value": 54.29,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -775,9 +779,10 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -786,9 +791,10 @@
     "value": 44.19,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -797,9 +803,10 @@
     "value": 43.29,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -808,9 +815,10 @@
     "value": 9.07,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -819,7 +827,7 @@
     "value": 92.63,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-fable-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools; Opus 4.8 fallback",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -831,7 +839,7 @@
     "value": 53.34,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-fable-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools; Opus 4.8 fallback",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -843,7 +851,7 @@
     "value": 70,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-fable-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools; Opus 4.8 fallback",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -855,7 +863,7 @@
     "value": 63.47,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-fable-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1; Opus 4.8 fallback",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -867,7 +875,7 @@
     "value": 28.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-fable-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools; Opus 4.8 fallback",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -879,7 +887,7 @@
     "value": 84.64,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-fable-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout; Opus 4.8 fallback",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -891,7 +899,7 @@
     "value": 60.19,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-fable-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1; Opus 4.8 fallback",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -903,7 +911,7 @@
     "value": 26.8,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-fable-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap; Opus 4.8 fallback",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -915,7 +923,7 @@
     "value": 92.02,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-8#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -927,7 +935,7 @@
     "value": 45.74,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-8#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -939,7 +947,7 @@
     "value": 67.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-8#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -951,7 +959,7 @@
     "value": 62.24,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-8#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -963,7 +971,7 @@
     "value": 20.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-8#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -975,7 +983,7 @@
     "value": 84.64,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-8#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -987,7 +995,7 @@
     "value": 53.47,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-8#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -999,7 +1007,7 @@
     "value": 27.63,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-8#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -1011,7 +1019,7 @@
     "value": 91.11,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -1023,7 +1031,7 @@
     "value": 39.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -1035,7 +1043,7 @@
     "value": 70.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -1047,7 +1055,7 @@
     "value": 16.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -1059,7 +1067,7 @@
     "value": 80.52,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -1071,7 +1079,7 @@
     "value": 53.59,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -1083,7 +1091,7 @@
     "value": 28.25,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -1095,9 +1103,10 @@
     "value": 86.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-5-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1106,9 +1115,10 @@
     "value": 28.36,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-5-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1117,9 +1127,10 @@
     "value": 74,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-5-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1128,9 +1139,10 @@
     "value": 57.96,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-5-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1139,9 +1151,10 @@
     "value": 4.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-5-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1150,9 +1163,10 @@
     "value": 49.54,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-5-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1161,9 +1175,10 @@
     "value": 83.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-sonnet-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1172,9 +1187,10 @@
     "value": 17.28,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-sonnet-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1183,9 +1199,10 @@
     "value": 65.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-sonnet-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1194,9 +1211,10 @@
     "value": 57.28,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-sonnet-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1205,9 +1223,10 @@
     "value": 1.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-sonnet-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1216,9 +1235,10 @@
     "value": 55.81,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-sonnet-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1227,9 +1247,10 @@
     "value": 44.68,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-sonnet-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1238,9 +1259,10 @@
     "value": 18.97,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-5-sonnet-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1249,9 +1271,10 @@
     "value": 80.9,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-1-opus-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1260,9 +1283,10 @@
     "value": 11.89,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-1-opus-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1271,9 +1295,10 @@
     "value": 66.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-1-opus-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1282,9 +1307,10 @@
     "value": 55.44,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-1-opus-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1293,9 +1319,10 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-1-opus-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1304,9 +1331,10 @@
     "value": 40.9,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-4-1-opus-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1315,7 +1343,7 @@
     "value": 94.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-1-pro-preview#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -1326,7 +1354,7 @@
     "value": 44.72,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-1-pro-preview#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -1337,7 +1365,7 @@
     "value": 72.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-1-pro-preview#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -1348,7 +1376,7 @@
     "value": 77.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-1-pro-preview#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -1359,7 +1387,7 @@
     "value": 17.71,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-1-pro-preview#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -1370,7 +1398,7 @@
     "value": 73.78,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-1-pro-preview#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -1381,7 +1409,7 @@
     "value": 58.91,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-1-pro-preview#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -1392,7 +1420,7 @@
     "value": 16.49,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-1-pro-preview#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -1403,7 +1431,7 @@
     "value": 92.22,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -1415,7 +1443,7 @@
     "value": 40.96,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "high reasoning",
@@ -1427,7 +1455,7 @@
     "value": 69.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -1439,7 +1467,7 @@
     "value": 76.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "high reasoning",
@@ -1451,7 +1479,7 @@
     "value": 13.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -1463,7 +1491,7 @@
     "value": 78.65,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "high reasoning",
@@ -1475,7 +1503,7 @@
     "value": 53.13,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "high reasoning",
@@ -1487,7 +1515,7 @@
     "value": 25.36,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "high reasoning",
@@ -1499,7 +1527,7 @@
     "value": 90.81,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -1511,7 +1539,7 @@
     "value": 37.21,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "high reasoning",
@@ -1523,7 +1551,7 @@
     "value": 70.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -1535,7 +1563,7 @@
     "value": 70.41,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "high reasoning",
@@ -1547,7 +1575,7 @@
     "value": 9.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -1559,7 +1587,7 @@
     "value": 56.13,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "high reasoning",
@@ -1571,7 +1599,7 @@
     "value": 84.44,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-2-5-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -1582,7 +1610,7 @@
     "value": 21.08,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-2-5-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -1593,7 +1621,7 @@
     "value": 66,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-2-5-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -1604,7 +1632,7 @@
     "value": 48.71,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-2-5-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -1615,7 +1643,7 @@
     "value": 2.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-2-5-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -1626,7 +1654,7 @@
     "value": 28.46,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-2-5-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -1637,7 +1665,7 @@
     "value": 42.82,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-2-5-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -1648,7 +1676,7 @@
     "value": 9.28,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-2-5-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -1659,7 +1687,7 @@
     "value": 93.13,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -1671,7 +1699,7 @@
     "value": 40.27,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "high reasoning",
@@ -1683,7 +1711,7 @@
     "value": 67.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -1695,7 +1723,7 @@
     "value": 15.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -1707,7 +1735,7 @@
     "value": 81.65,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "high reasoning",
@@ -1719,7 +1747,7 @@
     "value": 54.05,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "high reasoning",
@@ -1731,7 +1759,7 @@
     "value": 32.58,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "high reasoning",
@@ -1743,7 +1771,7 @@
     "value": 87.68,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -1754,7 +1782,7 @@
     "value": 23.91,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -1765,7 +1793,7 @@
     "value": 68,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -1776,7 +1804,7 @@
     "value": 53.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -1787,7 +1815,7 @@
     "value": 2,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -1798,7 +1826,7 @@
     "value": 45.72,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -1809,7 +1837,7 @@
     "value": 88.79,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -1821,7 +1849,7 @@
     "value": 35.87,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -1833,7 +1861,7 @@
     "value": 66.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -1845,7 +1873,7 @@
     "value": 76.46,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "reasoning, max effort",
@@ -1857,7 +1885,7 @@
     "value": 12.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -1869,7 +1897,7 @@
     "value": 64.04,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "reasoning, max effort",
@@ -1881,7 +1909,7 @@
     "value": 50,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "reasoning, max effort",
@@ -1893,7 +1921,7 @@
     "value": 25.77,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-pro#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "reasoning, max effort",
@@ -1905,9 +1933,10 @@
     "value": 84.04,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v3-2-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1916,9 +1945,10 @@
     "value": 22.24,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v3-2-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1927,9 +1957,10 @@
     "value": 65,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v3-2-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1938,9 +1969,10 @@
     "value": 60.68,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v3-2-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1949,9 +1981,10 @@
     "value": 2.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v3-2-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1960,9 +1993,10 @@
     "value": 46.82,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v3-2-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1971,9 +2005,10 @@
     "value": 38.89,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v3-2-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1982,9 +2017,10 @@
     "value": 18.76,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v3-2-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -1993,7 +2029,7 @@
     "value": 81.31,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-r1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -2004,7 +2040,7 @@
     "value": 14.87,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-r1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -2015,7 +2051,7 @@
     "value": 54.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-r1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -2026,7 +2062,7 @@
     "value": 39.59,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-r1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -2037,7 +2073,7 @@
     "value": 1.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-r1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -2048,7 +2084,7 @@
     "value": 40.28,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-r1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -2059,7 +2095,7 @@
     "value": 92.32,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-7-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -2070,7 +2106,7 @@
     "value": 38.09,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-7-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -2081,7 +2117,7 @@
     "value": 69,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-7-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -2092,7 +2128,7 @@
     "value": 80.54,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-7-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -2103,7 +2139,7 @@
     "value": 13.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-7-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -2114,7 +2150,7 @@
     "value": 74.53,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-7-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -2125,7 +2161,7 @@
     "value": 48.84,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-7-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -2136,7 +2172,7 @@
     "value": 10.93,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-7-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -2147,7 +2183,7 @@
     "value": 76.36,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -2158,7 +2194,7 @@
     "value": 11.08,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -2169,7 +2205,7 @@
     "value": 46.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -2180,7 +2216,7 @@
     "value": 44.15,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -2191,7 +2227,7 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -2202,7 +2238,7 @@
     "value": 38.31,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-max#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -2213,7 +2249,7 @@
     "value": 93.54,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "max thinking (launch default)",
@@ -2225,7 +2261,7 @@
     "value": 44.35,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "max thinking (launch default)",
@@ -2237,7 +2273,7 @@
     "value": 74.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "max thinking (launch default)",
@@ -2249,7 +2285,7 @@
     "value": 23.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "max thinking (launch default)",
@@ -2261,7 +2297,7 @@
     "value": 85.02,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "max thinking (launch default)",
@@ -2273,7 +2309,7 @@
     "value": 58.68,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "max thinking (launch default)",
@@ -2285,7 +2321,7 @@
     "value": 33.4,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "max thinking (launch default)",
@@ -2297,7 +2333,7 @@
     "value": 83.84,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -2308,7 +2344,7 @@
     "value": 22.34,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -2319,7 +2355,7 @@
     "value": 66.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -2330,7 +2366,7 @@
     "value": 68.1,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -2341,7 +2377,7 @@
     "value": 2.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -2352,7 +2388,7 @@
     "value": 42.36,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-thinking#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -2363,7 +2399,7 @@
     "value": 89.49,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -2375,7 +2411,7 @@
     "value": 40.13,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "max effort",
@@ -2387,7 +2423,7 @@
     "value": 71.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -2399,7 +2435,7 @@
     "value": 73.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "max effort",
@@ -2411,7 +2447,7 @@
     "value": 20.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "max effort",
@@ -2423,7 +2459,7 @@
     "value": 77.9,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "max effort",
@@ -2435,7 +2471,7 @@
     "value": 50.46,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "max effort",
@@ -2447,7 +2483,7 @@
     "value": 26.8,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "max effort",
@@ -2459,9 +2495,10 @@
     "value": 77.98,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-4-6-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2470,9 +2507,10 @@
     "value": 13.35,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-4-6-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2481,9 +2519,10 @@
     "value": 54.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-4-6-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2492,9 +2531,10 @@
     "value": 43.4,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-4-6-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2503,9 +2543,10 @@
     "value": 1.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-4-6-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2514,9 +2555,10 @@
     "value": 49.44,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-4-6-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2525,9 +2567,10 @@
     "value": 38.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-4-6-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2536,9 +2579,10 @@
     "value": 10.52,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-4-6-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2547,7 +2591,7 @@
     "value": 92.93,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -2558,7 +2602,7 @@
     "value": 37.12,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -2569,7 +2613,7 @@
     "value": 74,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -2580,7 +2624,7 @@
     "value": 82.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -2591,7 +2635,7 @@
     "value": 3.71,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -2602,7 +2646,7 @@
     "value": 65.17,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -2613,7 +2657,7 @@
     "value": 45.37,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -2624,7 +2668,7 @@
     "value": 12.99,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -2635,7 +2679,7 @@
     "value": 77.68,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -2646,7 +2690,7 @@
     "value": 12.47,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -2657,7 +2701,7 @@
     "value": 61,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -2668,7 +2712,7 @@
     "value": 72.31,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -2679,7 +2723,7 @@
     "value": 0.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -2690,7 +2734,7 @@
     "value": 36.11,
     "source": {
       "url": "https://artificialanalysis.ai/models/minimax-m2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -2701,7 +2745,7 @@
     "value": 74.85,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-medium-3-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -2712,7 +2756,7 @@
     "value": 12.79,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-medium-3-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -2723,7 +2767,7 @@
     "value": 61,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-medium-3-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -2734,7 +2778,7 @@
     "value": 68.78,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-medium-3-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -2745,7 +2789,7 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-medium-3-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -2756,7 +2800,7 @@
     "value": 50.56,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-medium-3-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -2767,7 +2811,7 @@
     "value": 39.58,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-medium-3-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -2778,7 +2822,7 @@
     "value": 14.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-medium-3-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -2789,7 +2833,7 @@
     "value": 67.98,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-large-3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -2800,7 +2844,7 @@
     "value": 4.08,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-large-3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -2811,7 +2855,7 @@
     "value": 34.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-large-3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -2822,7 +2866,7 @@
     "value": 36.19,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-large-3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -2833,7 +2877,7 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-large-3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -2844,7 +2888,7 @@
     "value": 11.99,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-large-3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -2855,7 +2899,7 @@
     "value": 36.23,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-large-3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -2866,7 +2910,7 @@
     "value": 5.77,
     "source": {
       "url": "https://artificialanalysis.ai/models/mistral-large-3#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -2877,9 +2921,10 @@
     "value": 86.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2888,9 +2933,10 @@
     "value": 26.55,
     "source": {
       "url": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2899,9 +2945,10 @@
     "value": 67,
     "source": {
       "url": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2910,9 +2957,10 @@
     "value": 81.36,
     "source": {
       "url": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2921,9 +2969,10 @@
     "value": 3.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2932,9 +2981,10 @@
     "value": 53.93,
     "source": {
       "url": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2943,9 +2993,10 @@
     "value": 39.93,
     "source": {
       "url": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2954,9 +3005,10 @@
     "value": 13.81,
     "source": {
       "url": "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2965,9 +3017,10 @@
     "value": 72.83,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-3-1-nemotron-ultra-253b-v1-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2976,9 +3029,10 @@
     "value": 8.08,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-3-1-nemotron-ultra-253b-v1-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2987,9 +3041,10 @@
     "value": 7.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-3-1-nemotron-ultra-253b-v1-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -2998,9 +3053,10 @@
     "value": 38.16,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-3-1-nemotron-ultra-253b-v1-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -3009,9 +3065,10 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-3-1-nemotron-ultra-253b-v1-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -3020,9 +3077,10 @@
     "value": 34.72,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-3-1-nemotron-ultra-253b-v1-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -3031,7 +3089,7 @@
     "value": 89.8,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark-1-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3043,7 +3101,7 @@
     "value": 45.09,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark-1-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3055,7 +3113,7 @@
     "value": 63.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark-1-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3067,7 +3125,7 @@
     "value": 15.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark-1-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3079,7 +3137,7 @@
     "value": 77.9,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark-1-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "xhigh effort",
@@ -3091,7 +3149,7 @@
     "value": 58.22,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark-1-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3103,7 +3161,7 @@
     "value": 25.15,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark-1-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "xhigh effort",
@@ -3115,7 +3173,7 @@
     "value": 67.07,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-maverick#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -3126,7 +3184,7 @@
     "value": 4.78,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-maverick#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -3137,7 +3195,7 @@
     "value": 46,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-maverick#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -3148,7 +3206,7 @@
     "value": 42.99,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-maverick#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -3159,7 +3217,7 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-maverick#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -3170,7 +3228,7 @@
     "value": 7.87,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-maverick#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -3181,7 +3239,7 @@
     "value": 33.1,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-maverick#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -3192,7 +3250,7 @@
     "value": 3.92,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-maverick#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -3203,7 +3261,7 @@
     "value": 58.69,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-scout#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -3214,7 +3272,7 @@
     "value": 4.32,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-scout#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -3225,7 +3283,7 @@
     "value": 25.8,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-scout#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -3236,7 +3294,7 @@
     "value": 39.52,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-scout#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -3247,7 +3305,7 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-scout#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -3258,7 +3316,7 @@
     "value": 3.75,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-scout#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -3269,7 +3327,7 @@
     "value": 17.01,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-scout#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -3280,7 +3338,7 @@
     "value": 3.3,
     "source": {
       "url": "https://artificialanalysis.ai/models/llama-4-scout#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -3291,7 +3349,7 @@
     "value": 92.02,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3303,7 +3361,7 @@
     "value": 41.61,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3315,7 +3373,7 @@
     "value": 74,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3327,7 +3385,7 @@
     "value": 73.95,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3339,7 +3397,7 @@
     "value": 23.43,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3351,7 +3409,7 @@
     "value": 78.28,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "xhigh effort",
@@ -3363,7 +3421,7 @@
     "value": 56.6,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3375,7 +3433,7 @@
     "value": 30.31,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "xhigh effort",
@@ -3387,7 +3445,7 @@
     "value": 87.47,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-mini#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3399,7 +3457,7 @@
     "value": 26.65,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-mini#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3411,7 +3469,7 @@
     "value": 69.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-mini#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3423,7 +3481,7 @@
     "value": 73.27,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-mini#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3435,7 +3493,7 @@
     "value": 10,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-mini#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3447,7 +3505,7 @@
     "value": 59.18,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-mini#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "xhigh effort",
@@ -3459,7 +3517,7 @@
     "value": 49.88,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-mini#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3471,7 +3529,7 @@
     "value": 21.44,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-mini#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "xhigh effort",
@@ -3483,7 +3541,7 @@
     "value": 81.72,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-nano#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3495,7 +3553,7 @@
     "value": 26.46,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-nano#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3507,7 +3565,7 @@
     "value": 66,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-nano#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3519,7 +3577,7 @@
     "value": 75.92,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-nano#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3531,7 +3589,7 @@
     "value": 9.25,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-nano#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3543,7 +3601,7 @@
     "value": 60.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-nano#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "xhigh effort",
@@ -3555,7 +3613,7 @@
     "value": 46.88,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-nano#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3567,7 +3625,7 @@
     "value": 21.03,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-4-nano#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "xhigh effort",
@@ -3579,7 +3637,7 @@
     "value": 91.52,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-3-codex#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3591,7 +3649,7 @@
     "value": 39.9,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-3-codex#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3603,7 +3661,7 @@
     "value": 74,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-3-codex#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3615,7 +3673,7 @@
     "value": 75.37,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-3-codex#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3627,7 +3685,7 @@
     "value": 16.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-3-codex#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3639,7 +3697,7 @@
     "value": 53.24,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-3-codex#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3651,7 +3709,7 @@
     "value": 90.3,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3663,7 +3721,7 @@
     "value": 35.45,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3675,7 +3733,7 @@
     "value": 72.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3687,7 +3745,7 @@
     "value": 75.44,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3699,7 +3757,7 @@
     "value": 11.55,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "xhigh effort",
@@ -3711,7 +3769,7 @@
     "value": 52.08,
     "source": {
       "url": "https://artificialanalysis.ai/models/gpt-5-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "xhigh effort",
@@ -3723,7 +3781,7 @@
     "value": 91.41,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-7#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3735,7 +3793,7 @@
     "value": 39.62,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-7#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3747,7 +3805,7 @@
     "value": 70.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-7#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3759,7 +3817,7 @@
     "value": 58.64,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-7#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3771,7 +3829,7 @@
     "value": 12,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-7#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3783,7 +3841,7 @@
     "value": 83.15,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-7#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3795,7 +3853,7 @@
     "value": 54.51,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-7#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3807,7 +3865,7 @@
     "value": 28.87,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-7#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3819,7 +3877,7 @@
     "value": 87.47,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3831,7 +3889,7 @@
     "value": 29.98,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3843,7 +3901,7 @@
     "value": 70.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3855,7 +3913,7 @@
     "value": 56.6,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3867,7 +3925,7 @@
     "value": 3.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3879,7 +3937,7 @@
     "value": 71.16,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3891,7 +3949,7 @@
     "value": 46.76,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3903,7 +3961,7 @@
     "value": 30.52,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-sonnet-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3915,7 +3973,7 @@
     "value": 89.6,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3927,7 +3985,7 @@
     "value": 36.74,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3939,7 +3997,7 @@
     "value": 70.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3951,7 +4009,7 @@
     "value": 53.13,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3963,7 +4021,7 @@
     "value": 12.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3975,7 +4033,7 @@
     "value": 51.85,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-4-6-adaptive#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -3987,7 +4045,7 @@
     "value": 92.83,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-6-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -3999,7 +4057,7 @@
     "value": 38.28,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-6-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "high reasoning",
@@ -4011,7 +4069,7 @@
     "value": 69.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-6-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -4023,7 +4081,7 @@
     "value": 10.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-6-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "high reasoning",
@@ -4035,7 +4093,7 @@
     "value": 77.53,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-6-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "high reasoning",
@@ -4047,7 +4105,7 @@
     "value": 52.66,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-6-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "high reasoning",
@@ -4059,7 +4117,7 @@
     "value": 24.54,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-6-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "high reasoning",
@@ -4071,7 +4129,7 @@
     "value": 83.84,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash-lite#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -4082,7 +4140,7 @@
     "value": 17.52,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash-lite#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -4093,7 +4151,7 @@
     "value": 62,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash-lite#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -4104,7 +4162,7 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash-lite#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -4115,7 +4173,7 @@
     "value": 53.56,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash-lite#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -4126,7 +4184,7 @@
     "value": 40.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash-lite#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -4137,7 +4195,7 @@
     "value": 16.49,
     "source": {
       "url": "https://artificialanalysis.ai/models/gemini-3-5-flash-lite#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -4148,9 +4206,10 @@
     "value": 91.11,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-20#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4159,9 +4218,10 @@
     "value": 32.21,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-20#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4170,9 +4230,10 @@
     "value": 58,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-20#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4181,9 +4242,10 @@
     "value": 81.22,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-20#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4192,9 +4254,10 @@
     "value": 6.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-20#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4203,9 +4266,10 @@
     "value": 45.6,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-20#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4214,9 +4278,10 @@
     "value": 85.25,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-1-fast-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4225,9 +4290,10 @@
     "value": 17.61,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-1-fast-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4236,9 +4302,10 @@
     "value": 68,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-1-fast-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4247,9 +4314,10 @@
     "value": 52.72,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-1-fast-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4258,9 +4326,10 @@
     "value": 2.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-1-fast-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4269,9 +4338,10 @@
     "value": 44.21,
     "source": {
       "url": "https://artificialanalysis.ai/models/grok-4-1-fast-reasoning#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4279,8 +4349,8 @@
     "benchmarkId": "gpqa-diamond",
     "value": 89.39,
     "source": {
-      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-07-22"
+      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash-0420#intelligence-breakdown",
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -4291,8 +4361,8 @@
     "benchmarkId": "hle",
     "value": 32.07,
     "source": {
-      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-07-22"
+      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash-0420#intelligence-breakdown",
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -4303,8 +4373,8 @@
     "benchmarkId": "aa-lcr",
     "value": 63,
     "source": {
-      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-07-22"
+      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash-0420#intelligence-breakdown",
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -4315,8 +4385,8 @@
     "benchmarkId": "ifbench",
     "value": 79.18,
     "source": {
-      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-07-22"
+      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash-0420#intelligence-breakdown",
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "reasoningEffort": "reasoning, max effort",
@@ -4327,8 +4397,8 @@
     "benchmarkId": "critpt",
     "value": 7.14,
     "source": {
-      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-07-22"
+      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash-0420#intelligence-breakdown",
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -4339,8 +4409,8 @@
     "benchmarkId": "terminal-bench-v2-1",
     "value": 61.8,
     "source": {
-      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-07-22"
+      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash-0420#intelligence-breakdown",
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "reasoning, max effort",
@@ -4351,8 +4421,8 @@
     "benchmarkId": "scicode",
     "value": 44.91,
     "source": {
-      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-07-22"
+      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash-0420#intelligence-breakdown",
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "reasoning, max effort",
@@ -4363,8 +4433,8 @@
     "benchmarkId": "tau3-banking",
     "value": 22.89,
     "source": {
-      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-07-22"
+      "url": "https://artificialanalysis.ai/models/deepseek-v4-flash-0420#intelligence-breakdown",
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "reasoning, max effort",
@@ -4376,9 +4446,10 @@
     "value": 89.29,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4387,9 +4458,10 @@
     "value": 27.29,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4398,9 +4470,10 @@
     "value": 65.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4409,9 +4482,10 @@
     "value": 78.78,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4420,9 +4494,10 @@
     "value": 1.71,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4431,9 +4506,10 @@
     "value": 51.31,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4442,9 +4518,10 @@
     "value": 42.01,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4453,9 +4530,10 @@
     "value": 13.4,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-5-397b-a17b#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4464,7 +4542,7 @@
     "value": 88.18,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-6-plus#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -4475,7 +4553,7 @@
     "value": 25.72,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-6-plus#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -4486,7 +4564,7 @@
     "value": 69.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-6-plus#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -4497,7 +4575,7 @@
     "value": 75.17,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-6-plus#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -4508,7 +4586,7 @@
     "value": 2.86,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-6-plus#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -4519,7 +4597,7 @@
     "value": 61.42,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-6-plus#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -4530,7 +4608,7 @@
     "value": 40.74,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-6-plus#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -4541,7 +4619,7 @@
     "value": 16.49,
     "source": {
       "url": "https://artificialanalysis.ai/models/qwen3-6-plus#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -4552,9 +4630,10 @@
     "value": 87.88,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4563,9 +4642,10 @@
     "value": 29.38,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4574,9 +4654,10 @@
     "value": 65.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4585,9 +4666,10 @@
     "value": 70.2,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4596,9 +4678,10 @@
     "value": 3.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4607,9 +4690,10 @@
     "value": 45.69,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4618,9 +4702,10 @@
     "value": 48.96,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4629,9 +4714,10 @@
     "value": 14.23,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4640,7 +4726,7 @@
     "value": 91.11,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-6#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -4651,7 +4737,7 @@
     "value": 35.91,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-6#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -4662,7 +4748,7 @@
     "value": 69.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-6#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -4673,7 +4759,7 @@
     "value": 75.99,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-6#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -4684,7 +4770,7 @@
     "value": 8,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-6#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -4695,7 +4781,7 @@
     "value": 65.92,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-6#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -4706,7 +4792,7 @@
     "value": 53.47,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-6#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -4717,7 +4803,7 @@
     "value": 20.62,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-6#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -4728,7 +4814,7 @@
     "value": 89.6,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-7-code#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -4739,7 +4825,7 @@
     "value": 32.76,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-7-code#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -4750,7 +4836,7 @@
     "value": 66.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-7-code#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -4761,7 +4847,7 @@
     "value": 63.13,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-7-code#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -4772,7 +4858,7 @@
     "value": 10,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-7-code#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -4783,7 +4869,7 @@
     "value": 67.42,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-7-code#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -4794,7 +4880,7 @@
     "value": 47.45,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-7-code#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -4805,7 +4891,7 @@
     "value": 18.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/kimi-k2-7-code#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -4816,9 +4902,10 @@
     "value": 82.02,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4827,9 +4914,10 @@
     "value": 27.25,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4838,9 +4926,10 @@
     "value": 63.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4849,9 +4938,10 @@
     "value": 72.31,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4860,9 +4950,10 @@
     "value": 2,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4871,9 +4962,10 @@
     "value": 46.18,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4882,9 +4974,10 @@
     "value": 86.77,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4893,9 +4986,10 @@
     "value": 28.04,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4904,9 +4998,10 @@
     "value": 62.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4915,9 +5010,10 @@
     "value": 76.26,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4926,9 +5022,10 @@
     "value": 4.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4937,9 +5034,10 @@
     "value": 61.8,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4948,9 +5046,10 @@
     "value": 43.75,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4959,9 +5058,10 @@
     "value": 11.55,
     "source": {
       "url": "https://artificialanalysis.ai/models/glm-5-1#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
+    "reasoningEffort": "reasoning",
     "selfReported": false
   },
   {
@@ -4970,7 +5070,7 @@
     "value": 59.39,
     "source": {
       "url": "https://artificialanalysis.ai/models/devstral-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -4981,7 +5081,7 @@
     "value": 3.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/devstral-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -4992,7 +5092,7 @@
     "value": 30,
     "source": {
       "url": "https://artificialanalysis.ai/models/devstral-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -5003,7 +5103,7 @@
     "value": 38.1,
     "source": {
       "url": "https://artificialanalysis.ai/models/devstral-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -5014,7 +5114,7 @@
     "value": 0,
     "source": {
       "url": "https://artificialanalysis.ai/models/devstral-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -5025,7 +5125,7 @@
     "value": 30.34,
     "source": {
       "url": "https://artificialanalysis.ai/models/devstral-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -5036,7 +5136,7 @@
     "value": 33.1,
     "source": {
       "url": "https://artificialanalysis.ai/models/devstral-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -5047,7 +5147,7 @@
     "value": 10.31,
     "source": {
       "url": "https://artificialanalysis.ai/models/devstral-2#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -5058,7 +5158,7 @@
     "value": 88.38,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "selfReported": false
@@ -5069,7 +5169,7 @@
     "value": 39.94,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "selfReported": false
@@ -5080,7 +5180,7 @@
     "value": 69.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "selfReported": false
@@ -5091,7 +5191,7 @@
     "value": 75.92,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 294 single-turn prompts; 5 repeats; official loose evaluator; prompt-level pass@1",
     "selfReported": false
@@ -5102,7 +5202,7 @@
     "value": 11.33,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "selfReported": false
@@ -5113,7 +5213,7 @@
     "value": 62.17,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "selfReported": false
@@ -5124,7 +5224,7 @@
     "value": 51.5,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "selfReported": false
@@ -5135,7 +5235,7 @@
     "value": 19.59,
     "source": {
       "url": "https://artificialanalysis.ai/models/muse-spark#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "selfReported": false
@@ -5146,7 +5246,7 @@
     "value": 93.23,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -5158,7 +5258,7 @@
     "value": 52.59,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -5170,7 +5270,7 @@
     "value": 70,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -5182,7 +5282,7 @@
     "value": 29.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -5194,7 +5294,7 @@
     "value": 89.14,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -5206,7 +5306,7 @@
     "value": 55.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -5218,7 +5318,7 @@
     "value": 30.31,
     "source": {
       "url": "https://artificialanalysis.ai/models/claude-opus-5#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "adaptive reasoning, max effort",
@@ -5230,7 +5330,7 @@
     "value": 90.81,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 198 questions; 5 repeats; regex-graded pass@1; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -5242,7 +5342,7 @@
     "value": 36.84,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 2,158 text-only questions; pass@1; GPT-4o (August 2024) equality checker; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -5254,7 +5354,7 @@
     "value": 65.67,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 100 roughly 100k-token multi-document questions; 3 repeats; equality-checker pass@1; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -5266,7 +5366,7 @@
     "value": 16.57,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 70 test challenges; 5 repeats; two-step answer parsing; official CritPt grader; pass@1; no tools",
     "reasoningEffort": "reasoning, max effort",
@@ -5278,7 +5378,7 @@
     "value": 78.65,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 89 tasks; Terminus 2 on E2B; 3 repeats; pass@1; 250-episode cap; 2-hour timeout",
     "reasoningEffort": "reasoning, max effort",
@@ -5290,7 +5390,7 @@
     "value": 49.88,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 288 test subproblems; scientist background included; 3 repeats; subproblem pass@1",
     "reasoningEffort": "reasoning, max effort",
@@ -5302,7 +5402,7 @@
     "value": 31.13,
     "source": {
       "url": "https://artificialanalysis.ai/models/deepseek-v4-flash#intelligence-breakdown",
-      "retrieved": "2026-08-03"
+      "retrieved": "2026-08-05"
     },
     "settings": "Artificial Analysis independent run; 97 tasks; 5 repeats; backend-state pass@1; BM25 plus grep retrieval; 200-step cap",
     "reasoningEffort": "reasoning, max effort",
