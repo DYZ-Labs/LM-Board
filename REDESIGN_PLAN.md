@@ -958,9 +958,6 @@ No email capture, no modal, no cookie banner (nothing is set), no engagement gam
 | CLS | ≤ 0.02 | unmeasured | `size-adjust` fallback metrics from `next/font`; readout reserves its box via `clamp` + fixed `line-height` |
 | Animation frame budget | ≥ 58 fps | n/a | transform/opacity/filter only; ≤ 2 `backdrop-filter` |
 | Grain paint | ≤ 15 ms one-time | n/a | 379-byte data URI; PNG swap if exceeded |
-| `/choose` HTML raw / gzip | ≤ 120 KiB / ≤ 18 KiB | measured in CI | compressed route-only projection; no benchmark cells |
-| `/choose` Flight / DOM | ≤ 48 KiB / ≤ 1,200 elements | measured in CI | five scope summaries and at most four visible cards |
-| `/choose` route JS gzip | ≤ 24 KiB | measured in CI | no form, state, or validation dependency |
 
 The font change is the headline win: dropping Newsreader (opsz + italic), IBM Plex Sans ×4, and IBM Plex Mono ×4 for two `latin`-subset variable faces should cut the largest asset class by roughly 70%. **Measure post-build and record the actual figure** — the estimate is not a claim.
 

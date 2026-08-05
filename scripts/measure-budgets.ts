@@ -150,27 +150,17 @@ function htmlText(value: string) {
 
 const homepage = join(OUT, "index.html");
 const comparePage = join(OUT, "compare.html");
-const choosePage = join(OUT, "choose.html");
 const data = loadLeaderboardData();
 const allCss = cssFilesOnDisk();
 const fonts = fontFiles();
 const fontDir = fonts.length > 0 ? dirBytes(join(OUT, "_next/static/media")) : { total: 0, files: 0 };
 const html = readFileSync(homepage, "utf8");
 const compareHtml = readFileSync(comparePage, "utf8");
-const chooseHtml = readFileSync(choosePage, "utf8");
 const homepageCss = linkedCssFiles(html);
 const homepageJs = linkedJsFiles(html);
-const chooseCss = linkedCssFiles(chooseHtml);
-const chooseJs = linkedJsFiles(chooseHtml);
-const homepageJsSet = new Set(homepageJs);
-const chooseRouteJs = chooseJs.filter((path) => !homepageJsSet.has(path));
 const homepageFlightBytes = inlineFlightBytes(html);
 const compareFlightBytes = inlineFlightBytes(compareHtml);
-const chooseFlightBytes = inlineFlightBytes(chooseHtml);
 const homepageCssText = homepageCss
-  .map((path) => readFileSync(path, "utf8"))
-  .join("\n");
-const chooseCssText = chooseCss
   .map((path) => readFileSync(path, "utf8"))
   .join("\n");
 const compareSection =
@@ -248,36 +238,6 @@ const budgets: Budget[] = [
     label: "compare Flight payload",
     actual: compareFlightBytes,
     budget: 110 * 1024,
-    unit: "bytes",
-  },
-  {
-    label: "choose HTML (raw)",
-    actual: statSync(choosePage).size,
-    budget: 120 * 1024,
-    unit: "bytes",
-  },
-  {
-    label: "choose HTML (gzip)",
-    actual: gzipBytes(choosePage),
-    budget: 18 * 1024,
-    unit: "bytes",
-  },
-  {
-    label: "choose Flight payload",
-    actual: chooseFlightBytes,
-    budget: 48 * 1024,
-    unit: "bytes",
-  },
-  {
-    label: "choose DOM elements",
-    actual: elementCount(chooseHtml),
-    budget: 1_200,
-    unit: "count",
-  },
-  {
-    label: "choose route JS (gzip)",
-    actual: chooseRouteJs.reduce((total, path) => total + gzipBytes(path), 0),
-    budget: 24 * 1024,
     unit: "bytes",
   },
   {
@@ -381,37 +341,6 @@ const sentinels: { label: string; ok: boolean }[] = [
       compareHtml.includes("compare-initial-empty") &&
       compareHtml.includes("compare-initial-skeleton") &&
       compareHtml.includes("comparePending"),
-  },
-  {
-    label: "renders chooser structure and default shortlist",
-    ok:
-      /<section\b[^>]*\bid="choose"[^>]*\baria-label="Choose a model"/.test(
-        chooseHtml,
-      ) &&
-      chooseHtml.includes("Find a model for the work") &&
-      chooseHtml.includes("Models") &&
-      (chooseHtml.match(/class="chooser-card"/g) ?? []).length >= 2,
-  },
-  {
-    label: "ships all chooser task controls and price provenance",
-    ok:
-      ["overall", "reasoning", "coding", "math", "agentic"].every(
-        (task) =>
-          new RegExp(`name="task"[^>]*value="${task}"`).test(chooseHtml),
-      ) &&
-      chooseHtml.includes("Official pricing") &&
-      chooseHtml.includes("Checked"),
-  },
-  {
-    label: "measures chooser Flight payload and route JS",
-    ok: chooseFlightBytes > 0 && chooseJs.length > 0 && chooseRouteJs.length > 0,
-  },
-  {
-    label: "covers chooser deep links before hydration",
-    ok:
-      chooseHtml.includes("chooser-initial-skeleton") &&
-      chooseHtml.includes("choosePending") &&
-      chooseCssText.includes("data-choose-pending"),
   },
 ];
 

@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import { loadLeaderboardData } from "./data";
-import { catalogFreshness, modelRecordFreshness, siteUrl } from "./site";
+import { modelRecordFreshness, siteUrl } from "./site";
 import {
-  chooseGraph,
   compareGraph,
   homeGraph,
   methodologyGraph,
@@ -305,18 +304,6 @@ describe("homeGraph", () => {
 });
 
 describe("page graphs", () => {
-  it("gives the canonical chooser a closed WebPage graph without query-specific recommendations", () => {
-    const graph = chooseGraph(data);
-    const page = find(graph, "WebPage") as Node;
-
-    expect(page.url).toBe(`${siteUrl}/choose`);
-    expect(page.dateModified).toBe(catalogFreshness(data));
-    expect(page.mainEntity).toEqual({ "@id": `${siteUrl}/#dataset` });
-    expect(nodes(graph).some((node) => typeOf(node) === "ItemList")).toBe(false);
-    expect(JSON.stringify(graph)).not.toContain("Most capable");
-    expectClosedGraph(graph);
-  });
-
   it("gives methodology a WebPage whose main entity is the TechArticle", () => {
     const graph = methodologyGraph(data);
     const page = find(graph, "WebPage") as Node;

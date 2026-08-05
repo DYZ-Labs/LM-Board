@@ -76,16 +76,6 @@ const initializationScript = `
         }, 12000);
       }
     }
-    if (window.location.pathname === "/choose") {
-      var chooserParams = new URLSearchParams(window.location.search);
-      var chooserKeys = ["task", "access", "context", "input", "output"];
-      if (chooserKeys.some(function (key) { return chooserParams.has(key); })) {
-        document.documentElement.dataset.choosePending = "true";
-        window.setTimeout(function () {
-          delete document.documentElement.dataset.choosePending;
-        }, 12000);
-      }
-    }
   } catch (error) {}
 `;
 

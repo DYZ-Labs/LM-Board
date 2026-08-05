@@ -80,14 +80,6 @@ export function buildPaletteEntries(
       },
     })),
     {
-      id: "view-choose",
-      kind: "go" as const,
-      detail: "Guided shortlist",
-      href: "/choose",
-      rank: null,
-      target: { name: "Choose a model", lab: "", id: "choose" },
-    },
-    {
       id: "view-compare",
       kind: "go" as const,
       detail: "Head to head",

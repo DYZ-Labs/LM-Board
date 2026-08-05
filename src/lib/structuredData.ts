@@ -1,6 +1,6 @@
 import type { LeaderboardData, LeaderboardRow } from "@/lib/data";
 import { coverageThreshold } from "@/lib/index";
-import { catalogFreshness, modelRecordFreshness, siteUrl } from "@/lib/site";
+import { modelRecordFreshness, siteUrl } from "@/lib/site";
 
 /**
  * The graph keeps four kinds of ownership separate:
@@ -435,40 +435,6 @@ export function compareGraph(data: LeaderboardData) {
         url,
         description: `Compare up to four of ${data.rows.length} frontier models across the LM Index, ${data.benchmarks.length} benchmark scores, pricing, release dates, and weight availability.`,
         dateModified: data.lastUpdated,
-        isPartOf: reference(WEBSITE_ID),
-        breadcrumb: reference(breadcrumbId),
-        about: reference(DATASET_ID),
-        mainEntity: reference(DATASET_ID),
-        inLanguage: "en-US",
-      },
-    ],
-  };
-}
-
-export function chooseGraph(data: LeaderboardData) {
-  const url = `${siteUrl}/choose`;
-  const webpageId = `${url}#webpage`;
-  const breadcrumbId = `${url}#breadcrumb`;
-
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      lmBoardOrganization(),
-      artificialAnalysisOrganization(),
-      website(),
-      boardDataset(data),
-      breadcrumbs(breadcrumbId, [
-        { name: "LM Board", path: "/" },
-        { name: "Choose a model", path: "/choose" },
-      ]),
-      {
-        "@type": "WebPage",
-        "@id": webpageId,
-        name: "Guided frontier model chooser",
-        url,
-        description:
-          "Apply task, access, context and first-party API price constraints to generate a deterministic shortlist from LM Board's published Index and coverage rules.",
-        dateModified: catalogFreshness(data),
         isPartOf: reference(WEBSITE_ID),
         breadcrumb: reference(breadcrumbId),
         about: reference(DATASET_ID),

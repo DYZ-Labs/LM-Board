@@ -10,7 +10,7 @@ LM Board does not run evals — it curates published ones. Every score is stored
 
 The leaderboard computes a transparent, coverage-gated Overall Index and complete category Indexes, with canonical ranks precomputed per scope. Overall requires 60% measured coverage; broadly measured models may use percentile estimates to fill complete category gaps. Every column sorts; benchmark columns and scoped ranking switch by category; provider, search, and weight filters combine; and an inline source panel backs every measured score. Category, sort, direction, projection, filters, and expanded-model state are reflected in the URL, so a specific view can be shared directly.
 
-The board renders in three explicit projections — `table` (every benchmark column), `profile` (compact, with a per-model score spark), and `plot` (price against Index). The server always renders the full table, CSS turns that same markup into ranked cards on phones, and viewport size never changes the selected projection or URL after hydration. Every model has a citable record at `/model/<id>`, `/choose` produces a deterministic four-model shortlist from task, access, context, and price constraints, and `/compare` puts up to four models side by side.
+The board renders in three explicit projections — `table` (every benchmark column), `profile` (compact, with a per-model score spark), and `plot` (price against Index). The server always renders the full table, CSS turns that same markup into ranked cards on phones, and viewport size never changes the selected projection or URL after hydration. Every model has a citable record at `/model/<id>`, and `/compare` puts up to four models side by side.
 
 The static export ships complete social/search metadata: generated site and per-model Open Graph cards, favicons, a web manifest, robots rules, a sitemap, and `llms.txt`. A static `palette.json` powers the deferred command palette.
 
@@ -52,7 +52,7 @@ The project is on Next.js 16. Production builds use its supported `--webpack`
 opt-out because the default Turbopack output does not fit the unchanged
 homepage raw-JavaScript budget; local development can use Turbopack normally.
 
-The byte gate measures static HTML, Flight, directly linked CSS/executable JS, fonts, DOM size, and request count against the budgets in `REDESIGN_PLAN.md`. It understands both Next 15/Webpack and Next 16/Turbopack asset layouts and excludes only `nomodule` fallbacks that Next 16's supported browsers do not fetch. Deferred interaction chunks are intentionally loaded on demand, so release review also runs Lighthouse against `out/` and exercises the command palette, plot, filters, compare, chooser, and a model record in a real browser.
+The byte gate measures static HTML, Flight, directly linked CSS/executable JS, fonts, DOM size, and request count against the budgets in `REDESIGN_PLAN.md`. It understands both Next 15/Webpack and Next 16/Turbopack asset layouts and excludes only `nomodule` fallbacks that Next 16's supported browsers do not fetch. Deferred interaction chunks are intentionally loaded on demand, so release review also runs Lighthouse against `out/` and exercises the command palette, plot, filters, compare, and a model record in a real browser.
 
 `npm test` runs two Vitest projects: `lib` (index math, sort comparators, URL parsing, data assembly, palette contrast, discovery core — Node environment) and `ui` (component behaviour and an axe-core accessibility pass — jsdom). The contrast suite parses `src/styles/tokens.css` directly, so editing a colour token is checked against WCAG rather than against a stale copy of the palette.
 
@@ -95,7 +95,7 @@ GitHub disables scheduled workflows after 60 days without repository activity; a
 
 - **Rollback:** If the site is down or a deploy is bad, open the LM Board project in the Vercel dashboard, go to **Deployments**, select the previous known-good deployment, and choose **Promote**. If a data commit caused the problem, `git revert <commit>` on a new branch, open and merge the resulting pull request, and let Vercel deploy it.
 - **Monitoring and alerts:** `.github/workflows/monitor-production.yml` checks
-  `/`, `/compare`, `/choose`, and a deterministic model record every 15 minutes. It
+  `/`, `/compare`, and a deterministic model record every 15 minutes. It
   verifies status, content type, content sentinels, redirect origin, response
   size, and security headers with bounded requests. Failures open or update one
   `bug` issue assigned to `@thedanielyuan`; a healthy run closes the incident.
