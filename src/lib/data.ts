@@ -53,11 +53,16 @@ export type LeaderboardLeader = {
   rankedFieldSize: number;
 };
 
+export type LeaderboardScore = Score & {
+  /** UI compatibility view; publisher.type remains the sole stored truth. */
+  readonly selfReported: boolean;
+};
+
 export type LeaderboardRow = {
   model: Model;
   reasoningEffort: string | null;
   reasoningEffortLabel: ReasoningEffortLabel | null;
-  scoresByBenchmark: Record<string, Score | null>;
+  scoresByBenchmark: Record<string, LeaderboardScore | null>;
   /**
    * Luminance step per benchmark, precomputed at build time from that
    * benchmark's own distribution. Derived data, so it lives with the row
@@ -100,7 +105,10 @@ export type LeaderboardData = {
  * pages; sending them for every homepage score cell would duplicate evidence the
  * non-interactive table cannot expose.
  */
-export type LeaderboardClientScore = Pick<Score, "value" | "selfReported">;
+export type LeaderboardClientScore = Pick<
+  LeaderboardScore,
+  "value" | "selfReported"
+>;
 
 export type LeaderboardClientModel = Omit<Model, "pricing"> & {
   pricing?: Pick<NonNullable<Model["pricing"]>, "input" | "output">;
@@ -270,10 +278,19 @@ export function loadLeaderboardData(): LeaderboardData {
       reasoningEffort,
       reasoningEffortLabel: summarizeReasoningEffort(reasoningEffort),
       scoresByBenchmark: Object.fromEntries(
-        benchmarks.map((benchmark) => [
-          benchmark.id,
-          scoreLookup.get(benchmark.id) ?? null,
-        ]),
+        benchmarks.map((benchmark) => {
+          const score = scoreLookup.get(benchmark.id);
+
+          return [
+            benchmark.id,
+            score === undefined
+              ? null
+              : {
+                  ...score,
+                  selfReported: score.publisher.type === "vendor",
+                },
+          ];
+        }),
       ),
       rampByBenchmark: Object.fromEntries(
         benchmarks.map((benchmark) => {

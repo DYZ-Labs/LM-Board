@@ -3,9 +3,10 @@ import { describe, expect, it } from "vitest";
 import type {
   LeaderboardClientRow,
   LeaderboardRow,
+  LeaderboardScore,
   LeaderboardScope,
 } from "./data";
-import type { Model, Publisher, Score } from "./schema";
+import type { Model, Publisher } from "./schema";
 import {
   defaultDirectionFor,
   nextDirectionFor,
@@ -22,7 +23,7 @@ const publisher: Publisher = {
   runsOwnEvals: true,
 };
 
-const score = (modelId: string, value: number): Score => ({
+const score = (modelId: string, value: number): LeaderboardScore => ({
   modelId,
   benchmarkId: "bench",
   publisherId: publisher.id,

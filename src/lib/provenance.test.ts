@@ -73,7 +73,6 @@ describe("resolveMeasurements", () => {
       alternates: [],
       spread: null,
       unverified: false,
-      selfReported: false,
     });
   });
 
@@ -144,7 +143,7 @@ describe("resolveMeasurements", () => {
     );
 
     expect(score.unverified).toBe(true);
-    expect(score.selfReported).toBe(true);
+    expect(score.publisher.type).toBe("vendor");
     expect(score.spread).toBeNull();
   });
 });

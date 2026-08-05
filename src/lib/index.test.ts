@@ -42,7 +42,6 @@ const score = (
   alternates: [],
   spread: null,
   unverified: false,
-  selfReported: false,
 });
 
 const noEstimates = new Map<string, number>();

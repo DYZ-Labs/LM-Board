@@ -10,8 +10,6 @@ export type ResolvedScore = Measurement & {
   spread: number | null;
   /** True when every measurement of this cell is vendor-published. */
   unverified: boolean;
-  /** Compatibility view for consumers; always derived from publisher.type. */
-  readonly selfReported: boolean;
 };
 
 const PUBLISHER_PRECEDENCE: Record<Publisher["type"], number> = {
@@ -89,7 +87,6 @@ export function resolveMeasurements(
         unverified: ordered.every(
           ({ publisher }) => publisher.type === "vendor",
         ),
-        selfReported: canonical.publisher.type === "vendor",
       };
     });
 }
