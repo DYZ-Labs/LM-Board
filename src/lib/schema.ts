@@ -64,6 +64,31 @@ export const BenchmarkSchema = z
   })
   .strict();
 
+export const PublisherSchema = z
+  .object({
+    id: slugSchema,
+    name: z.string().trim().min(1),
+    url: urlSchema,
+    type: z.enum(["independent", "benchmark-author", "vendor"]),
+    runsOwnEvals: z.boolean(),
+    vendorForLab: z.string().trim().min(1).optional(),
+    note: z.string().trim().min(1).optional(),
+  })
+  .strict();
+
+export const MeasurementSchema = z
+  .object({
+    modelId: slugSchema,
+    benchmarkId: slugSchema,
+    publisherId: slugSchema,
+    value: z.number().finite(),
+    source: SourceSchema,
+    settings: z.string().trim().min(1).optional(),
+    harness: z.string().trim().min(1).optional(),
+    reasoningEffort: z.string().trim().min(1).max(40).optional(),
+  })
+  .strict();
+
 export const ScoreSchema = z
   .object({
     modelId: slugSchema,
@@ -78,8 +103,12 @@ export const ScoreSchema = z
 
 export const ModelsFileSchema = z.array(ModelSchema).min(1);
 export const BenchmarksFileSchema = z.array(BenchmarkSchema).min(1);
+export const PublishersFileSchema = z.array(PublisherSchema).min(1);
+export const MeasurementsFileSchema = z.array(MeasurementSchema).min(1);
 export const ScoresFileSchema = z.array(ScoreSchema).min(1);
 
 export type Model = z.infer<typeof ModelSchema>;
 export type Benchmark = z.infer<typeof BenchmarkSchema>;
+export type Publisher = z.infer<typeof PublisherSchema>;
+export type Measurement = z.infer<typeof MeasurementSchema>;
 export type Score = z.infer<typeof ScoreSchema>;
