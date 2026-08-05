@@ -3,6 +3,9 @@
     "id": "artificial-analysis",
     "name": "Artificial Analysis",
     "url": "https://artificialanalysis.ai",
+    "sourceHosts": [
+      "artificialanalysis.ai"
+    ],
     "type": "independent",
     "runsOwnEvals": true,
     "note": "Independent runs under a mystery-shopper policy; maintains private copies of eval sets."
@@ -11,6 +14,9 @@
     "id": "epoch-ai",
     "name": "Epoch AI",
     "url": "https://epoch.ai/benchmarks",
+    "sourceHosts": [
+      "epoch.ai"
+    ],
     "type": "independent",
     "runsOwnEvals": true,
     "note": "Nonprofit. Publishes eval code, interaction logs, and CSVs under CC-BY-4.0."
@@ -19,6 +25,30 @@
     "id": "terminal-bench",
     "name": "Terminal-Bench",
     "url": "https://www.tbench.ai/",
+    "sourceHosts": [
+      "www.tbench.ai"
+    ],
+    "type": "benchmark-author",
+    "runsOwnEvals": true
+  },
+  {
+    "id": "scale-seal",
+    "name": "Scale SEAL",
+    "url": "https://labs.scale.com/leaderboard/humanitys_last_exam",
+    "sourceHosts": [
+      "labs.scale.com"
+    ],
+    "type": "benchmark-author",
+    "runsOwnEvals": true
+  },
+  {
+    "id": "sierra-research",
+    "name": "Sierra Research",
+    "url": "https://sierra.ai/blog/tau-bench-shaping-development-evaluation-agents",
+    "sourceHosts": [
+      "sierra.ai",
+      "github.com/sierra-research"
+    ],
     "type": "benchmark-author",
     "runsOwnEvals": true
   },
@@ -26,6 +56,10 @@
     "id": "openai",
     "name": "OpenAI",
     "url": "https://openai.com",
+    "sourceHosts": [
+      "openai.com",
+      "deploymentsafety.openai.com"
+    ],
     "type": "vendor",
     "runsOwnEvals": true,
     "vendorForLab": "OpenAI"
@@ -34,6 +68,11 @@
     "id": "anthropic",
     "name": "Anthropic",
     "url": "https://www.anthropic.com",
+    "sourceHosts": [
+      "anthropic.com",
+      "www.anthropic.com",
+      "www-cdn.anthropic.com"
+    ],
     "type": "vendor",
     "runsOwnEvals": true,
     "vendorForLab": "Anthropic"
@@ -42,8 +81,122 @@
     "id": "google-deepmind",
     "name": "Google DeepMind",
     "url": "https://deepmind.google",
+    "sourceHosts": [
+      "deepmind.google",
+      "storage.googleapis.com/deepmind-media"
+    ],
     "type": "vendor",
     "runsOwnEvals": true,
     "vendorForLab": "Google"
+  },
+  {
+    "id": "deepseek",
+    "name": "DeepSeek",
+    "url": "https://www.deepseek.com/",
+    "sourceHosts": [
+      "api-docs.deepseek.com",
+      "huggingface.co/deepseek-ai"
+    ],
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "DeepSeek"
+  },
+  {
+    "id": "meta",
+    "name": "Meta",
+    "url": "https://ai.meta.com/",
+    "sourceHosts": [
+      "ai.meta.com",
+      "huggingface.co/meta-llama"
+    ],
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "Meta"
+  },
+  {
+    "id": "minimax",
+    "name": "MiniMax",
+    "url": "https://www.minimax.io/",
+    "sourceHosts": [
+      "www.minimax.io",
+      "huggingface.co/MiniMaxAI"
+    ],
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "MiniMax"
+  },
+  {
+    "id": "mistral-ai",
+    "name": "Mistral AI",
+    "url": "https://mistral.ai/",
+    "sourceHosts": [
+      "mistral.ai",
+      "docs.mistral.ai",
+      "huggingface.co/mistralai"
+    ],
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "Mistral AI"
+  },
+  {
+    "id": "moonshot-ai",
+    "name": "Moonshot AI",
+    "url": "https://www.kimi.com/",
+    "sourceHosts": [
+      "www.kimi.com",
+      "huggingface.co/moonshotai"
+    ],
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "Moonshot AI"
+  },
+  {
+    "id": "nvidia",
+    "name": "NVIDIA",
+    "url": "https://www.nvidia.com/",
+    "sourceHosts": [
+      "build.nvidia.com",
+      "research.nvidia.com",
+      "huggingface.co/nvidia"
+    ],
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "NVIDIA"
+  },
+  {
+    "id": "qwen",
+    "name": "Qwen",
+    "url": "https://qwen.ai/",
+    "sourceHosts": [
+      "qwen.ai",
+      "huggingface.co/Qwen"
+    ],
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "Qwen"
+  },
+  {
+    "id": "z-ai",
+    "name": "Z.ai",
+    "url": "https://z.ai/",
+    "sourceHosts": [
+      "z.ai",
+      "huggingface.co/zai-org"
+    ],
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "Z.ai"
+  },
+  {
+    "id": "xai",
+    "name": "xAI",
+    "url": "https://x.ai/",
+    "sourceHosts": [
+      "x.ai",
+      "docs.x.ai"
+    ],
+    "type": "vendor",
+    "runsOwnEvals": true,
+    "vendorForLab": "xAI"
   }
 ]
