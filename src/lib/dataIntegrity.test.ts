@@ -314,7 +314,48 @@ describe("validateDataIntegrity errors", () => {
     );
   });
 
-  it("requires evidence everywhere after evidence-backed measurements begin", () => {
+  it("allows a publisher with no evidence-backed measurements", () => {
+    const result = validate(
+      [benchmark("ifbench"), benchmark("other")],
+      [measurement("ifbench"), measurement("other")],
+    );
+
+    expect(
+      result.errors.filter((error) =>
+        error.includes("must all carry source quotes"),
+      ),
+    ).toEqual([]);
+  });
+
+  it("allows a publisher whose measurements all carry evidence", () => {
+    const ifbenchEvidence = {
+      quote: "| IFBench | 80 |",
+      printedBenchmarkName: "IFBench",
+      printedConditions: null,
+      printedColumnHeader: "Model",
+    };
+    const gpqaEvidence = {
+      quote: "| GPQA Diamond | 80 |",
+      printedBenchmarkName: "GPQA Diamond",
+      printedConditions: null,
+      printedColumnHeader: "Model",
+    };
+    const result = validate(
+      [benchmark("ifbench"), benchmark("gpqa-diamond")],
+      [
+        measurement("ifbench", { evidence: ifbenchEvidence }),
+        measurement("gpqa-diamond", { evidence: gpqaEvidence }),
+      ],
+    );
+
+    expect(
+      result.errors.filter((error) =>
+        error.includes("must all carry source quotes"),
+      ),
+    ).toEqual([]);
+  });
+
+  it("reports one aggregated error for a partially covered publisher", () => {
     const evidence = {
       quote: "| IFBench | 80 |",
       printedBenchmarkName: "IFBench",
@@ -326,9 +367,38 @@ describe("validateDataIntegrity errors", () => {
       [measurement("ifbench", { evidence }), measurement("other")],
     );
 
-    expect(result.errors).toContain(
-      "measurements.json[1].evidence: required because measurements.json contains evidence-backed records",
+    expect(
+      result.errors.filter((error) =>
+        error.includes("must all carry source quotes"),
+      ),
+    ).toEqual([
+      'publisher "independent": 1 of 2 measurements lack evidence, but 1 has it. A publisher\'s records must all carry source quotes or none may. Either complete the backfill or revert the evidence-backed record.',
+    ]);
+  });
+
+  it("isolates evidence coverage between publishers", () => {
+    const evidence = {
+      quote: "| IFBench | 80 |",
+      printedBenchmarkName: "IFBench",
+      printedConditions: null,
+      printedColumnHeader: "Model",
+    };
+    const result = validate(
+      [benchmark("ifbench"), benchmark("other")],
+      [
+        measurement("ifbench", { evidence }),
+        measurement("other"),
+        measurement("ifbench", { publisherId: otherIndependent.id }),
+      ],
     );
+
+    expect(
+      result.errors.filter((error) =>
+        error.includes("must all carry source quotes"),
+      ),
+    ).toEqual([
+      'publisher "independent": 1 of 2 measurements lack evidence, but 1 has it. A publisher\'s records must all carry source quotes or none may. Either complete the backfill or revert the evidence-backed record.',
+    ]);
   });
 
   it("applies benchmark mapping rules retroactively to stored evidence", () => {
