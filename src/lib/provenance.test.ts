@@ -146,4 +146,21 @@ describe("resolveMeasurements", () => {
     expect(score.publisher.type).toBe("vendor");
     expect(score.spread).toBeNull();
   });
+
+  it("preserves first-seen cell traversal while resolving within each cell", () => {
+    const laterIdFirst = {
+      ...measurement("independent-a", 80),
+      modelId: "z-model",
+    };
+    const earlierIdSecond = {
+      ...measurement("independent-a", 82),
+      modelId: "a-model",
+    };
+
+    expect(
+      resolveMeasurements([laterIdFirst, earlierIdSecond], publishers).map(
+        ({ modelId }) => modelId,
+      ),
+    ).toEqual(["z-model", "a-model"]);
+  });
 });

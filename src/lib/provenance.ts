@@ -72,21 +72,19 @@ export function resolveMeasurements(
     groups.set(key, group);
   }
 
-  return [...groups.entries()]
-    .sort(([left], [right]) => compareStrings(left, right))
-    .map(([, group]) => {
-      const ordered = [...group].sort(comparePublishedMeasurements);
-      const [canonical, ...alternates] = ordered;
-      const values = ordered.map(({ value }) => value);
+  return [...groups.values()].map((group) => {
+    const ordered = [...group].sort(comparePublishedMeasurements);
+    const [canonical, ...alternates] = ordered;
+    const values = ordered.map(({ value }) => value);
 
-      return {
-        ...canonical,
-        alternates,
-        spread:
-          values.length === 1 ? null : Math.max(...values) - Math.min(...values),
-        unverified: ordered.every(
-          ({ publisher }) => publisher.type === "vendor",
-        ),
-      };
-    });
+    return {
+      ...canonical,
+      alternates,
+      spread:
+        values.length === 1 ? null : Math.max(...values) - Math.min(...values),
+      unverified: ordered.every(
+        ({ publisher }) => publisher.type === "vendor",
+      ),
+    };
+  });
 }
