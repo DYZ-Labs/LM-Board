@@ -60,13 +60,6 @@ export function ModelRecord({ row, benchmarks }: ModelRecordProps) {
           >
             Compare
           </Link>
-          <Link
-            className="btn"
-            href="/choose"
-            prefetch={false}
-          >
-            Find alternatives
-          </Link>
           <a
             className="btn link-external"
             href={model.url}

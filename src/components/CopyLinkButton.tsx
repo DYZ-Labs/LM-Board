@@ -13,7 +13,7 @@ type CopyLinkButtonProps = {
   confirmation?: string;
   className?: string;
   /** Which copy affordance this is, for the conversion event. */
-  surface: "view" | "row" | "record" | "comparison" | "chooser";
+  surface: "view" | "row" | "record" | "comparison";
 };
 
 type Status = "idle" | "copying" | "copied" | "error";

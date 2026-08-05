@@ -33,11 +33,9 @@ export function SourceClickTracker() {
       if (!link) return;
 
       const benchmark = link.getAttribute("data-source");
-      const sourceKind = link.getAttribute("data-source-kind");
-
       trackEvent("source_click", {
-        surface: sourceKind === "price" ? "chooser" : benchmark ? "record" : "board",
-        kind: sourceKind === "price" || benchmark === "pricing" ? "price" : "score",
+        surface: benchmark ? "record" : "board",
+        kind: benchmark === "pricing" ? "price" : "score",
         ...(benchmark && benchmark !== "pricing" ? { benchmark } : {}),
       });
     }
